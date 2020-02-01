@@ -1,0 +1,19 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{DC6CB083-4D08-95EB-BB6E-8F9469B7660F}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "PokeCollection",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"UMG",
+				"Engine",
+				"Paper2D",
+				"CoreUObject"
+			]
+		}
+	]
+}
