@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PokeCharacter.h"
 #include "PokeCollectionCharacter.generated.h"
+
 
 /**
  * 플레이어 클래스
@@ -17,7 +19,7 @@ class APokeCollectionCharacter : public ACharacter
 public:
 	APokeCollectionCharacter();
 
-	const TArray<class APokeCharacter*> GetFirstPartyCharacters() const;
+	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -40,8 +42,8 @@ private:
 	 */
 	// Key: SlotNum, Value: ID
 	UPROPERTY(Transient)
-	TArray<int32> FirstParty;
-
+	//TArray<int32> FirstParty;
+	TMap<int32, int32> FirstParty;
 
 
 	UPROPERTY(EditDefaultsOnly)

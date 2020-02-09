@@ -31,6 +31,18 @@ public:
 	int32 Speed = 0;
 };
 
+struct SlotNum
+{
+	SlotNum(int32 InSlotNum) { SlotNumber = InSlotNum; }
+
+private:
+	int32 SlotNumber = 0;
+
+	FORCEINLINE bool operator==(const int32& Other) const
+	{
+		return SlotNumber == Other;
+	}
+};
 
 UCLASS()
 class POKECOLLECTION_API APokeCharacter : public APaperFlipbookActor
@@ -47,11 +59,18 @@ public:
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
 	int32 GetCharacterID() const { return CharacterID; }
 
+	void SetJoinedPartyNum(int32 InPartyNum) { JoinedPartyNum = InPartyNum; }
+	int32 GetJoinedPartyNum() const { return JoinedPartyNum; }
+
+	void SetJoinedSlotNum(int32 InSlotNum) { JoinedSlotNum = InSlotNum; }
+	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
 	int32 CharacterID = 0;
+	int32 CharacterKey = 1;
 
 	/**
 	 * Stats
@@ -71,8 +90,8 @@ private:
 	/**
 	 * Party
 	 */
-	int32 PartyNum = 0;
-	int32 SlotNum = 0;
+	int32 JoinedPartyNum = 0;
+	int32 JoinedSlotNum = 0;
 
 	FString DebugString;
 };

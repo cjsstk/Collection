@@ -38,4 +38,6 @@ void UInGameMainWidget::OnStartButtonClicked()
 			GameMode->BattleStart();
 		}
 	}
+
+	SetVisibility(ESlateVisibility::Collapsed);
 }

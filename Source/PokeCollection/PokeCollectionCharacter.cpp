@@ -22,19 +22,15 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 
 }
 
-const TArray<class APokeCharacter*> APokeCollectionCharacter::GetFirstPartyCharacters() const
+const TMap<int32, class APokeCharacter*> APokeCollectionCharacter::GetPartyCharacters(int32 InPartyNum) const
 {
-	TArray<class APokeCharacter*> FoundPartyCharacters;
+	TMap<int32, class APokeCharacter*> FoundPartyCharacters;
 
-	for (int32 ID : FirstParty)
+	for (auto&& Character : HaveCharacters)
 	{
-		for (auto&& Character : HaveCharacters)
+		if (Character->GetJoinedPartyNum() == InPartyNum)
 		{
-			if (Character->GetCharacterID() == ID)
-			{
-				FoundPartyCharacters.Add(Character);
-				break;
-			}
+			FoundPartyCharacters.Add(Character->GetJoinedSlotNum(), Character);
 		}
 	}
 
@@ -46,9 +42,17 @@ void APokeCollectionCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	/** Temp Init HaveCharacters */
-	APokeCharacter* PokeCharacter = NewObject<APokeCharacter>(TempCharacter.Get());
-	HaveCharacters.AddUnique(PokeCharacter);
-
+	if (ensure(TempCharacter.Get()))
+	{
+		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>(TempCharacter.Get());
+		if (PokeCharacter)
+		{
+			PokeCharacter->SetJoinedPartyNum(1);
+			PokeCharacter->SetJoinedSlotNum(1);
+			HaveCharacters.AddUnique(PokeCharacter);
+		}
+	}
+	//
 
 	NextCharacterID = 0;
 	for (APokeCharacter* Character : HaveCharacters)
@@ -59,7 +63,7 @@ void APokeCollectionCharacter::BeginPlay()
 		}
 
 		// Temp add party
-		FirstParty.Add(NextCharacterID);
+		FirstParty.Add(0, NextCharacterID);
 
 		Character->SetCharacterID(NextCharacterID);
 		++NextCharacterID;

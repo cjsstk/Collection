@@ -3,9 +3,11 @@
 
 #include "BattleManager.h"
 
+#include "CMS.h"
 #include "InBattleCharacterPanel.h"
 #include "PokeCollectionCharacter.h"
 
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
 ABattleManager::ABattleManager()
@@ -19,15 +21,23 @@ void ABattleManager::BattleStart()
 		return;
 	}
 
-	const TArray<APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetFirstPartyCharacters();
+	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetPartyCharacters(1);
 
 	for (auto&& PartyMember : CurrentPartyCharacters)
 	{
-		BattleMembers.AddUnique(PartyMember);
+		BattleMembers.AddUnique(PartyMember.Value);
 	}
 
-	
-
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FCharacterInfo CharacterInfo = CMS::GetCharacterDataTable(1);
+		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(1, false);
+		if (ensure(BattlePanel))
+		{
+			AActor* Character = World->SpawnActor<APokeCharacter>(CharacterInfo.CharacterClass.Get(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
+		}
+	}
 }
 
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)

@@ -4,6 +4,7 @@
 
 #include "BattleManager.h"
 #include "PokeCollectionCharacter.h"
+#include "CMS.h"
 
 #include "Engine/World.h"
 #include "UObject/ConstructorHelpers.h"
@@ -17,6 +18,8 @@ APokeCollectionGameMode::APokeCollectionGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	CMS::LoadCMS();
 }
 
 void APokeCollectionGameMode::BattleStart()
