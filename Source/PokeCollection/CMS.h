@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "PokeCharacter.h"
+#include "PaperFlipbook.h"
 #include "CMS.generated.h"
 
 USTRUCT(BlueprintType)
@@ -19,6 +20,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class APokeCharacter> CharacterClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPaperFlipbook* CharacterSprite;
 };
 
 namespace CMS

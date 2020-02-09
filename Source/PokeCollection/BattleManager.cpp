@@ -6,9 +6,11 @@
 #include "CMS.h"
 #include "InBattleCharacterPanel.h"
 #include "PokeCollectionCharacter.h"
+#include "PokeCharacter.h"
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "PaperFlipbookComponent.h"
 
 ABattleManager::ABattleManager()
 {
@@ -35,7 +37,12 @@ void ABattleManager::BattleStart()
 		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(1, false);
 		if (ensure(BattlePanel))
 		{
-			AActor* Character = World->SpawnActor<APokeCharacter>(CharacterInfo.CharacterClass.Get(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
+			APokeCharacter* Character = World->SpawnActor<APokeCharacter>(APokeCharacter::StaticClass(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
+
+			if (Character)
+			{
+				Character->GetRenderComponent()->SetFlipbook(CharacterInfo.CharacterSprite);
+			}
 		}
 	}
 }
