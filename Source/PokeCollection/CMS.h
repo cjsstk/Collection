@@ -8,6 +8,9 @@
 #include "PaperFlipbook.h"
 #include "CMS.generated.h"
 
+using characterKey = int32;
+const static characterKey INVALID_ITEMKEY = 0;
+
 USTRUCT(BlueprintType)
 struct FCharacterInfo : public FTableRowBase
 {
@@ -36,8 +39,11 @@ namespace CMS
  * 
  */
 UCLASS()
-class POKECOLLECTION_API UCMS : public UDataTable
+class POKECOLLECTION_API UCMSData : public UDataTable
 {
 	GENERATED_BODY()
 	
+public:
+
+
 };

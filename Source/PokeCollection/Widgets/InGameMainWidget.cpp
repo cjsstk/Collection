@@ -11,10 +11,26 @@ void UInGameMainWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	if (!CheckAllButtonsExist())
+	{
+		ensure(0);
+	}
+
 	if (TempStartButton)
 	{
 		TempStartButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
 	}
+
+	/*ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	CharacterBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	InventoryButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	SecretBaseButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	WalkButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	MissionButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	DayCareButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);*/
+	PartyMakeButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnPartyMakeButtonClicked);
+	AdventureButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnAdventureButtonClicked);
+
 }
 
 void UInGameMainWidget::NativeDestruct()
@@ -40,4 +56,21 @@ void UInGameMainWidget::OnStartButtonClicked()
 	}
 
 	SetVisibility(ESlateVisibility::Collapsed);
+}
+
+bool UInGameMainWidget::CheckAllButtonsExist()
+{
+	bool bIsExist = true;
+
+	bIsExist = bIsExist && ShopButton;
+	bIsExist = bIsExist && CharacterBoxButton;
+	bIsExist = bIsExist && InventoryButton;
+	bIsExist = bIsExist && SecretBaseButton;
+	bIsExist = bIsExist && WalkButton;
+	bIsExist = bIsExist && MissionButton;
+	bIsExist = bIsExist && DayCareButton;
+	bIsExist = bIsExist && PartyMakeButton;
+	bIsExist = bIsExist && AdventureButton;
+
+	return bIsExist;
 }
