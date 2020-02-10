@@ -6,6 +6,8 @@
 #include "Button.h"
 
 #include "PokeCollectionGameMode.h"
+#include "PokeCollectionHUD.h"
+
 
 void UInGameMainWidget::NativeConstruct()
 {
@@ -56,6 +58,20 @@ void UInGameMainWidget::OnStartButtonClicked()
 	}
 
 	SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UInGameMainWidget::OnPartyMakeButtonClicked()
+{
+}
+
+void UInGameMainWidget::OnAdventureButtonClicked()
+{
+	APokeCollectionHUD* Hud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (Hud)
+	{
+		Hud->OpenInGameAdventureWidget();
+	}
+
 }
 
 bool UInGameMainWidget::CheckAllButtonsExist()

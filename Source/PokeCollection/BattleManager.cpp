@@ -33,15 +33,15 @@ void ABattleManager::BattleStart()
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		FCharacterInfo CharacterInfo = CMS::GetCharacterDataTable(1);
+		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(1);
 		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(1, false);
-		if (ensure(BattlePanel))
+		if (ensure(BattlePanel) && ensure(CharacterInfo))
 		{
 			APokeCharacter* Character = World->SpawnActor<APokeCharacter>(APokeCharacter::StaticClass(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
 
 			if (Character)
 			{
-				Character->GetRenderComponent()->SetFlipbook(CharacterInfo.CharacterSprite);
+				Character->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
 			}
 		}
 	}

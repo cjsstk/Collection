@@ -3,7 +3,10 @@
 
 #include "PokeCollectionHUD.h"
 
+#include "Widgets/InGameAdventureWidget.h"
+
 #include "Blueprint/UserWidget.h"
+#include "WidgetLayoutLibrary.h"
 
 void APokeCollectionHUD::BeginPlay()
 {
@@ -16,5 +19,21 @@ void APokeCollectionHUD::BeginPlay()
 		{
 			InGameMainWidget->AddToViewport();
 		}
+	}
+
+	if (InGameAdventureWidgetClass.Get())
+	{
+		InGameAdventureWidget = CreateWidget<UInGameAdventureWidget>(GetWorld(), InGameAdventureWidgetClass, FName("InGameAdventureWidget"));
+	}
+}
+
+void APokeCollectionHUD::OpenInGameAdventureWidget()
+{
+	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+
+	if (ensure(InGameAdventureWidget))
+	{
+		InGameAdventureWidget->AddToViewport();
+		InGameAdventureWidget->OnOpen();
 	}
 }

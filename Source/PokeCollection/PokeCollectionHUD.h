@@ -16,6 +16,10 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
+	void OpenInGameAdventureWidget();
+
+	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
+	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -24,7 +28,13 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameMainWidget> InGameMainWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
+
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;
 
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -27,12 +27,25 @@ public:
 	UPaperFlipbook* CharacterSprite;
 };
 
+USTRUCT(BlueprintType)
+struct FStageInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TSoftObjectPtr<UTexture2D> StageBackground = nullptr;
+};
+
 namespace CMS
 {
 	void LoadCMS();
-	FCharacterInfo GetCharacterDataTable(int32 CharacterKey);
+
+	const FCharacterInfo* GetCharacterDataTable(characterKey CharacterKey);
+	const FStageInfo* GetStageDataTable(int32 StageKey);
 
 	static UDataTable* CharacterDataTable;
+	static UDataTable* StageDataTable;
 };
 
 /**
