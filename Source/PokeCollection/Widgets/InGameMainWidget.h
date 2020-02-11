@@ -40,6 +40,9 @@ private:
 	class UButton* TempStartButton = nullptr;
 	//
 
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Background = nullptr;
+
 	/** Down Side Buttons */
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ShopButton = nullptr;
