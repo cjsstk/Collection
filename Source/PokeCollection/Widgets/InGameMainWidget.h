@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "InGameTopStatusBar.h"
 #include "InGameMainWidget.generated.h"
 
 UCLASS(abstract)
@@ -12,16 +13,22 @@ class POKECOLLECTION_API UInGameWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativeConstruct() override;
+
 	virtual void OnOpen() {};
-	virtual void OnBack() {};
+
+	UFUNCTION()
+	virtual void OnBack();
+
+	void SetPrevWidget(UInGameWidget* InPrevWidget) { PrevWidget = InPrevWidget; }
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UButton* BackButton = nullptr;
+	UInGameTopStatusBar* TopStatusBar = nullptr;
 
-	TSubclassOf<UInGameWidget> PrevWidget;
+	UPROPERTY(Transient)
+	UInGameWidget* PrevWidget = nullptr;
 
-	bool bIsPopUpWidget = false;
 };
 
 

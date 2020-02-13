@@ -25,3 +25,8 @@ void UInGameAdventureWidget::OnOpen()
 		}
 	}
 }
+
+void UInGameAdventureWidget::OnBack()
+{
+	Super::OnBack();
+}

@@ -4,10 +4,34 @@
 #include "InGameMainWidget.h"
 
 #include "Button.h"
+#include "WidgetLayoutLibrary.h"
 
 #include "PokeCollectionGameMode.h"
 #include "PokeCollectionHUD.h"
 
+
+void UInGameWidget::NativeConstruct()
+{
+	if (TopStatusBar)
+	{
+		TopStatusBar->OnBackButtonClicked.AddUniqueDynamic(this, &UInGameWidget::OnBack);
+	}
+}
+
+void UInGameWidget::OnBack()
+{
+	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+
+	if (PrevWidget)
+	{
+		PrevWidget->AddToViewport();
+	}
+	else
+	{
+		ensure(0);
+		// Profile?
+	}
+}
 
 void UInGameMainWidget::NativeConstruct()
 {

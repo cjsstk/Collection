@@ -17,6 +17,7 @@ class POKECOLLECTION_API UInGameAdventureWidget : public UInGameWidget
 	
 public:
 	virtual void OnOpen() override;
+	virtual void OnBack() override;
 
 private:
 	UPROPERTY(meta = (BindWidget))

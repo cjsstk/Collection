@@ -24,6 +24,7 @@ void APokeCollectionHUD::BeginPlay()
 	if (InGameAdventureWidgetClass.Get())
 	{
 		InGameAdventureWidget = CreateWidget<UInGameAdventureWidget>(GetWorld(), InGameAdventureWidgetClass, FName("InGameAdventureWidget"));
+		InGameAdventureWidget->SetPrevWidget(InGameMainWidget);
 	}
 }
 
