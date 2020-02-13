@@ -18,6 +18,7 @@ class POKECOLLECTION_API UInGameTopStatusBar : public UUserWidget
 	
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UFUNCTION()
 	void OnBack();
@@ -27,4 +28,13 @@ public:
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BackButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BerryAmountText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* MoneyAmountText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* StardustAmountText = nullptr;
 };

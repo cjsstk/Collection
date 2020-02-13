@@ -23,6 +23,10 @@ public:
 
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 
+	int32 GetBerryAmount() const { return BerryAmount; }
+	int32 GetMoneyAmount() const { return MoneyAmount; }
+	int32 GetStardustAmount() const { return StardustAmount; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -52,5 +56,11 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class APokeCharacter> TempCharacter;
 
+	/** 
+	 * Resource
+	 */
+	int32 BerryAmount = 1000;		// Need for start battle
+	int32 MoneyAmount = 2000;		// Need for buy items..
+	int32 StardustAmount = 3000;	// Charged resource
 };
 
