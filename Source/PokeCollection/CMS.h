@@ -37,6 +37,15 @@ public:
 	TSoftObjectPtr<UTexture2D> StageBackground = nullptr;
 };
 
+USTRUCT(BlueprintType)
+struct FWidgetInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	
+};
+
 namespace CMS
 {
 	void LoadCMS();

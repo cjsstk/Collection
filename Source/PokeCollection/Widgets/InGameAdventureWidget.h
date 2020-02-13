@@ -4,23 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Widgets/InGameMainWidget.h"
 #include "InGameAdventureWidget.generated.h"
-
-
-UCLASS(abstract)
-class POKECOLLECTION_API UInGameFullScreenWidget : public UUserWidget
-{
-	GENERATED_BODY()
-
-public:
-	virtual void OnOpen() {};
-};
 
 /**
  * 
  */
 UCLASS()
-class POKECOLLECTION_API UInGameAdventureWidget : public UInGameFullScreenWidget
+class POKECOLLECTION_API UInGameAdventureWidget : public UInGameWidget
 {
 	GENERATED_BODY()
 	

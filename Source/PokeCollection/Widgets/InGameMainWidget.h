@@ -6,11 +6,30 @@
 #include "Blueprint/UserWidget.h"
 #include "InGameMainWidget.generated.h"
 
+UCLASS(abstract)
+class POKECOLLECTION_API UInGameWidget : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	virtual void OnOpen() {};
+	virtual void OnBack() {};
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* BackButton = nullptr;
+
+	TSubclassOf<UInGameWidget> PrevWidget;
+
+	bool bIsPopUpWidget = false;
+};
+
+
 /**
- * 
+ * In Game Main UI (Lobby)
  */
 UCLASS(Blueprintable)
-class POKECOLLECTION_API UInGameMainWidget : public UUserWidget
+class POKECOLLECTION_API UInGameMainWidget : public UInGameWidget
 {
 	GENERATED_BODY()
 	

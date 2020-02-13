@@ -17,7 +17,7 @@ void UInGameAdventureWidget::OnOpen()
 		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 		if (ensure(Player))
 		{
-			const FStageInfo* StageInfo = CMS::GetStageDataTable(Player->GetCurrentStageNum());
+			const FStageInfo* StageInfo = CMS::GetStageDataTable(Player->GetCurrentSelectedStageNum());
 			if (StageInfo)
 			{
 				Background->SetBrushFromTexture(StageInfo->StageBackground.LoadSynchronous());

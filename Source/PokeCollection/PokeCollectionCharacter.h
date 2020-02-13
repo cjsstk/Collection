@@ -19,7 +19,7 @@ class APokeCollectionCharacter : public ACharacter
 public:
 	APokeCollectionCharacter();
 
-	int32 GetCurrentStageNum() const { return CurrentStageNum; }
+	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
 
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 
@@ -35,7 +35,7 @@ private:
 	 * 
 	 */
 	int32 NextCharacterID = 0;
-	int32 CurrentStageNum = 1;
+	int32 CurrentSelectedStageNum = 1;
 
 	UPROPERTY()
 	TArray<class APokeCharacter*> HaveCharacters;
