@@ -34,7 +34,8 @@ struct FStageInfo : public FTableRowBase
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	TSoftObjectPtr<UTexture2D> StageBackground = nullptr;
+	TSubclassOf<class UStageWidget> StageWidgets;
+
 };
 
 USTRUCT(BlueprintType)

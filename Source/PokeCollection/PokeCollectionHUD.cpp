@@ -12,6 +12,15 @@ void APokeCollectionHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (InGameTopStatusBarClass.Get())
+	{
+		InGameTopStatusBar = CreateWidget<UInGameTopStatusBar>(GetWorld(), InGameTopStatusBarClass, FName("InGameTopStatusBar"));
+		if (ensure(InGameTopStatusBar))
+		{
+			InGameTopStatusBar->AddToViewport(1);
+		}
+	}
+
 	if (InGameMainWidgetClass.Get())
 	{
 		InGameMainWidget = CreateWidget<UInGameMainWidget>(GetWorld(), InGameMainWidgetClass, FName("InGameMainWidget"));
@@ -31,6 +40,11 @@ void APokeCollectionHUD::BeginPlay()
 void APokeCollectionHUD::OpenInGameAdventureWidget()
 {
 	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+
+	if (ensure(InGameTopStatusBar))
+	{
+		InGameTopStatusBar->AddToViewport(1);
+	}
 
 	if (ensure(InGameAdventureWidget))
 	{

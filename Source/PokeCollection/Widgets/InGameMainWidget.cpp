@@ -8,13 +8,18 @@
 
 #include "PokeCollectionGameMode.h"
 #include "PokeCollectionHUD.h"
-
+#include "Widgets/InGameTopStatusBar.h"
 
 void UInGameWidget::NativeConstruct()
 {
-	if (TopStatusBar)
+	APokeCollectionHUD* Hud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (ensure(Hud))
 	{
-		TopStatusBar->OnBackButtonClicked.AddUniqueDynamic(this, &UInGameWidget::OnBack);
+		UInGameTopStatusBar* TopStatusBar = Hud->GetInGameTopStatusBar();
+		if (ensure(TopStatusBar))
+		{
+			TopStatusBar->OnBackButtonClicked.AddUniqueDynamic(this, &UInGameWidget::OnBack);
+		}
 	}
 }
 

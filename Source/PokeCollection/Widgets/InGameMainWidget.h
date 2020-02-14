@@ -23,9 +23,6 @@ public:
 	void SetPrevWidget(UInGameWidget* InPrevWidget) { PrevWidget = InPrevWidget; }
 
 private:
-	UPROPERTY(meta = (BindWidget))
-	UInGameTopStatusBar* TopStatusBar = nullptr;
-
 	UPROPERTY(Transient)
 	UInGameWidget* PrevWidget = nullptr;
 

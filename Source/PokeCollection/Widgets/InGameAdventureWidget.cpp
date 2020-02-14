@@ -3,16 +3,22 @@
 
 #include "InGameAdventureWidget.h"
 
+#include "Components/WidgetSwitcher.h"
 #include "Image.h"
 
 #include "CMS.h"
 #include "PokeCollectionCharacter.h"
 
+void UInGameAdventureWidget::NativeConstruct()
+{
+
+}
+
 void UInGameAdventureWidget::OnOpen()
 {
 	Super::OnOpen();
 
-	if (ensure(Background))
+	/*if (ensure(Background))
 	{
 		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 		if (ensure(Player))
@@ -23,10 +29,5 @@ void UInGameAdventureWidget::OnOpen()
 				Background->SetBrushFromTexture(StageInfo->StageBackground.LoadSynchronous());
 			}
 		}
-	}
-}
-
-void UInGameAdventureWidget::OnBack()
-{
-	Super::OnBack();
+	}*/
 }

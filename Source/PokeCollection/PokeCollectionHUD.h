@@ -20,6 +20,7 @@ public:
 
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
+	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -31,10 +32,16 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameTopStatusBar> InGameTopStatusBarClass;
+
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameTopStatusBar* InGameTopStatusBar = nullptr;
 
 };
