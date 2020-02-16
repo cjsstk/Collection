@@ -53,6 +53,7 @@ namespace CMS
 
 	const FCharacterInfo* GetCharacterDataTable(characterKey CharacterKey);
 	const FStageInfo* GetStageDataTable(int32 StageKey);
+	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);
 
 	static UDataTable* CharacterDataTable;
 	static UDataTable* StageDataTable;

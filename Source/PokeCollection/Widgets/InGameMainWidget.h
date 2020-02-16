@@ -22,6 +22,9 @@ public:
 
 	void SetPrevWidget(UInGameWidget* InPrevWidget) { PrevWidget = InPrevWidget; }
 
+protected:
+	class APokeCollectionCharacter* GetPlayer() const;
+
 private:
 	UPROPERTY(Transient)
 	UInGameWidget* PrevWidget = nullptr;

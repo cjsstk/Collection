@@ -39,6 +39,11 @@ const FStageInfo* CMS::GetStageDataTable(int32 StageKey)
     }
 
     FStageInfo* StageInfo = StageDataTable->FindRow<FStageInfo>(FName(*(FString::FormatAsNumber(StageKey))), FString(""));
-
+ 
     return StageInfo;
+}
+
+void CMS::GetAllStageDataTable(TArray<FStageInfo*>& OutArray)
+{
+    StageDataTable->GetAllRows(FString(""), OutArray);
 }

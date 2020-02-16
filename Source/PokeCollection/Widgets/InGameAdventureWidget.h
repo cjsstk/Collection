@@ -34,8 +34,19 @@ public:
 
 	virtual void OnOpen() override;
 
+	UFUNCTION()
+	void OnPrevStageButtonClicked();
+
+	UFUNCTION()
+	void OnNextStageButtonClicked();
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UWidgetSwitcher* StageWidgets;
 
+	UPROPERTY(meta = (BindWidget))
+	class UButton* PrevStageButton;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* NextStageButton;
 };

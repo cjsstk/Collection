@@ -6,6 +6,7 @@
 #include "Button.h"
 #include "WidgetLayoutLibrary.h"
 
+#include "PokeCollectionCharacter.h"
 #include "PokeCollectionGameMode.h"
 #include "PokeCollectionHUD.h"
 #include "Widgets/InGameTopStatusBar.h"
@@ -25,6 +26,11 @@ void UInGameWidget::NativeConstruct()
 
 void UInGameWidget::OnBack()
 {
+	if (!IsInViewport())
+	{
+		return;
+	}
+
 	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
 
 	if (PrevWidget)
@@ -36,6 +42,11 @@ void UInGameWidget::OnBack()
 		ensure(0);
 		// Profile?
 	}
+}
+
+APokeCollectionCharacter* UInGameWidget::GetPlayer() const
+{
+	return Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 }
 
 void UInGameMainWidget::NativeConstruct()

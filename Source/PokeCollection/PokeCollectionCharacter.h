@@ -19,6 +19,7 @@ class APokeCollectionCharacter : public ACharacter
 public:
 	APokeCollectionCharacter();
 
+	void SetCurrentSelectedStageNum(int32 NewSelectedStageNum) { CurrentSelectedStageNum = FMath::Clamp(NewSelectedStageNum, 1, MaxOpenedStageNum); }
 	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
 
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
@@ -40,6 +41,7 @@ private:
 	 */
 	int32 NextCharacterID = 0;
 	int32 CurrentSelectedStageNum = 1;
+	int32 MaxOpenedStageNum = 2;
 
 	UPROPERTY()
 	TArray<class APokeCharacter*> HaveCharacters;

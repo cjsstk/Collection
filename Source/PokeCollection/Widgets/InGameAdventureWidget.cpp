@@ -3,6 +3,7 @@
 
 #include "InGameAdventureWidget.h"
 
+#include "Button.h"
 #include "Components/WidgetSwitcher.h"
 #include "Image.h"
 
@@ -11,23 +12,73 @@
 
 void UInGameAdventureWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 
+	if (ensure(StageWidgets))
+	{
+		StageWidgets->ClearChildren();
+
+		TArray<FStageInfo*> AllStageDatas;
+
+		CMS::GetAllStageDataTable(AllStageDatas);
+
+		for (FStageInfo* StageData : AllStageDatas)
+		{
+			if (StageData && StageData->StageWidgets.Get())
+			{
+				UStageWidget* StageWidget = CreateWidget<UStageWidget>(GetWorld(), StageData->StageWidgets.Get());
+				if (!StageWidget)
+				{
+					continue;
+				}
+
+				StageWidgets->AddChild(StageWidget);
+			}
+		}
+
+		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+		if (ensure(Player))
+		{
+			StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedStageNum() - 1);
+		}
+	}
+
+	if (PrevStageButton)
+	{
+		PrevStageButton->OnClicked.AddUniqueDynamic(this, &UInGameAdventureWidget::OnPrevStageButtonClicked);
+	}
+	
+	if (NextStageButton)
+	{
+		NextStageButton->OnClicked.AddUniqueDynamic(this, &UInGameAdventureWidget::OnNextStageButtonClicked);
+	}
 }
 
 void UInGameAdventureWidget::OnOpen()
 {
 	Super::OnOpen();
+}
 
-	/*if (ensure(Background))
+void UInGameAdventureWidget::OnPrevStageButtonClicked()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!Player)
 	{
-		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
-		if (ensure(Player))
-		{
-			const FStageInfo* StageInfo = CMS::GetStageDataTable(Player->GetCurrentSelectedStageNum());
-			if (StageInfo)
-			{
-				Background->SetBrushFromTexture(StageInfo->StageBackground.LoadSynchronous());
-			}
-		}
-	}*/
+		return;
+	}
+
+	Player->SetCurrentSelectedStageNum(Player->GetCurrentSelectedStageNum() - 1);
+	StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedStageNum() - 1);
+}
+
+void UInGameAdventureWidget::OnNextStageButtonClicked()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!Player)
+	{
+		return;
+	}
+
+	Player->SetCurrentSelectedStageNum(Player->GetCurrentSelectedStageNum() + 1);
+	StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedStageNum() - 1);
 }
