@@ -17,6 +17,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 	
 public:
 	void OpenInGameAdventureWidget();
+	void OpenBattleStageInfoPopUp();
 
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
@@ -35,6 +36,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameTopStatusBar> InGameTopStatusBarClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UBattleStageInfoPopUp> BattleStageInfoPopUpClass;
+
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
 
@@ -43,5 +47,8 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameTopStatusBar* InGameTopStatusBar = nullptr;
+
+	UPROPERTY(Transient)
+	class UBattleStageInfoPopUp* BattleStageInfoPopUp = nullptr;
 
 };

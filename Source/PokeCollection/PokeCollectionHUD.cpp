@@ -4,6 +4,7 @@
 #include "PokeCollectionHUD.h"
 
 #include "Widgets/InGameAdventureWidget.h"
+#include "Widgets/BattleStageInfoPopUp.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -35,6 +36,11 @@ void APokeCollectionHUD::BeginPlay()
 		InGameAdventureWidget = CreateWidget<UInGameAdventureWidget>(GetWorld(), InGameAdventureWidgetClass, FName("InGameAdventureWidget"));
 		InGameAdventureWidget->SetPrevWidget(InGameMainWidget);
 	}
+
+	if (BattleStageInfoPopUpClass.Get())
+	{
+		BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
+	}
 }
 
 void APokeCollectionHUD::OpenInGameAdventureWidget()
@@ -51,4 +57,9 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 		InGameAdventureWidget->AddToViewport();
 		InGameAdventureWidget->OnOpen();
 	}
+}
+
+void APokeCollectionHUD::OpenBattleStageInfoPopUp()
+{
+
 }

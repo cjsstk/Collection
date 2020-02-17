@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperFlipbookActor.h"
+#include "CMSType.h"
 #include "PokeCharacter.generated.h"
 
 USTRUCT(Atomic)

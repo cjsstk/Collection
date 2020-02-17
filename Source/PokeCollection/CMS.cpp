@@ -17,11 +17,17 @@ void CMS::LoadCMS()
     {
         StageDataTable = StageDT.Object;
     }
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> BattleStageDT(TEXT("/Game/CMS/BattleStageInfo"));
+	if (ensure(BattleStageDT.Succeeded()))
+	{
+		BattleStageDataTable = BattleStageDT.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
 {
-    if (CharacterKey == INVALID_ITEMKEY)
+    if (CharacterKey == INVALID_CHARACTERKEY)
     {
         return nullptr;
     }
@@ -46,4 +52,16 @@ const FStageInfo* CMS::GetStageDataTable(int32 StageKey)
 void CMS::GetAllStageDataTable(TArray<FStageInfo*>& OutArray)
 {
     StageDataTable->GetAllRows(FString(""), OutArray);
+}
+
+const FBattleStageInfo* CMS::GetBattleStageDataTable(battleStageKey BattleStageKey)
+{
+	if (BattleStageKey == INVALID_BATTLESTAGEKEY)
+	{
+		return nullptr;
+	}
+
+	FBattleStageInfo* BattleStageInfo = BattleStageDataTable->FindRow<FBattleStageInfo>(FName(*(FString::FormatAsNumber(BattleStageKey))), FString(""));
+
+	return BattleStageInfo;
 }

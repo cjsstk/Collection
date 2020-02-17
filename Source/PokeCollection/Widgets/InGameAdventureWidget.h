@@ -19,12 +19,24 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Background;
 
+	UPROPERTY(meta = (BindWidget))
+	class UBattleStageSignboard* BattleStageOne;
+
+	UPROPERTY(meta = (BindWidget))
+	class UBattleStageSignboard* BattleStageTwo;
+
+	UPROPERTY(meta = (BindWidget))
+	class UBattleStageSignboard* BattleStageThree;
+
+	UPROPERTY(meta = (BindWidget))
+	class UBattleStageSignboard* BattleStageFour;
+
 };
 
 /**
  * Adventure widget. Contains stage widgets
  */
-UCLASS()
+UCLASS(Blueprintable)
 class POKECOLLECTION_API UInGameAdventureWidget : public UInGameWidget
 {
 	GENERATED_BODY()

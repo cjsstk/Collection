@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "CMSType.h"
 #include "PokeCharacter.h"
 #include "PaperFlipbook.h"
 #include "CMS.generated.h"
 
-using characterKey = int32;
-const static characterKey INVALID_ITEMKEY = 0;
+//using characterKey = int32;
+//const static characterKey INVALID_CHARACTERKEY = 0;
 
 USTRUCT(BlueprintType)
 struct FCharacterInfo : public FTableRowBase
@@ -39,12 +40,16 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FWidgetInfo : public FTableRowBase
+struct FBattleStageInfo : public FTableRowBase
 {
 	GENERATED_BODY()
 
 public:
-	
+	UPROPERTY(EditDefaultsOnly)
+	FText BattleStageName;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<int32> DropCharacterIDs;
 };
 
 namespace CMS
@@ -54,9 +59,11 @@ namespace CMS
 	const FCharacterInfo* GetCharacterDataTable(characterKey CharacterKey);
 	const FStageInfo* GetStageDataTable(int32 StageKey);
 	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);
+	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
 
 	static UDataTable* CharacterDataTable;
 	static UDataTable* StageDataTable;
+	static UDataTable* BattleStageDataTable;
 };
 
 /**
