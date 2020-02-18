@@ -37,6 +37,40 @@ void UBattleStageSignboard::OnSignboardClicked()
 	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
 	if (PokeHud)
 	{
-		PokeHud->OpenBattleStageInfoPopUp();
+		PokeHud->OpenBattleStageInfoPopUp(BattleStageKey);
 	}
+}
+
+void UBattleStageInfoPopUp::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (BackgroundButton)
+	{
+		BackgroundButton->OnClicked.AddUniqueDynamic(this, &UBattleStageInfoPopUp::OnBackgroundClicked);
+	}
+}
+
+void UBattleStageInfoPopUp::InitInfo(battleStageKey InBattleStageKey)
+{
+	if (InBattleStageKey == INVALID_BATTLESTAGEKEY)
+	{
+		return;
+	}
+
+	const FBattleStageInfo* BattleStageInfo = CMS::GetBattleStageDataTable(InBattleStageKey);
+	if (!BattleStageInfo)
+	{
+		return;
+	}
+
+	if (BattleStageName)
+	{
+		BattleStageName->SetText(BattleStageInfo->BattleStageName);
+	}
+}
+
+void UBattleStageInfoPopUp::OnBackgroundClicked()
+{
+	this->RemoveFromViewport();
 }

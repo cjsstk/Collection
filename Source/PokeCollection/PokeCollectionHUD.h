@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "Widgets/InGameMainWidget.h"
+#include "CMS.h"
 #include "PokeCollectionHUD.generated.h"
 
 /**
@@ -17,7 +18,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 	
 public:
 	void OpenInGameAdventureWidget();
-	void OpenBattleStageInfoPopUp();
+	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 

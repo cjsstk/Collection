@@ -43,6 +43,12 @@ class POKECOLLECTION_API UBattleStageInfoPopUp : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeConstruct() override;
+
+	void InitInfo(battleStageKey InBattleStageKey);
+
+	UFUNCTION()
+	void OnBackgroundClicked();
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -50,4 +56,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* StartBattleButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BattleStageName = nullptr;
 };

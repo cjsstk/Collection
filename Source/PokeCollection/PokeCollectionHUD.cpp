@@ -64,11 +64,12 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 	}
 }
 
-void APokeCollectionHUD::OpenBattleStageInfoPopUp()
+void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey)
 {
-	if (ensure(BattleStageInfoPopUp))
+	if (ensure(BattleStageInfoPopUp) && InBattleStageKey != INVALID_BATTLESTAGEKEY)
 	{
 		BattleStageInfoPopUp->AddToViewport(2);
+		BattleStageInfoPopUp->InitInfo(InBattleStageKey);
 	}
 }
 
