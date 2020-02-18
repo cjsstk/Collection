@@ -43,13 +43,18 @@ void APokeCollectionHUD::BeginPlay()
 	}
 }
 
+void APokeCollectionHUD::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+}
+
 void APokeCollectionHUD::OpenInGameAdventureWidget()
 {
-	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+	//UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
 
-	if (ensure(InGameTopStatusBar))
+	if (ensure(InGameMainWidget))
 	{
-		InGameTopStatusBar->AddToViewport(1);
+		InGameMainWidget->RemoveFromViewport();
 	}
 
 	if (ensure(InGameAdventureWidget))
@@ -62,4 +67,25 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 void APokeCollectionHUD::OpenBattleStageInfoPopUp()
 {
 
+}
+
+void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)
+{
+	if (!CurrentWidget)
+	{
+		ensure(0);
+		return;
+	}
+
+	CurrentWidget->RemoveFromViewport();
+
+	if (CurrentWidget->GetPrevWidget())
+	{
+		CurrentWidget->GetPrevWidget()->AddToViewport();
+		CurrentWidget->GetPrevWidget()->OnOpen();
+	}
+	else
+	{
+
+	}
 }

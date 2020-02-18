@@ -19,12 +19,15 @@ public:
 	void OpenInGameAdventureWidget();
 	void OpenBattleStageInfoPopUp();
 
+	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
+
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

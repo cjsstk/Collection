@@ -21,9 +21,11 @@ public:
 	virtual void OnBack();
 
 	void SetPrevWidget(UInGameWidget* InPrevWidget) { PrevWidget = InPrevWidget; }
+	class UInGameWidget* GetPrevWidget() const { return PrevWidget; }
 
 protected:
 	class APokeCollectionCharacter* GetPlayer() const;
+	class APokeCollectionHUD* GetPokeHud() const;
 
 private:
 	UPROPERTY(Transient)

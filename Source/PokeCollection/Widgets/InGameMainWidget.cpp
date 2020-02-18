@@ -31,22 +31,31 @@ void UInGameWidget::OnBack()
 		return;
 	}
 
-	UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());
+	APokeCollectionHUD* Hud = GetPokeHud();
+	if (Hud)
+	{
+		Hud->OnBackButtonClicked(this);
+	}
 
-	if (PrevWidget)
-	{
-		PrevWidget->AddToViewport();
-	}
-	else
-	{
-		ensure(0);
-		// Profile?
-	}
+	//if (PrevWidget)
+	//{
+	//	PrevWidget->AddToViewport();
+	//}
+	//else
+	//{
+	//	ensure(0);
+	//	// Profile?
+	//}
 }
 
 APokeCollectionCharacter* UInGameWidget::GetPlayer() const
 {
 	return Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+}
+
+class APokeCollectionHUD* UInGameWidget::GetPokeHud() const
+{
+	return GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
 }
 
 void UInGameMainWidget::NativeConstruct()
@@ -106,7 +115,7 @@ void UInGameMainWidget::OnPartyMakeButtonClicked()
 
 void UInGameMainWidget::OnAdventureButtonClicked()
 {
-	APokeCollectionHUD* Hud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	APokeCollectionHUD* Hud = GetPokeHud();
 	if (Hud)
 	{
 		Hud->OpenInGameAdventureWidget();
