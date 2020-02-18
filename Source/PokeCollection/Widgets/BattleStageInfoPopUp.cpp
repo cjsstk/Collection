@@ -6,6 +6,8 @@
 #include "Button.h"
 #include "TextBlock.h"
 
+#include "PokeCollectionHUD.h"
+
 void UBattleStageSignboard::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -27,5 +29,14 @@ void UBattleStageSignboard::NativeConstruct()
 
 void UBattleStageSignboard::OnSignboardClicked()
 {
+	if (!GetOwningPlayer())
+	{
+		return;
+	}
 
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (PokeHud)
+	{
+		PokeHud->OpenBattleStageInfoPopUp();
+	}
 }

@@ -37,15 +37,6 @@ void UInGameWidget::OnBack()
 		Hud->OnBackButtonClicked(this);
 	}
 
-	//if (PrevWidget)
-	//{
-	//	PrevWidget->AddToViewport();
-	//}
-	//else
-	//{
-	//	ensure(0);
-	//	// Profile?
-	//}
 }
 
 APokeCollectionCharacter* UInGameWidget::GetPlayer() const

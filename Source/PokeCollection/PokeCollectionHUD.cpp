@@ -66,7 +66,10 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 
 void APokeCollectionHUD::OpenBattleStageInfoPopUp()
 {
-
+	if (ensure(BattleStageInfoPopUp))
+	{
+		BattleStageInfoPopUp->AddToViewport(2);
+	}
 }
 
 void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)
