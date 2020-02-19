@@ -9,8 +9,8 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
-#include "PokeCharacter.h"
 #include "PokeCollectionGameMode.h"
+#include "CMS.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APokeCollectionCharacter
@@ -20,6 +20,27 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(RootComponent);
 
+}
+
+void APokeCollectionCharacter::InitHaveCharacters()
+{
+	for (characterKey Key : SavedCharacterKeys)
+	{
+		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(Key);
+		if (!CharacterInfo)
+		{
+			ensure(0);
+			continue;
+		}
+
+		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
+		if (PokeCharacter)
+		{
+			PokeCharacter->Init(Key);
+		}
+
+		HaveCharacters.AddUnique(PokeCharacter);
+	}
 }
 
 const TMap<int32, class APokeCharacter*> APokeCollectionCharacter::GetPartyCharacters(int32 InPartyNum) const
@@ -42,7 +63,9 @@ void APokeCollectionCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	/** Temp Init HaveCharacters */
-	if (ensure(TempCharacter.Get()))
+	InitHaveCharacters();
+
+	/*if (ensure(TempCharacter.Get()))
 	{
 		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>(TempCharacter.Get());
 		if (PokeCharacter)
@@ -51,7 +74,7 @@ void APokeCollectionCharacter::BeginPlay()
 			PokeCharacter->SetJoinedSlotNum(1);
 			HaveCharacters.AddUnique(PokeCharacter);
 		}
-	}
+	}*/
 	//
 
 	NextCharacterID = 0;

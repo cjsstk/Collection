@@ -46,12 +46,12 @@ private:
 };
 
 UCLASS()
-class POKECOLLECTION_API APokeCharacter : public APaperFlipbookActor
+class POKECOLLECTION_API APokeCharacter : public AActor
 {
 	GENERATED_BODY()
 	
 public:
-	APokeCharacter();
+	void Init(characterKey InCharacterKey);
 
 	void Attack(/*int32 SkillIndex,*/ APokeCharacter* TargetCharacter);
 
@@ -72,6 +72,16 @@ protected:
 private:
 	int32 CharacterID = 0;
 	int32 CharacterKey = 1;
+	
+	/** 
+	 * Base info
+	 */
+	UPROPERTY(Transient)
+	FName CharacterName;
+
+	UPROPERTY(Transient)
+	class UTexture* CharacterProfileImage = nullptr;
+
 
 	/**
 	 * Stats
@@ -87,6 +97,9 @@ private:
 	
 	UPROPERTY(Transient)
 	APokeCharacter* CurrentTargetCharacter = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ABattleCharacterActor> BattleCharacterActor;
 
 	/**
 	 * Party

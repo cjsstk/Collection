@@ -41,7 +41,7 @@ void ABattleManager::BattleStart()
 
 			if (Character)
 			{
-				Character->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
+				//Character->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
 			}
 		}
 	}

@@ -22,10 +22,10 @@ public:
 	FName CharacterName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class APokeCharacter> CharacterClass;
+	UPaperFlipbook* CharacterSprite;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPaperFlipbook* CharacterSprite;
+	UTexture* CharacterProfile;
 };
 
 USTRUCT(BlueprintType)

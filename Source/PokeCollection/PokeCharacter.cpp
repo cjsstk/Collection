@@ -4,12 +4,23 @@
 #include "PokeCharacter.h"
 
 #include "InBattleCharacterPanel.h"
+#include "CMS.h"
 
 #include "DrawDebugHelpers.h"
 
-APokeCharacter::APokeCharacter()
+void APokeCharacter::Init(characterKey InCharacterKey)
 {
-	RootComponent->SetWorldRotation(FRotator(0, 90, 0));
+	if (InCharacterKey == INVALID_CHARACTERKEY)
+	{
+		return;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
+	if (ensure(CharacterInfo))
+	{
+		CharacterName = CharacterInfo->CharacterName;
+		CharacterProfileImage = CharacterInfo->CharacterProfile;
+	}
 }
 
 void APokeCharacter::Attack(APokeCharacter* TargetCharacter)

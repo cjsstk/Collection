@@ -83,7 +83,7 @@ void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)
 
 	CurrentWidget->RemoveFromViewport();
 
-	if (CurrentWidget->GetPrevWidget())
+	if (CurrentWidget->GetPrevWidget() && !CurrentWidget->GetPrevWidget()->IsInViewport())
 	{
 		CurrentWidget->GetPrevWidget()->AddToViewport();
 		CurrentWidget->GetPrevWidget()->OnOpen();
