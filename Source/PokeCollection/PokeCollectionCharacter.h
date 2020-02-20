@@ -24,6 +24,9 @@ public:
 	void SetCurrentSelectedStageNum(int32 NewSelectedStageNum) { CurrentSelectedStageNum = FMath::Clamp(NewSelectedStageNum, 1, MaxOpenedStageNum); }
 	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
 
+	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
+
+	const TArray<class APokeCharacter*>& GetHaveCharacters() const { return HaveCharacters; }
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 
 	int32 GetBerryAmount() const { return BerryAmount; }
@@ -44,6 +47,8 @@ private:
 	int32 NextCharacterID = 0;
 	int32 CurrentSelectedStageNum = 1;
 	int32 MaxOpenedStageNum = 2;
+
+	int32 MaxHaveCharactersNum = 100;
 
 	UPROPERTY(Transient)
 	TArray<class APokeCharacter*> HaveCharacters;

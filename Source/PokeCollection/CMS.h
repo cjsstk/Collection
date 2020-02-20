@@ -25,7 +25,7 @@ public:
 	UPaperFlipbook* CharacterSprite;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture* CharacterProfile;
+	UTexture2D* CharacterProfile;
 };
 
 USTRUCT(BlueprintType)

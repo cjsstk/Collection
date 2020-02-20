@@ -60,6 +60,8 @@ public:
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
 	int32 GetCharacterID() const { return CharacterID; }
 
+	int32 GetCharacterKey() const { return CharacterKey; }
+
 	void SetJoinedPartyNum(int32 InPartyNum) { JoinedPartyNum = InPartyNum; }
 	int32 GetJoinedPartyNum() const { return JoinedPartyNum; }
 
@@ -80,7 +82,7 @@ private:
 	FName CharacterName;
 
 	UPROPERTY(Transient)
-	class UTexture* CharacterProfileImage = nullptr;
+	class UTexture2D* CharacterProfileImage = nullptr;
 
 
 	/**

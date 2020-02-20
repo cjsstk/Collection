@@ -17,6 +17,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
+	void OpenInGameCharacterBoxWidget();
 	void OpenInGameAdventureWidget();
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 
@@ -25,6 +26,7 @@ public:
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
+	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,6 +35,9 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameMainWidget> InGameMainWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameCharacterBoxWidget> InGameCharacterBoxWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
@@ -45,6 +50,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameCharacterBoxWidget* InGameCharacterBoxWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;

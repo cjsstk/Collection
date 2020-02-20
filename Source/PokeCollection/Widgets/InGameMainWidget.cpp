@@ -63,13 +63,13 @@ void UInGameMainWidget::NativeConstruct()
 		TempStartButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
 	}
 
-	/*ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	CharacterBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	InventoryButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	SecretBaseButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	WalkButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	MissionButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	DayCareButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);*/
+	//ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	CharacterBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnCharacterBoxButtonClicked);
+	//InventoryButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	//SecretBaseButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	//WalkButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	//MissionButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	//DayCareButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
 	PartyMakeButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnPartyMakeButtonClicked);
 	AdventureButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnAdventureButtonClicked);
 
@@ -104,6 +104,15 @@ void UInGameMainWidget::OnPartyMakeButtonClicked()
 {
 }
 
+void UInGameMainWidget::OnCharacterBoxButtonClicked()
+{
+	APokeCollectionHUD* Hud = GetPokeHud();
+	if (Hud)
+	{
+		Hud->OpenInGameCharacterBoxWidget();
+	}
+}
+
 void UInGameMainWidget::OnAdventureButtonClicked()
 {
 	APokeCollectionHUD* Hud = GetPokeHud();
@@ -111,7 +120,6 @@ void UInGameMainWidget::OnAdventureButtonClicked()
 	{
 		Hud->OpenInGameAdventureWidget();
 	}
-
 }
 
 bool UInGameMainWidget::CheckAllButtonsExist()

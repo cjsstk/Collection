@@ -59,6 +59,9 @@ private:
 	void OnPartyMakeButtonClicked();
 
 	UFUNCTION()
+	void OnCharacterBoxButtonClicked();
+
+	UFUNCTION()
 	void OnAdventureButtonClicked();
 
 	bool CheckAllButtonsExist();

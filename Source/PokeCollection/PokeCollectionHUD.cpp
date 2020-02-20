@@ -5,6 +5,7 @@
 
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
+#include "Widgets/InGameCharacterBoxWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -31,10 +32,22 @@ void APokeCollectionHUD::BeginPlay()
 		}
 	}
 
+	if (InGameCharacterBoxWidgetClass.Get())
+	{
+		InGameCharacterBoxWidget = CreateWidget<UInGameCharacterBoxWidget>(GetWorld(), InGameCharacterBoxWidgetClass, FName("InGameCharacterBoxWidget"));
+		if (ensure(InGameCharacterBoxWidget))
+		{
+			InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
+		}
+	}
+
 	if (InGameAdventureWidgetClass.Get())
 	{
 		InGameAdventureWidget = CreateWidget<UInGameAdventureWidget>(GetWorld(), InGameAdventureWidgetClass, FName("InGameAdventureWidget"));
-		InGameAdventureWidget->SetPrevWidget(InGameMainWidget);
+		if (ensure(InGameAdventureWidget))
+		{
+			InGameAdventureWidget->SetPrevWidget(InGameMainWidget);
+		}
 	}
 
 	if (BattleStageInfoPopUpClass.Get())
@@ -46,6 +59,20 @@ void APokeCollectionHUD::BeginPlay()
 void APokeCollectionHUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+}
+
+void APokeCollectionHUD::OpenInGameCharacterBoxWidget()
+{
+	if (ensure(InGameMainWidget))
+	{
+		InGameMainWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameCharacterBoxWidget))
+	{
+		InGameCharacterBoxWidget->AddToViewport();
+		InGameCharacterBoxWidget->OnOpen();
+	}
 }
 
 void APokeCollectionHUD::OpenInGameAdventureWidget()
