@@ -15,6 +15,8 @@ void APokeCharacter::Init(characterKey InCharacterKey)
 		return;
 	}
 
+	CharacterKey = InCharacterKey;
+
 	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (ensure(CharacterInfo))
 	{

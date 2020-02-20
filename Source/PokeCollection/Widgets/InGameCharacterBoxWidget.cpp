@@ -10,10 +10,13 @@
 #include "Image.h"
 #include "UniformGridPanel.h"
 #include "UniformGridSlot.h"
+#include "ScrollBox.h"
 
 void UInGameCharacterBoxWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	bIsFocusable = true;
 
 	APokeCollectionCharacter* Player = GetPlayer();
 	if (!ensure(Player))
@@ -40,7 +43,7 @@ void UInGameCharacterBoxWidget::NativeConstruct()
 		UUniformGridSlot* GridSlot = CharacterGridPanel->AddChildToUniformGrid(CharacterSlot, Index / ColumnNum, Index % ColumnNum);
 		if (GridSlot)
 		{
-			//GridSlot->SetHorizontalAlignment(HAlign_Fill);
+			GridSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
 			//GridSlot->SetVerticalAlignment(VAlign_Fill);
 		}
 	}
@@ -50,6 +53,8 @@ void UInGameCharacterBoxWidget::NativeConstruct()
 void UInGameCharacterBoxWidget::OnOpen()
 {
 	Super::OnOpen();
+
+	SetFocus();
 
 	APokeCollectionCharacter* Player = GetPlayer();
 	if (!ensure(Player))
@@ -67,32 +72,41 @@ void UInGameCharacterBoxWidget::OnOpen()
 		return;
 	}
 
-	CharacterGridPanel->ClearChildren();
-
 	const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
-	for (int32 Index = 0; Index < HaveCharacters.Num(); ++Index)
+	const int32 SlotNum = CharacterGridPanel->GetChildrenCount();
+
+	for (int32 Index = 0; Index < SlotNum; Index++)
 	{
-		UCharacterBoxSlot* CharacterSlot = CreateWidget<UCharacterBoxSlot>(GetWorld(), CharacterBoxSlotClass.Get());
-		if (!ensure(CharacterSlot))
+		UCharacterBoxSlot* Slot = Cast<UCharacterBoxSlot>(CharacterGridPanel->GetChildAt(Index));
+		if (Slot)
 		{
-			continue;
+			if (HaveCharacters.IsValidIndex(Index))
+			{
+				characterKey CharacterKey = (HaveCharacters[Index])->GetCharacterKey();
+				const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+				if (!CharacterInfo)
+				{
+					continue;
+				}
+
+				Slot->SetProfileImage(CharacterInfo->CharacterProfile);
+				Slot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
+			else
+			{
+				if ((Index / ColumnNum) > ((HaveCharacters.Num() - 1) / ColumnNum))
+				{
+					Slot->SetVisibility(ESlateVisibility::Collapsed);
+				}
+				else
+				{
+					Slot->SetVisibility(ESlateVisibility::Hidden);
+				}
+			}
 		}
 
-		characterKey CharacterKey = (HaveCharacters[Index])->GetCharacterKey();
-		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
-		if (!CharacterInfo)
-		{
-			continue;
-		}
-
-		CharacterSlot->SetProfileImage(CharacterInfo->CharacterProfile);
-
-		UUniformGridSlot* GridSlot = CharacterGridPanel->AddChildToUniformGrid(CharacterSlot, Index / ColumnNum, Index % ColumnNum);
-		if (GridSlot)
-		{
-			GridSlot->SetHorizontalAlignment(HAlign_Fill);
-		}
 	}
+
 }
 
 void UCharacterBoxSlot::SetProfileImage(UTexture2D* InProfileTexture)

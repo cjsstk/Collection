@@ -44,6 +44,9 @@ private:
 	class UImage* BackgroundImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
+	class UScrollBox* CharacterScrollBox = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
 	class UUniformGridPanel* CharacterGridPanel = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
