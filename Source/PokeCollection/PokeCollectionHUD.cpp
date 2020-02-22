@@ -6,6 +6,7 @@
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
+#include "Widgets/InGameProfileWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -29,6 +30,16 @@ void APokeCollectionHUD::BeginPlay()
 		if (ensure(InGameMainWidget))
 		{
 			InGameMainWidget->AddToViewport();
+		}
+	}
+
+	if (InGameProfileWidgetClass.Get())
+	{
+		InGameProfileWidget = CreateWidget<UInGameProfileWidget>(GetWorld(), InGameProfileWidgetClass, FName("InGameProfileWidget"));
+		if (ensure(InGameProfileWidget) && InGameMainWidget)
+		{
+			InGameProfileWidget->SetPrevWidget(InGameMainWidget);
+			InGameMainWidget->SetPrevWidget(InGameProfileWidget);
 		}
 	}
 
@@ -89,6 +100,10 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 		InGameAdventureWidget->AddToViewport();
 		InGameAdventureWidget->OnOpen();
 	}
+}
+
+void APokeCollectionHUD::OpenInGameProfileWidget()
+{
 }
 
 void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey)

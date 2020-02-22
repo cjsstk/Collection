@@ -21,6 +21,11 @@ public:
 
 	void InitHaveCharacters();
 
+	FName GetPlayerNickName() const { return PlayerNickName; }
+	int32 GetPlayerLevel() const { return PlayerLevel; }
+	int32 GetPlayerCurrentExp() const { return PlayerCurrentExp; }
+	int32 GetPlayerMaxExp() const { return PlayerMaxExp; }
+
 	void SetCurrentSelectedStageNum(int32 NewSelectedStageNum) { CurrentSelectedStageNum = FMath::Clamp(NewSelectedStageNum, 1, MaxOpenedStageNum); }
 	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
 
@@ -40,6 +45,15 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;
+
+	/** 
+	 * Player Info
+	 */
+	UPROPERTY()
+	FName PlayerNickName = FName("Moong");
+	int32 PlayerLevel = 1;
+	int32 PlayerCurrentExp = 0;
+	int32 PlayerMaxExp = 1000;
 
 	/*
 	 * 

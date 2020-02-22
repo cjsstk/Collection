@@ -19,11 +19,13 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 public:
 	void OpenInGameCharacterBoxWidget();
 	void OpenInGameAdventureWidget();
+	void OpenInGameProfileWidget();
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
+	class UInGameProfileWidget* GetInGameProfileWidget() const { return InGameProfileWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
@@ -35,6 +37,9 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameMainWidget> InGameMainWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameProfileWidget> InGameProfileWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameCharacterBoxWidget> InGameCharacterBoxWidgetClass;
@@ -50,6 +55,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameProfileWidget* InGameProfileWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameCharacterBoxWidget* InGameCharacterBoxWidget = nullptr;
