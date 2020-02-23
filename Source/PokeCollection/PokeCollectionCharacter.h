@@ -26,6 +26,9 @@ public:
 	int32 GetPlayerCurrentExp() const { return PlayerCurrentExp; }
 	int32 GetPlayerMaxExp() const { return PlayerMaxExp; }
 
+	void SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey);
+	battleStageKey GetCurrentSelectedBattleStageKey() const { return CurrentSelectedBattleStageKey; }
+
 	void SetCurrentSelectedStageNum(int32 NewSelectedStageNum) { CurrentSelectedStageNum = FMath::Clamp(NewSelectedStageNum, 1, MaxOpenedStageNum); }
 	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
 
@@ -59,6 +62,7 @@ private:
 	 * 
 	 */
 	int32 NextCharacterID = 0;
+	battleStageKey CurrentSelectedBattleStageKey = 0;
 	int32 CurrentSelectedStageNum = 1;
 	int32 MaxOpenedStageNum = 2;
 

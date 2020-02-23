@@ -15,7 +15,7 @@ class POKECOLLECTION_API UInGameWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	virtual void OnOpen() {};
+	virtual void OnOpen();
 
 	UFUNCTION()
 	virtual void OnBack();

@@ -50,9 +50,15 @@ public:
 	UFUNCTION()
 	void OnBackgroundClicked();
 
+	UFUNCTION()
+	void OnStartBattleClicked();
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BackgroundButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* CancelButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* StartBattleButton = nullptr;

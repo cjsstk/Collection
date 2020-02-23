@@ -24,6 +24,19 @@ void UInGameWidget::NativeConstruct()
 	}
 }
 
+void UInGameWidget::OnOpen() 
+{
+	APokeCollectionHUD* Hud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (ensure(Hud))
+	{
+		UInGameTopStatusBar* TopStatusBar = Hud->GetInGameTopStatusBar();
+		if (ensure(TopStatusBar))
+		{
+			TopStatusBar->OnBackButtonClicked.AddUniqueDynamic(this, &UInGameWidget::OnBack);
+		}
+	}
+}
+
 void UInGameWidget::OnBack()
 {
 	if (!IsInViewport())
@@ -35,6 +48,12 @@ void UInGameWidget::OnBack()
 	if (Hud)
 	{
 		Hud->OnBackButtonClicked(this);
+
+		UInGameTopStatusBar* TopStatusBar = Hud->GetInGameTopStatusBar();
+		if (ensure(TopStatusBar))
+		{
+			TopStatusBar->OnBackButtonClicked.RemoveDynamic(this, &UInGameWidget::OnBack);
+		}
 	}
 
 }

@@ -12,6 +12,13 @@
 #include "PokeCollectionGameMode.h"
 #include "CMS.h"
 
+static TAutoConsoleVariable<int32> CVarShowInViewportWidgetsDebug
+(
+	TEXT("poke.showInViewportWidgetsDebug"),
+	0, 
+	TEXT("1: Enable debug, 0: Disable debug")
+);
+
 //////////////////////////////////////////////////////////////////////////
 // APokeCollectionCharacter
 
@@ -41,6 +48,16 @@ void APokeCollectionCharacter::InitHaveCharacters()
 
 		HaveCharacters.AddUnique(PokeCharacter);
 	}
+}
+
+void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey)
+{
+	if (InBattleStageKey == INVALID_BATTLESTAGEKEY)
+	{
+		return;
+	}
+
+	CurrentSelectedBattleStageKey = InBattleStageKey;
 }
 
 const TMap<int32, class APokeCharacter*> APokeCollectionCharacter::GetPartyCharacters(int32 InPartyNum) const

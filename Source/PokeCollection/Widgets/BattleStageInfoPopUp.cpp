@@ -49,6 +49,14 @@ void UBattleStageInfoPopUp::NativeConstruct()
 	{
 		BackgroundButton->OnClicked.AddUniqueDynamic(this, &UBattleStageInfoPopUp::OnBackgroundClicked);
 	}
+	if (CancelButton)
+	{
+		CancelButton->OnClicked.AddUniqueDynamic(this, &UBattleStageInfoPopUp::OnBackgroundClicked);
+	}
+	if (StartBattleButton)
+	{
+		StartBattleButton->OnClicked.AddUniqueDynamic(this, &UBattleStageInfoPopUp::OnStartBattleClicked);
+	}
 }
 
 void UBattleStageInfoPopUp::InitInfo(battleStageKey InBattleStageKey)
@@ -73,4 +81,9 @@ void UBattleStageInfoPopUp::InitInfo(battleStageKey InBattleStageKey)
 void UBattleStageInfoPopUp::OnBackgroundClicked()
 {
 	this->RemoveFromViewport();
+}
+
+void UBattleStageInfoPopUp::OnStartBattleClicked()
+{
+
 }
