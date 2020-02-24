@@ -7,11 +7,20 @@
 #include "InGameMakePartyWidget.generated.h"
 
 /**
- * 
+ * Party making widget
  */
 UCLASS()
 class POKECOLLECTION_API UInGameMakePartyWidget : public UInGameWidget
 {
 	GENERATED_BODY()
 	
+public:
+	void SetJustBeforeBattle(bool bNewJustBeforeBattle) { bJustBeforeBattle = bNewJustBeforeBattle; }
+
+
+private:
+
+
+	bool bJustBeforeBattle = false;
+
 };

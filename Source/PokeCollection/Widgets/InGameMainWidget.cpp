@@ -121,6 +121,11 @@ void UInGameMainWidget::OnStartButtonClicked()
 
 void UInGameMainWidget::OnPartyMakeButtonClicked()
 {
+	APokeCollectionHUD* Hud = GetPokeHud();
+	if (Hud)
+	{
+		Hud->OpenInGameMakePartyWidget(false);
+	}
 }
 
 void UInGameMainWidget::OnCharacterBoxButtonClicked()

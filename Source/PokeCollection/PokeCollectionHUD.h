@@ -20,6 +20,7 @@ public:
 	void OpenInGameCharacterBoxWidget();
 	void OpenInGameAdventureWidget();
 	void OpenInGameProfileWidget();
+	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
@@ -28,6 +29,7 @@ public:
 	class UInGameProfileWidget* GetInGameProfileWidget() const { return InGameProfileWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
+	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
 
 protected:
@@ -51,6 +53,9 @@ private:
 	TSubclassOf<class UInGameTopStatusBar> InGameTopStatusBarClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameMakePartyWidget> InGameMakePartyWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UBattleStageInfoPopUp> BattleStageInfoPopUpClass;
 
 	UPROPERTY(Transient)
@@ -67,6 +72,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameTopStatusBar* InGameTopStatusBar = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameMakePartyWidget* InGameMakePartyWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UBattleStageInfoPopUp* BattleStageInfoPopUp = nullptr;

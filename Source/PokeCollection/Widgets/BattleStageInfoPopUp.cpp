@@ -85,5 +85,16 @@ void UBattleStageInfoPopUp::OnBackgroundClicked()
 
 void UBattleStageInfoPopUp::OnStartBattleClicked()
 {
+	this->RemoveFromViewport();
 
+	if (!GetOwningPlayer())
+	{
+		return;
+	}
+
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (PokeHud)
+	{
+		PokeHud->OpenInGameMakePartyWidget(true);
+	}
 }

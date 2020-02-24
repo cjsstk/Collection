@@ -7,6 +7,7 @@
 #include "Widgets/BattleStageInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameProfileWidget.h"
+#include "Widgets/InGameMakePartyWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -61,6 +62,15 @@ void APokeCollectionHUD::BeginPlay()
 		}
 	}
 
+	if (InGameMakePartyWidgetClass.Get())
+	{
+		InGameMakePartyWidget = CreateWidget<UInGameMakePartyWidget>(GetWorld(), InGameMakePartyWidgetClass, FName("InGameMakePartyWidget"));
+		if (ensure(InGameMakePartyWidget))
+		{
+			InGameMakePartyWidget->SetPrevWidget(InGameMainWidget);
+		}
+	}
+
 	if (BattleStageInfoPopUpClass.Get())
 	{
 		BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
@@ -104,6 +114,31 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 
 void APokeCollectionHUD::OpenInGameProfileWidget()
 {
+}
+
+void APokeCollectionHUD::OpenInGameMakePartyWidget(bool bJustBeforeBattle)
+{
+	if (bJustBeforeBattle)
+	{
+		if (ensure(InGameAdventureWidget))
+		{
+			InGameAdventureWidget->RemoveFromViewport();
+			InGameMakePartyWidget->SetPrevWidget(InGameAdventureWidget);
+		}
+	}
+	else
+	{
+		if (ensure(InGameMainWidget))
+		{
+			InGameMainWidget->RemoveFromViewport();
+			InGameMakePartyWidget->SetPrevWidget(InGameMainWidget);
+		}
+	}
+
+	InGameMakePartyWidget->AddToViewport();
+	InGameMakePartyWidget->SetJustBeforeBattle(bJustBeforeBattle);
+	InGameMakePartyWidget->OnOpen();
+
 }
 
 void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey)
