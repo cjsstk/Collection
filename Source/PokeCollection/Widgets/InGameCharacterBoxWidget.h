@@ -23,6 +23,8 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* ProfileImage = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SelectCharacterButton = nullptr;
 };
 
 

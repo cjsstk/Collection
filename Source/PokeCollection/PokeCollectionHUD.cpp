@@ -6,6 +6,7 @@
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
+#include "Widgets/InGameCharacterInfoWidget.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
 
@@ -57,6 +58,15 @@ void APokeCollectionHUD::BeginPlay()
 		if (ensure(InGameCharacterBoxWidget))
 		{
 			InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
+		}
+	}
+
+	if (InGameCharacterInfoWidgetClass.Get())
+	{
+		InGameCharacterInfoWidget = CreateWidget<UInGameCharacterInfoWidget>(GetWorld(), InGameCharacterInfoWidgetClass, FName("InGameCharacterBoxWidget"));
+		if (ensure(InGameCharacterInfoWidget))
+		{
+			InGameCharacterInfoWidget->SetPrevWidget(InGameCharacterBoxWidget);
 		}
 	}
 
@@ -117,10 +127,6 @@ void APokeCollectionHUD::OpenInGameAdventureWidget()
 		InGameAdventureWidget->AddToViewport();
 		InGameAdventureWidget->OnOpen();
 	}
-}
-
-void APokeCollectionHUD::OpenInGameProfileWidget()
-{
 }
 
 void APokeCollectionHUD::OpenInGameMakePartyWidget(bool bJustBeforeBattle)

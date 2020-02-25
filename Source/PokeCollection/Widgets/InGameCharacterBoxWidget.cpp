@@ -71,7 +71,7 @@ void UInGameCharacterBoxWidget::OnOpen()
 	{
 		return;
 	}
-
+	
 	const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
 	const int32 SlotNum = CharacterGridPanel->GetChildrenCount();
 

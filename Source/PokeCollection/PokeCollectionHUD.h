@@ -19,7 +19,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 public:
 	void OpenInGameCharacterBoxWidget();
 	void OpenInGameAdventureWidget();
-	void OpenInGameProfileWidget();
+	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 
@@ -31,7 +31,7 @@ public:
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
-
+	class UInGameCharacterInfoWidget* GetInGameCharacterInfoWidget() const { return InGameCharacterInfoWidget; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
@@ -45,6 +45,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameCharacterBoxWidget> InGameCharacterBoxWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameCharacterInfoWidget> InGameCharacterInfoWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
@@ -66,6 +69,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameCharacterBoxWidget* InGameCharacterBoxWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameCharacterInfoWidget* InGameCharacterInfoWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;
