@@ -12,13 +12,6 @@
 #include "PokeCollectionGameMode.h"
 #include "CMS.h"
 
-static TAutoConsoleVariable<int32> CVarShowInViewportWidgetsDebug
-(
-	TEXT("poke.showInViewportWidgetsDebug"),
-	0, 
-	TEXT("1: Enable debug, 0: Disable debug")
-);
-
 //////////////////////////////////////////////////////////////////////////
 // APokeCollectionCharacter
 
@@ -101,9 +94,6 @@ void APokeCollectionCharacter::BeginPlay()
 		{
 			continue;
 		}
-
-		// Temp add party
-		FirstParty.Add(0, NextCharacterID);
 
 		Character->SetCharacterID(NextCharacterID);
 		++NextCharacterID;

@@ -53,6 +53,5 @@ private:
 	TSubclassOf<UCharacterBoxSlot> CharacterBoxSlotClass;
 
 	int32 ColumnNum = 7;
-	int32 RowNum = 0;
 
 };

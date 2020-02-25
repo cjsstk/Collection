@@ -20,7 +20,6 @@ public:
 
 private:
 
-
 	bool bJustBeforeBattle = false;
 
 };

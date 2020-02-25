@@ -75,7 +75,7 @@ private:
 	 * Character Party
 	 */
 	// Key: SlotNum, Value: ID
-	UPROPERTY(Transient)
+	UPROPERTY(Transient, EditDefaultsOnly)
 	//TArray<int32> FirstParty;
 	TMap<int32, int32> FirstParty;
 

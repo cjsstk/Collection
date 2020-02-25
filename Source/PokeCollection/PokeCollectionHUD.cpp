@@ -12,6 +12,13 @@
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
 
+static TAutoConsoleVariable<int32> CVarShowInViewportWidgetsDebug
+(
+	TEXT("poke.showInViewportWidgetsDebug"),
+	0,
+	TEXT("1: Enable debug, 0: Disable debug")
+);
+
 void APokeCollectionHUD::BeginPlay()
 {
 	Super::BeginPlay();
