@@ -63,7 +63,7 @@ void APokeCollectionHUD::BeginPlay()
 
 	if (InGameCharacterInfoWidgetClass.Get())
 	{
-		InGameCharacterInfoWidget = CreateWidget<UInGameCharacterInfoWidget>(GetWorld(), InGameCharacterInfoWidgetClass, FName("InGameCharacterBoxWidget"));
+		InGameCharacterInfoWidget = CreateWidget<UInGameCharacterInfoWidget>(GetWorld(), InGameCharacterInfoWidgetClass, FName("InGameCharacterInfoWidget"));
 		if (ensure(InGameCharacterInfoWidget))
 		{
 			InGameCharacterInfoWidget->SetPrevWidget(InGameCharacterBoxWidget);

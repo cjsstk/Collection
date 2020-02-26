@@ -68,6 +68,10 @@ public:
 	void SetJoinedSlotNum(int32 InSlotNum) { JoinedSlotNum = InSlotNum; }
 	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
 
+	FName GetCharacterName() const { return CharacterName; }
+	class UTexture2D* GetCharacterProfileImage() const { return CharacterProfileImage; }
+	class UTexture2D* GetCharacterImage() const { return CharacterImage; }
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -84,6 +88,8 @@ private:
 	UPROPERTY(Transient)
 	class UTexture2D* CharacterProfileImage = nullptr;
 
+	UPROPERTY(Transient)
+	class UTexture2D* CharacterImage = nullptr;
 
 	/**
 	 * Stats

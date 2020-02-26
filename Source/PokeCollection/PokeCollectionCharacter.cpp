@@ -68,6 +68,19 @@ const TMap<int32, class APokeCharacter*> APokeCollectionCharacter::GetPartyChara
 	return FoundPartyCharacters;
 }
 
+APokeCharacter* APokeCollectionCharacter::GetCharacterByID(int32 InCharacterID) const
+{
+	for (APokeCharacter* Character : HaveCharacters)
+	{
+		if (Character && Character->GetCharacterID() == InCharacterID)
+		{
+			return Character;
+		}
+	}
+
+	return nullptr;
+}
+
 void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();

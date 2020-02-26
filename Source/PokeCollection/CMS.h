@@ -26,6 +26,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* CharacterProfile;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* CharacterImage;
+
 };
 
 USTRUCT(BlueprintType)

@@ -22,6 +22,7 @@ void APokeCharacter::Init(characterKey InCharacterKey)
 	{
 		CharacterName = CharacterInfo->CharacterName;
 		CharacterProfileImage = CharacterInfo->CharacterProfile;
+		CharacterImage = CharacterInfo->CharacterImage;
 	}
 }
 

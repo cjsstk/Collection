@@ -36,6 +36,7 @@ public:
 
 	const TArray<class APokeCharacter*>& GetHaveCharacters() const { return HaveCharacters; }
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
+	class APokeCharacter* GetCharacterByID(int32 InCharacterID) const;
 
 	int32 GetBerryAmount() const { return BerryAmount; }
 	int32 GetMoneyAmount() const { return MoneyAmount; }

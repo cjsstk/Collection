@@ -90,14 +90,14 @@ void UInGameCharacterBoxWidget::OnOpen()
 					continue;
 				}
 
-				characterKey CharacterKey = CurrentCharacter->GetCharacterKey();
-				const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
-				if (!CharacterInfo)
-				{
-					continue;
-				}
+				//characterKey CharacterKey = CurrentCharacter->GetCharacterKey();
+				//const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+				//if (!CharacterInfo)
+				//{
+				//	continue;
+				//}
 
-				CharacterSlot->SetProfileImage(CharacterInfo->CharacterProfile);
+				CharacterSlot->SetProfileImage(CurrentCharacter->GetCharacterProfileImage());
 				CharacterSlot->SetCharacterID(CurrentCharacter->GetCharacterID());
 				CharacterSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}

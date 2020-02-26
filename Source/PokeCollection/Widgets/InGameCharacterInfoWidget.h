@@ -15,9 +15,17 @@ class POKECOLLECTION_API UInGameCharacterInfoWidget : public UInGameWidget
 	GENERATED_BODY()
 	
 public:
-	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
+	virtual void OnOpen() override;
 
+	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
+	
 private:
+	UPROPERTY(meta = (BindWidget))
+	class UImage* CharacterImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* CharacterName = nullptr;
+
 	int32 SelectedCharacterID = 0;
 
 };
