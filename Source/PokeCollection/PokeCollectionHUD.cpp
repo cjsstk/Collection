@@ -113,6 +113,21 @@ void APokeCollectionHUD::OpenInGameCharacterBoxWidget()
 	}
 }
 
+void APokeCollectionHUD::OpenInGameCharacterInfoWidget(int32 InCharacterID)
+{
+	if (ensure(InGameCharacterBoxWidget))
+	{
+		InGameCharacterBoxWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameCharacterInfoWidget))
+	{
+		InGameCharacterInfoWidget->AddToViewport();
+		InGameCharacterInfoWidget->SetSelectedCharacterID(InCharacterID);
+		InGameCharacterInfoWidget->OnOpen();
+	}
+}
+
 void APokeCollectionHUD::OpenInGameAdventureWidget()
 {
 	//UWidgetLayoutLibrary::RemoveAllWidgets(GetWorld());

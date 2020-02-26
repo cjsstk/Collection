@@ -18,6 +18,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 	
 public:
 	void OpenInGameCharacterBoxWidget();
+	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
 	void OpenInGameAdventureWidget();
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);

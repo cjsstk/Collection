@@ -5,8 +5,10 @@
 
 #include "CMS.h"
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 #include "PokeCharacter.h"
 
+#include "Button.h"
 #include "Image.h"
 #include "UniformGridPanel.h"
 #include "UniformGridSlot.h"
@@ -77,36 +79,62 @@ void UInGameCharacterBoxWidget::OnOpen()
 
 	for (int32 Index = 0; Index < SlotNum; Index++)
 	{
-		UCharacterBoxSlot* Slot = Cast<UCharacterBoxSlot>(CharacterGridPanel->GetChildAt(Index));
-		if (Slot)
+		UCharacterBoxSlot* CharacterSlot = Cast<UCharacterBoxSlot>(CharacterGridPanel->GetChildAt(Index));
+		if (CharacterSlot)
 		{
 			if (HaveCharacters.IsValidIndex(Index))
 			{
-				characterKey CharacterKey = (HaveCharacters[Index])->GetCharacterKey();
+				APokeCharacter* CurrentCharacter = HaveCharacters[Index];
+				if (!ensure(CurrentCharacter))
+				{
+					continue;
+				}
+
+				characterKey CharacterKey = CurrentCharacter->GetCharacterKey();
 				const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
 				if (!CharacterInfo)
 				{
 					continue;
 				}
 
-				Slot->SetProfileImage(CharacterInfo->CharacterProfile);
-				Slot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				CharacterSlot->SetProfileImage(CharacterInfo->CharacterProfile);
+				CharacterSlot->SetCharacterID(CurrentCharacter->GetCharacterID());
+				CharacterSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
 			{
 				if ((Index / ColumnNum) > ((HaveCharacters.Num() - 1) / ColumnNum))
 				{
-					Slot->SetVisibility(ESlateVisibility::Collapsed);
+					CharacterSlot->SetVisibility(ESlateVisibility::Collapsed);
 				}
 				else
 				{
-					Slot->SetVisibility(ESlateVisibility::Hidden);
+					CharacterSlot->SetVisibility(ESlateVisibility::Hidden);
 				}
 			}
 		}
 
 	}
 
+}
+
+void UCharacterBoxSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (SelectCharacterButton)
+	{
+		SelectCharacterButton->OnClicked.AddUniqueDynamic(this, &UCharacterBoxSlot::OnSelectCharacterButtonClicked);
+	}
+}
+
+void UCharacterBoxSlot::OnSelectCharacterButtonClicked()
+{
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (PokeHud)
+	{
+		PokeHud->OpenInGameCharacterInfoWidget(CharacterID);
+	}
 }
 
 void UCharacterBoxSlot::SetProfileImage(UTexture2D* InProfileTexture)
@@ -117,4 +145,9 @@ void UCharacterBoxSlot::SetProfileImage(UTexture2D* InProfileTexture)
 	}
 
 	ProfileImage->SetBrushFromTexture(InProfileTexture);
+}
+
+void UCharacterBoxSlot::SetCharacterID(int32 InCharacterID)
+{
+	CharacterID = InCharacterID;
 }

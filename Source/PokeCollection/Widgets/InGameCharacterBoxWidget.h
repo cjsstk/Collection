@@ -13,8 +13,13 @@ class POKECOLLECTION_API UCharacterBoxSlot : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetProfileImage(UTexture2D* InProfileTexture);
+	virtual void NativeConstruct() override;
 
+	UFUNCTION()
+	void OnSelectCharacterButtonClicked();
+
+	void SetProfileImage(UTexture2D* InProfileTexture);
+	void SetCharacterID(int32 InCharacterID);
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -25,6 +30,8 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SelectCharacterButton = nullptr;
+
+	int32 CharacterID = 0;
 };
 
 

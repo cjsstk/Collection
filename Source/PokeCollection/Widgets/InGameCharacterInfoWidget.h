@@ -15,9 +15,9 @@ class POKECOLLECTION_API UInGameCharacterInfoWidget : public UInGameWidget
 	GENERATED_BODY()
 	
 public:
-
+	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
 
 private:
-
+	int32 SelectedCharacterID = 0;
 
 };
