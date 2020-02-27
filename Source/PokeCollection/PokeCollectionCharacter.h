@@ -7,6 +7,12 @@
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.generated.h"
 
+enum class EPlayerMode
+{
+	BattleMode,
+	MakePartyMode,
+};
+
 
 /**
  * 플레이어 클래스
@@ -20,6 +26,7 @@ public:
 	APokeCollectionCharacter();
 
 	void InitHaveCharacters();
+	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
 	FName GetPlayerNickName() const { return PlayerNickName; }
 	int32 GetPlayerLevel() const { return PlayerLevel; }
@@ -76,9 +83,8 @@ private:
 	 * Character Party
 	 */
 	// Key: SlotNum, Value: ID
-	UPROPERTY(Transient, EditDefaultsOnly)
-	//TArray<int32> FirstParty;
-	TMap<int32, int32> FirstParty;
+	//UPROPERTY(Transient, EditDefaultsOnly)
+	//TMap<int32, int32> FirstParty;
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> SavedCharacterKeys;

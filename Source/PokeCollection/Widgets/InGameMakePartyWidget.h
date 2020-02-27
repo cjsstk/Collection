@@ -15,10 +15,23 @@ class POKECOLLECTION_API UInGameMakePartyWidget : public UInGameWidget
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeConstruct() override;
+
+	virtual void OnOpen() override;
+
+	void RefreshSlots();
+
+	UFUNCTION()
+	void OnDecisionButtonClicked();
+
 	void SetJustBeforeBattle(bool bNewJustBeforeBattle) { bJustBeforeBattle = bNewJustBeforeBattle; }
 
-
 private:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* DecisionButton = nullptr;
+
+	UPROPERTY(Transient)
+	TArray<class AMakePartyCharacterPanel*> CharacterSlots;
 
 	bool bJustBeforeBattle = false;
 

@@ -65,12 +65,13 @@ public:
 	void SetJoinedPartyNum(int32 InPartyNum) { JoinedPartyNum = InPartyNum; }
 	int32 GetJoinedPartyNum() const { return JoinedPartyNum; }
 
-	void SetJoinedSlotNum(int32 InSlotNum) { JoinedSlotNum = InSlotNum; }
+	void SetJoinedSlotNum(int32 InSlotNum) { if (InSlotNum > 9) { ensure(0); return; } JoinedSlotNum = InSlotNum; }
 	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
 
-	FName GetCharacterName() const { return CharacterName; }
-	class UTexture2D* GetCharacterProfileImage() const { return CharacterProfileImage; }
-	class UTexture2D* GetCharacterImage() const { return CharacterImage; }
+	FName GetCharacterName() const;
+	class UTexture2D* GetCharacterProfileImage() const;
+	class UTexture2D* GetCharacterImage() const;
+	class UPaperFlipbook* GetCharacterFlipbook() const;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
@@ -82,14 +83,14 @@ private:
 	/** 
 	 * Base info
 	 */
-	UPROPERTY(Transient)
+	/*UPROPERTY(Transient)
 	FName CharacterName;
 
 	UPROPERTY(Transient)
 	class UTexture2D* CharacterProfileImage = nullptr;
 
 	UPROPERTY(Transient)
-	class UTexture2D* CharacterImage = nullptr;
+	class UTexture2D* CharacterImage = nullptr;*/
 
 	/**
 	 * Stats

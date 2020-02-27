@@ -20,9 +20,9 @@ void APokeCharacter::Init(characterKey InCharacterKey)
 	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (ensure(CharacterInfo))
 	{
-		CharacterName = CharacterInfo->CharacterName;
-		CharacterProfileImage = CharacterInfo->CharacterProfile;
-		CharacterImage = CharacterInfo->CharacterImage;
+		//CharacterName = CharacterInfo->CharacterName;
+		//CharacterProfileImage = CharacterInfo->CharacterProfile;
+		//CharacterImage = CharacterInfo->CharacterImage;
 	}
 }
 
@@ -47,6 +47,74 @@ void APokeCharacter::AddDebugString(const FString& InDebugString, bool bAddNewLi
 	{
 		DebugString += TEXT("\n");
 	}
+}
+
+FName APokeCharacter::GetCharacterName() const
+{ 
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return FName("InvalidKey");
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return FName("InvalidCMS");
+	}
+
+	return CharacterInfo->CharacterName;
+}
+
+UTexture2D* APokeCharacter::GetCharacterProfileImage() const
+{ 
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return nullptr;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return nullptr;
+	}
+
+	return CharacterInfo->CharacterProfile;
+}
+
+UTexture2D* APokeCharacter::GetCharacterImage() const
+{
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return nullptr;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return nullptr;
+	}
+
+	return CharacterInfo->CharacterImage;
+}
+
+UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const
+{
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return nullptr;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return nullptr;
+	}
+
+	return CharacterInfo->CharacterSprite;
 }
 
 void APokeCharacter::Tick(float DeltaSeconds)

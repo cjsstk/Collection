@@ -24,6 +24,8 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 
 void APokeCollectionCharacter::InitHaveCharacters()
 {
+	NextCharacterID = 0;
+
 	for (characterKey Key : SavedCharacterKeys)
 	{
 		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(Key);
@@ -37,9 +39,26 @@ void APokeCollectionCharacter::InitHaveCharacters()
 		if (PokeCharacter)
 		{
 			PokeCharacter->Init(Key);
+			PokeCharacter->SetCharacterID(NextCharacterID);
+			++NextCharacterID;
 		}
 
 		HaveCharacters.AddUnique(PokeCharacter);
+	}
+}
+
+void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
+{
+	switch (NewPlayerMode)
+	{
+	case EPlayerMode::BattleMode:
+		CameraComponent->SetRelativeRotation(FRotator(0, 0, 0));
+		break;
+	case EPlayerMode::MakePartyMode:
+		CameraComponent->SetRelativeRotation(FRotator(0, 180, 0));
+		break;
+	default:
+		break;
 	}
 }
 
@@ -85,33 +104,14 @@ void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/** Temp Init HaveCharacters */
 	InitHaveCharacters();
 
-	/*if (ensure(TempCharacter.Get()))
+	// Temp slot setting
+	for (int32 i = 1; i < 5; i++)
 	{
-		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>(TempCharacter.Get());
-		if (PokeCharacter)
-		{
-			PokeCharacter->SetJoinedPartyNum(1);
-			PokeCharacter->SetJoinedSlotNum(1);
-			HaveCharacters.AddUnique(PokeCharacter);
-		}
-	}*/
-	//
-
-	NextCharacterID = 0;
-	for (APokeCharacter* Character : HaveCharacters)
-	{
-		if (!ensure(Character))
-		{
-			continue;
-		}
-
-		Character->SetCharacterID(NextCharacterID);
-		++NextCharacterID;
+		HaveCharacters[i]->SetJoinedPartyNum(1);
+		HaveCharacters[i]->SetJoinedSlotNum(i);
 	}
-
 }
 
 void APokeCollectionCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
