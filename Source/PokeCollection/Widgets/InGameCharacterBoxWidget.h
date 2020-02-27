@@ -21,6 +21,8 @@ public:
 	void SetProfileImage(UTexture2D* InProfileTexture);
 	void SetCharacterID(int32 InCharacterID);
 
+	void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackgroundImage = nullptr;
@@ -32,6 +34,8 @@ private:
 	class UButton* SelectCharacterButton = nullptr;
 
 	int32 CharacterID = 0;
+
+	bool bIsMakingParty = false;
 };
 
 
@@ -48,6 +52,8 @@ public:
 
 	virtual void OnOpen() override;
 
+	void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackgroundImage = nullptr;
@@ -62,5 +68,6 @@ private:
 	TSubclassOf<UCharacterBoxSlot> CharacterBoxSlotClass;
 
 	int32 ColumnNum = 7;
-
+	
+	bool bIsMakingParty = false;
 };

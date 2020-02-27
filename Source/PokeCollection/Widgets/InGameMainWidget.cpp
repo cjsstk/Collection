@@ -133,7 +133,7 @@ void UInGameMainWidget::OnCharacterBoxButtonClicked()
 	APokeCollectionHUD* Hud = GetPokeHud();
 	if (Hud)
 	{
-		Hud->OpenInGameCharacterBoxWidget();
+		Hud->OpenInGameCharacterBoxWidget(false);
 	}
 }
 

@@ -109,8 +109,8 @@ void APokeCollectionCharacter::BeginPlay()
 	// Temp slot setting
 	for (int32 i = 1; i < 5; i++)
 	{
-		HaveCharacters[i]->SetJoinedPartyNum(1);
-		HaveCharacters[i]->SetJoinedSlotNum(i);
+		HaveCharacters[i * 2]->SetJoinedPartyNum(1);
+		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
 	}
 }
 

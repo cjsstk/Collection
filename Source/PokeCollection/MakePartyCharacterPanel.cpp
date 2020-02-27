@@ -7,6 +7,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "PaperFlipbookComponent.h"
 
+#include "PokePlayerController.h"
+#include "PokeCollectionHUD.h"
+
 AMakePartyCharacterPanel::AMakePartyCharacterPanel()
 {
 	//PrimaryActorTick.bCanEverTick = true;
@@ -26,6 +29,26 @@ AMakePartyCharacterPanel::AMakePartyCharacterPanel()
 void AMakePartyCharacterPanel::SetFlipbook(UPaperFlipbook* NewFlipbook)
 {
 	FlipbookComponent->SetFlipbook(NewFlipbook);
+}
+
+void AMakePartyCharacterPanel::NotifyActorOnReleased(FKey PressedButton)
+{
+	UE_LOG(LogTemp, Log, TEXT("NotifyActorOnReleased"));
+}
+
+void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Type FingerIndex)
+{
+	UE_LOG(LogTemp, Log, TEXT("NotifyActorOnInputTouchEnd"));
+
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
+		if (PokeHud)
+		{
+			PokeHud->OpenInGameCharacterBoxWidget(true);
+		}
+	}
 }
 
 void AMakePartyCharacterPanel::BeginPlay()

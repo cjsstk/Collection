@@ -17,6 +17,9 @@ public:
 	int32 GetSlotNum() const { return SlotNum; }
 	void SetFlipbook(class UPaperFlipbook* NewFlipbook);
 
+	virtual void NotifyActorOnReleased(FKey PressedButton = EKeys::LeftMouseButton) override;
+	virtual void NotifyActorOnInputTouchEnd(const ETouchIndex::Type FingerIndex = ETouchIndex::Type::Touch1) override;
+
 protected:
 	virtual void BeginPlay() override;
 	//virtual void Tick(float DeltaTime) override;

@@ -99,15 +99,28 @@ void APokeCollectionHUD::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
-void APokeCollectionHUD::OpenInGameCharacterBoxWidget()
+void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsMakingParty)
 {
-	if (ensure(InGameMainWidget))
+	if (bIsMakingParty)
 	{
-		InGameMainWidget->RemoveFromViewport();
+		if (ensure(InGameMakePartyWidget))
+		{
+			InGameMakePartyWidget->RemoveFromViewport();
+			InGameCharacterBoxWidget->SetPrevWidget(InGameMakePartyWidget);
+		}
+	}
+	else
+	{
+		if (ensure(InGameMainWidget))
+		{
+			InGameMainWidget->RemoveFromViewport();
+			InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
+		}
 	}
 
 	if (ensure(InGameCharacterBoxWidget))
 	{
+		InGameCharacterBoxWidget->SetIsMakingParty(bIsMakingParty);
 		InGameCharacterBoxWidget->AddToViewport();
 		InGameCharacterBoxWidget->OnOpen();
 	}

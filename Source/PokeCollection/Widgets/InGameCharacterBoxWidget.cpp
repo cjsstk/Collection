@@ -75,6 +75,14 @@ void UInGameCharacterBoxWidget::OnOpen()
 	}
 	
 	const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
+
+	// Exclude joined party character
+	TArray<APokeCharacter*> ShowCharacters = HaveCharacters;
+	if (bIsMakingParty)
+	{
+		ShowCharacters.RemoveAll([](const APokeCharacter* PC) { return PC->GetJoinedPartyNum() > 0; });
+	}
+
 	const int32 SlotNum = CharacterGridPanel->GetChildrenCount();
 
 	for (int32 Index = 0; Index < SlotNum; Index++)
@@ -82,28 +90,22 @@ void UInGameCharacterBoxWidget::OnOpen()
 		UCharacterBoxSlot* CharacterSlot = Cast<UCharacterBoxSlot>(CharacterGridPanel->GetChildAt(Index));
 		if (CharacterSlot)
 		{
-			if (HaveCharacters.IsValidIndex(Index))
+			if (ShowCharacters.IsValidIndex(Index))
 			{
-				APokeCharacter* CurrentCharacter = HaveCharacters[Index];
+				APokeCharacter* CurrentCharacter = ShowCharacters[Index];
 				if (!ensure(CurrentCharacter))
 				{
 					continue;
 				}
 
-				//characterKey CharacterKey = CurrentCharacter->GetCharacterKey();
-				//const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
-				//if (!CharacterInfo)
-				//{
-				//	continue;
-				//}
-
 				CharacterSlot->SetProfileImage(CurrentCharacter->GetCharacterProfileImage());
 				CharacterSlot->SetCharacterID(CurrentCharacter->GetCharacterID());
+				CharacterSlot->SetIsMakingParty(bIsMakingParty);
 				CharacterSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
 			{
-				if ((Index / ColumnNum) > ((HaveCharacters.Num() - 1) / ColumnNum))
+				if ((Index / ColumnNum) > ((ShowCharacters.Num() - 1) / ColumnNum))
 				{
 					CharacterSlot->SetVisibility(ESlateVisibility::Collapsed);
 				}
