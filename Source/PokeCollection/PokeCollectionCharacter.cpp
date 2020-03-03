@@ -100,6 +100,15 @@ APokeCharacter* APokeCollectionCharacter::GetCharacterByID(int32 InCharacterID) 
 	return nullptr;
 }
 
+APokeCharacter* APokeCollectionCharacter::GetCharacterBySlotNum(int32 InPartyNum, int32 InSlotNum) const
+{
+	return *HaveCharacters.FindByPredicate([InPartyNum, InSlotNum](APokeCharacter* PC)
+		{ 
+			return (PC->GetJoinedPartyNum() == InPartyNum && PC->GetJoinedSlotNum() == InSlotNum);
+		}
+	);
+}
+
 void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();

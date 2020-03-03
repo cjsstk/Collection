@@ -133,7 +133,42 @@ void UCharacterBoxSlot::NativeConstruct()
 void UCharacterBoxSlot::OnSelectCharacterButtonClicked()
 {
 	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
-	if (PokeHud)
+	if (!ensure(PokeHud))
+	{
+		return;
+	}
+
+	if (bIsMakingParty)
+	{
+		APokeCollectionCharacter* Player = GetOwningPlayerPawn() ? Cast<APokeCollectionCharacter>(GetOwningPlayerPawn()) : nullptr;
+		if (ensure(Player))
+		{
+			UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
+			if (!CharacterBoxWidget)
+			{
+				return;
+			}
+
+			int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
+
+			APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(1, SelectedSlotNum);
+			if (CurrentCharacter)
+			{
+				CurrentCharacter->SetJoinedSlotNum(0);
+				CurrentCharacter->SetJoinedPartyNum(0);
+			}
+
+			APokeCharacter* NextCharacter = Player->GetCharacterByID(CharacterID);
+			if (NextCharacter)
+			{
+				NextCharacter->SetJoinedSlotNum(SelectedSlotNum);
+				NextCharacter->SetJoinedPartyNum(1);
+			}
+
+			PokeHud->OnBackButtonClicked(CharacterBoxWidget);
+		}
+	}
+	else
 	{
 		PokeHud->OpenInGameCharacterInfoWidget(CharacterID);
 	}

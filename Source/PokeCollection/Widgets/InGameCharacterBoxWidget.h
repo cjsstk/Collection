@@ -46,13 +46,16 @@ UCLASS()
 class POKECOLLECTION_API UInGameCharacterBoxWidget : public UInGameWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual void NativeConstruct() override;
 
 	virtual void OnOpen() override;
 
 	void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+
+	void SetSelectedPartySlotNum(int32 InSelectedPartySlotNum) { SelectedPartySlotNum = InSelectedPartySlotNum; }
+	int32 GetSelectedPartySlotNum() const { return SelectedPartySlotNum; }
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -69,5 +72,8 @@ private:
 
 	int32 ColumnNum = 7;
 	
+	/** Make party */
 	bool bIsMakingParty = false;
+
+	int32 SelectedPartySlotNum = 0;
 };

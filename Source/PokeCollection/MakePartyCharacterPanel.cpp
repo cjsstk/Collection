@@ -9,6 +9,7 @@
 
 #include "PokePlayerController.h"
 #include "PokeCollectionHUD.h"
+#include "Widgets/InGameCharacterBoxWidget.h"
 
 AMakePartyCharacterPanel::AMakePartyCharacterPanel()
 {
@@ -47,6 +48,11 @@ void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Typ
 		if (PokeHud)
 		{
 			PokeHud->OpenInGameCharacterBoxWidget(true);
+			UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
+			if (CharacterBoxWidget)
+			{
+				CharacterBoxWidget->SetSelectedPartySlotNum(SlotNum);
+			}
 		}
 	}
 }
