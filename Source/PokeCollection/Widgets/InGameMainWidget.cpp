@@ -77,11 +77,6 @@ void UInGameMainWidget::NativeConstruct()
 		ensure(0);
 	}
 
-	if (TempStartButton)
-	{
-		TempStartButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	}
-
 	//ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
 	CharacterBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnCharacterBoxButtonClicked);
 	//InventoryButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
@@ -97,26 +92,6 @@ void UInGameMainWidget::NativeConstruct()
 void UInGameMainWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
-
-	if (TempStartButton)
-	{
-		TempStartButton->OnClicked.RemoveDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
-	}
-}
-
-void UInGameMainWidget::OnStartButtonClicked()
-{
-	UWorld* World = GetWorld();
-	if (World)
-	{
-		APokeCollectionGameMode* GameMode = Cast<APokeCollectionGameMode>(GetWorld()->GetAuthGameMode());
-		if (GameMode)
-		{
-			GameMode->BattleStart();
-		}
-	}
-
-	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInGameMainWidget::OnPartyMakeButtonClicked()

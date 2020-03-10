@@ -3,6 +3,7 @@
 
 #include "BattleManager.h"
 
+#include "BattleCharacterActor.h"
 #include "CMS.h"
 #include "InBattleCharacterPanel.h"
 #include "PokeCollectionCharacter.h"
@@ -37,14 +38,17 @@ void ABattleManager::BattleStart()
 		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(1, false);
 		if (ensure(BattlePanel) && ensure(CharacterInfo))
 		{
-			APokeCharacter* Character = World->SpawnActor<APokeCharacter>(APokeCharacter::StaticClass(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
+			ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(ABattleCharacterActor::StaticClass(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
 
-			if (Character)
+			if (BattleCharacter)
 			{
-				//Character->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
+				BattleCharacter->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
+				CreatedBattleCharacters.Add(BattleCharacter);
 			}
 		}
 	}
+
+	OnBattleStart.Broadcast();
 }
 
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)

@@ -24,6 +24,9 @@ public:
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 
+	UFUNCTION()
+	void OnStartBattle();
+
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }

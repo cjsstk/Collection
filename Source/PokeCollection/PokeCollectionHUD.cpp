@@ -9,6 +9,9 @@
 #include "Widgets/InGameCharacterInfoWidget.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
+#include "PokeCollectionCharacter.h"
+#include "PokeCore.h"
+#include "BattleManager.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -91,6 +94,12 @@ void APokeCollectionHUD::BeginPlay()
 	if (BattleStageInfoPopUpClass.Get())
 	{
 		BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
+	}
+
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (BattleManager)
+	{
+		BattleManager->OnBattleStart.AddUniqueDynamic(this, &APokeCollectionHUD::OnStartBattle);
 	}
 }
 
@@ -188,6 +197,19 @@ void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKe
 	{
 		BattleStageInfoPopUp->AddToViewport(2);
 		BattleStageInfoPopUp->InitInfo(InBattleStageKey);
+	}
+}
+
+void APokeCollectionHUD::OnStartBattle()
+{
+	if (InGameMakePartyWidget)
+	{
+		InGameMakePartyWidget->RemoveFromViewport();
+	}
+
+	if (InGameTopStatusBar)
+	{
+		InGameMakePartyWidget->RemoveFromViewport();
 	}
 }
 

@@ -21,27 +21,3 @@ APokeCollectionGameMode::APokeCollectionGameMode()
 
 	CMS::LoadCMS();
 }
-
-void APokeCollectionGameMode::BattleStart()
-{
-	if (ensure(BattleManager))
-	{
-		BattleManager->BattleStart();
-	}
-}
-
-void APokeCollectionGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
-{
-	Super::InitGame(MapName, Options, ErrorMessage);
-}
-
-void APokeCollectionGameMode::BeginPlay()
-{
-	Super::BeginPlay();
-
-	BattleManager = Cast<ABattleManager>(UGameplayStatics::GetActorOfClass(this, ABattleManager::StaticClass()));
-	if (!BattleManager)
-	{
-		ensure(0);
-	}
-}

@@ -53,9 +53,6 @@ protected:
 
 private:
 	UFUNCTION()
-	void OnStartButtonClicked();
-
-	UFUNCTION()
 	void OnPartyMakeButtonClicked();
 
 	UFUNCTION()
@@ -65,11 +62,6 @@ private:
 	void OnAdventureButtonClicked();
 
 	bool CheckAllButtonsExist();
-
-	/** */
-	UPROPERTY(meta = (BindWidget))
-	class UButton* TempStartButton = nullptr;
-	//
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Background = nullptr;

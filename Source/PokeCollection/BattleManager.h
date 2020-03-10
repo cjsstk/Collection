@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "BattleManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleStart);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleEnd);
+
 /**
  * 
  */
@@ -21,6 +24,9 @@ public:
 
 	class AInBattleCharacterPanel* GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel);
 
+	FOnBattleStart OnBattleStart;
+	FOnBattleEnd OnBattleEnd;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
@@ -31,6 +37,9 @@ private:
 
 	UPROPERTY(Transient)
 	TArray<class AInBattleCharacterPanel*> BattleCharacterPanels;
+
+	UPROPERTY(Transient)
+	TArray<class ABattleCharacterActor*> CreatedBattleCharacters;
 
 	UPROPERTY(Transient)
 	class APokeCollectionCharacter* PlayerCharacter;

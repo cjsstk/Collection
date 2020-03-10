@@ -14,16 +14,6 @@ class APokeCollectionGameMode : public AGameModeBase
 public:
 	APokeCollectionGameMode();
 
-	void BattleStart();
-
-protected:
-	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
-	virtual void BeginPlay() override;
-
-private:
-	UPROPERTY(Transient)
-	class ABattleManager* BattleManager = nullptr;
-
 };
 
 

@@ -7,6 +7,8 @@
 #include "PanelWidget.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "BattleManager.h"
+#include "PokeCore.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
 #include "MakePartyCharacterPanel.h"
@@ -81,14 +83,18 @@ void UInGameMakePartyWidget::RefreshSlots()
 
 void UInGameMakePartyWidget::OnDecisionButtonClicked()
 {
-	if (bJustBeforeBattle)
+	APokeCollectionHUD* PokeHud = GetPokeHud();
+	if (ensure(PokeHud))
 	{
-
-	}
-	else
-	{
-		APokeCollectionHUD* PokeHud = GetPokeHud();
-		if (PokeHud)
+		if (bJustBeforeBattle)
+		{
+			ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+			if (ensure(BattleManager))
+			{
+				BattleManager->BattleStart();
+			}
+		}
+		else
 		{
 			PokeHud->OnBackButtonClicked(this);
 		}
