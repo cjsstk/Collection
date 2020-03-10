@@ -3,8 +3,8 @@
 
 #include "PokeCore.h"
 
-#include "PokeGameInstance.h"
 #include "BattleManager.h"
+#include "PokeCollectionGameMode.h"
 
 #include "Engine/World.h"
 
@@ -15,11 +15,11 @@ ABattleManager* PokeCore::GetBattleManager(const UWorld* WorldContext)
 		return nullptr;
 	}
 
-	UPokeGameInstance* PokeInstance = Cast<UPokeGameInstance>(WorldContext->GetGameInstance());
-	if (!ensure(PokeInstance))
+	APokeCollectionGameMode* PokeGameMode = Cast<APokeCollectionGameMode>(WorldContext->GetAuthGameMode());
+	if (!ensure(PokeGameMode))
 	{
 		return nullptr;
 	}
 
-	return PokeInstance->GetBattleManager();
+	return PokeGameMode->GetBattleManager();
 }

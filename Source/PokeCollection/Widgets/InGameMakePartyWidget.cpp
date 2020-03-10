@@ -7,6 +7,8 @@
 #include "PanelWidget.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "BattleManager.h"
+#include "PokeCore.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
 #include "MakePartyCharacterPanel.h"
@@ -83,7 +85,11 @@ void UInGameMakePartyWidget::OnDecisionButtonClicked()
 {
 	if (bJustBeforeBattle)
 	{
-
+		ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+		if (BattleManager)
+		{
+			BattleManager->BattleStart();
+		}
 	}
 	else
 	{

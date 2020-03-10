@@ -97,7 +97,7 @@ void APokeCollectionHUD::BeginPlay()
 	}
 
 	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
-	if (BattleManager)
+	if (ensure(BattleManager))
 	{
 		BattleManager->OnBattleStart.AddUniqueDynamic(this, &APokeCollectionHUD::OnStartBattle);
 	}
@@ -209,7 +209,7 @@ void APokeCollectionHUD::OnStartBattle()
 
 	if (InGameTopStatusBar)
 	{
-		InGameMakePartyWidget->RemoveFromViewport();
+		InGameTopStatusBar->RemoveFromViewport();
 	}
 }
 

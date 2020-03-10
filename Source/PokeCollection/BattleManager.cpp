@@ -24,6 +24,14 @@ void ABattleManager::BattleStart()
 		return;
 	}
 
+	UWorld* World = GetWorld();
+	if (!ensure(World))
+	{
+		return;
+	}
+
+	PlayerCharacter->SetPlayerMode(EPlayerMode::BattleMode);
+
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetPartyCharacters(1);
 
 	for (auto&& PartyMember : CurrentPartyCharacters)
@@ -31,11 +39,10 @@ void ABattleManager::BattleStart()
 		BattleMembers.AddUnique(PartyMember.Value);
 	}
 
-	UWorld* World = GetWorld();
-	if (World)
+	for (APokeCharacter* BattleMember : BattleMembers)
 	{
-		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(1);
-		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(1, false);
+		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(BattleMember->GetCharacterKey());
+		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(BattleMember->GetJoinedSlotNum(), false);
 		if (ensure(BattlePanel) && ensure(CharacterInfo))
 		{
 			ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(ABattleCharacterActor::StaticClass(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
@@ -76,6 +83,10 @@ void ABattleManager::BeginPlay()
 	if (World)
 	{
 		PlayerCharacter = Cast<APokeCollectionCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+		if (!PlayerCharacter)
+		{
+			ensure(0);
+		}
 	}
 
 	TArray<AActor*> FoundPanels;
