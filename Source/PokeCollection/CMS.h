@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* CharacterImage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bRangeAttack = false;
+
 };
 
 USTRUCT(BlueprintType)

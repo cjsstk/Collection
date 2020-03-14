@@ -43,4 +43,7 @@ private:
 
 	UPROPERTY(Transient)
 	class APokeCollectionCharacter* PlayerCharacter;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ABattleCharacterActor> BattleCharacterActorClass;
 };

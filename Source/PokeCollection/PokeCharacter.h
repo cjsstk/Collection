@@ -72,6 +72,7 @@ public:
 	class UTexture2D* GetCharacterProfileImage() const;
 	class UTexture2D* GetCharacterImage() const;
 	class UPaperFlipbook* GetCharacterFlipbook() const;
+	bool IsRangeAttack() const;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;

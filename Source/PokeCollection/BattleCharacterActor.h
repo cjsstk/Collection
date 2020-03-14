@@ -6,16 +6,22 @@
 #include "PaperFlipbookActor.h"
 #include "BattleCharacterActor.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
-class POKECOLLECTION_API ABattleCharacterActor : public APaperFlipbookActor
+class POKECOLLECTION_API ABattleCharacterActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:
 	ABattleCharacterActor();
 
+	class UPaperFlipbookComponent* GetRenderComponent() const { return RenderComponent; }
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	class UBoxComponent* BodyBoxComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	class UPaperFlipbookComponent* RenderComponent;
 
 };

@@ -43,9 +43,9 @@ void ABattleManager::BattleStart()
 	{
 		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(BattleMember->GetCharacterKey());
 		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(BattleMember->GetJoinedSlotNum(), false);
-		if (ensure(BattlePanel) && ensure(CharacterInfo))
+		if (ensure(BattlePanel) && ensure(CharacterInfo) && BattleCharacterActorClass.Get())
 		{
-			ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(ABattleCharacterActor::StaticClass(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
+			ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(BattleCharacterActorClass.Get(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
 
 			if (BattleCharacter)
 			{

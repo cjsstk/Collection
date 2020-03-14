@@ -117,6 +117,23 @@ UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const
 	return CharacterInfo->CharacterSprite;
 }
 
+bool APokeCharacter::IsRangeAttack() const
+{
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return false;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return false;
+	}
+
+	return CharacterInfo->bRangeAttack;
+}
+
 void APokeCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
