@@ -127,11 +127,11 @@ bool UInGameMainWidget::CheckAllButtonsExist()
 
 	bIsExist = bIsExist && ShopButton;
 	bIsExist = bIsExist && CharacterBoxButton;
-	bIsExist = bIsExist && InventoryButton;
-	bIsExist = bIsExist && SecretBaseButton;
-	bIsExist = bIsExist && WalkButton;
-	bIsExist = bIsExist && MissionButton;
-	bIsExist = bIsExist && DayCareButton;
+	//bIsExist = bIsExist && InventoryButton;
+	//bIsExist = bIsExist && SecretBaseButton;
+	//bIsExist = bIsExist && WalkButton;
+	//bIsExist = bIsExist && MissionButton;
+	//bIsExist = bIsExist && DayCareButton;
 	bIsExist = bIsExist && PartyMakeButton;
 	bIsExist = bIsExist && AdventureButton;
 

@@ -37,4 +37,11 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* StardustAmountText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BerryChargingText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* MoneyChargingText = nullptr;
+
 };

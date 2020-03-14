@@ -123,10 +123,35 @@ void APokeCollectionCharacter::BeginPlay()
 	}
 }
 
+void APokeCollectionCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	TickResourceCharge(DeltaSeconds);
+}
+
 void APokeCollectionCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 
 
+}
+
+void APokeCollectionCharacter::TickResourceCharge(float DeltaSeconds)
+{
+	BerryChargingIntervalAgeSeconds += DeltaSeconds;
+	MoneyChargingIntervalAgeSeconds += DeltaSeconds;
+
+	while (BerryChargingIntervalAgeSeconds >= BerryChargingIntervalSeconds)
+	{
+		BerryChargingIntervalAgeSeconds -= BerryChargingIntervalSeconds;
+		BerryAmount += BerryChargingAmount;
+	}
+
+	while (MoneyChargingIntervalAgeSeconds >= MoneyChargingIntervalSeconds)
+	{
+		MoneyChargingIntervalAgeSeconds -= MoneyChargingIntervalSeconds;
+		MoneyAmount += MoneyChargingAmount;
+	}
 }

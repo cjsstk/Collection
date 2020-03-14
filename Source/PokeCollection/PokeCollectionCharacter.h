@@ -49,12 +49,19 @@ public:
 	int32 GetBerryAmount() const { return BerryAmount; }
 	int32 GetMoneyAmount() const { return MoneyAmount; }
 	int32 GetStardustAmount() const { return StardustAmount; }
+	int32 GetBerryChargingAmount() const { return BerryChargingAmount; }
+	int32 GetMoneyChargingAmount() const { return MoneyChargingAmount; }
+	int32 GetBerryChargingIntervalMinutes() const { return BerryChargingIntervalSeconds / 60; }
+	int32 GetMoneyChargingIntervalMinutes() const { return MoneyChargingIntervalSeconds / 60; }
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void TickResourceCharge(float DeltaSeconds);
+
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;
 
@@ -96,5 +103,21 @@ private:
 	int32 BerryAmount = 1000;		// Need for start battle
 	int32 MoneyAmount = 2000;		// Need for buy items..
 	int32 StardustAmount = 3000;	// Charged resource
+
+	float BerryChargingIntervalAgeSeconds = 0.0f;
+	float MoneyChargingIntervalAgeSeconds = 0.0f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float BerryChargingIntervalSeconds = 10.0f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MoneyChargingIntervalSeconds = 10.0f;
+	
+	UPROPERTY(EditDefaultsOnly)
+	int32 BerryChargingAmount = 10;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 MoneyChargingAmount = 10;
+
 };
 

@@ -29,6 +29,10 @@ void UInGameTopStatusBar::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 		const int32 BerryAmount = Player->GetBerryAmount();
 		const int32 MoneyAmount = Player->GetMoneyAmount();
 		const int32 StardustAmount = Player->GetStardustAmount();
+		const int32 BerryChargingAmount = Player->GetBerryChargingAmount();
+		const int32 MoneyChargingAmount = Player->GetMoneyChargingAmount();
+		const int32 BerryChargingIntervalMinutes = Player->GetBerryChargingIntervalMinutes();
+		const int32 MoneyChargingIntervalMinutes = Player->GetMoneyChargingIntervalMinutes();
 
 		if (BerryAmountText)
 		{
@@ -41,6 +45,18 @@ void UInGameTopStatusBar::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 		if (StardustAmountText)
 		{
 			StardustAmountText->SetText(FText::AsNumber(StardustAmount));
+		}
+		if (BerryChargingText)
+		{
+			FString BerryCharging;
+			BerryCharging = "+" + FString::FormatAsNumber(BerryChargingAmount) + "/" + FString::FormatAsNumber(BerryChargingIntervalMinutes) + "m";
+			BerryChargingText->SetText(FText::FromString(BerryCharging));
+		}
+		if (MoneyChargingText)
+		{
+			FString MoneyCharging;
+			MoneyCharging = "+" + FString::FormatAsNumber(MoneyChargingAmount) + "/" + FString::FormatAsNumber(MoneyChargingIntervalMinutes) + "m";
+			MoneyChargingText->SetText(FText::FromString(MoneyCharging));
 		}
 	}
 

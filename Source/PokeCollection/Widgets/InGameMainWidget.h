@@ -66,6 +66,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Background = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UImage* MainCharacter = nullptr;
+
 	/** Down Side Buttons */
 	UPROPERTY(meta = (BindWidget))
 	class UButton* ShopButton = nullptr;
@@ -74,19 +77,22 @@ private:
 	class UButton* CharacterBoxButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* InventoryButton = nullptr;
+	class UButton* PokedexButton = nullptr;
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* SecretBaseButton = nullptr;
+	/*UPROPERTY(meta = (BindWidget))
+	class UButton* InventoryButton = nullptr;*/
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* WalkButton = nullptr;
+	/*UPROPERTY(meta = (BindWidget))
+	class UButton* SecretBaseButton = nullptr;*/
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* MissionButton = nullptr;
+	/*UPROPERTY(meta = (BindWidget))
+	class UButton* WalkButton = nullptr;*/
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* DayCareButton = nullptr;
+	/*UPROPERTY(meta = (BindWidget))
+	class UButton* MissionButton = nullptr;*/
+
+	/*UPROPERTY(meta = (BindWidget))
+	class UButton* DayCareButton = nullptr;*/
 	//
 
 	/** Middle Side Buttons */
