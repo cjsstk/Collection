@@ -55,6 +55,8 @@ void UCharacterBoxWidget::OnOpen()
 
 				BoxSlot->SetContentImage(CurrentCharacter->GetCharacterProfileImage());
 				BoxSlot->SetContentID(EBoxContentType::Character, CurrentCharacter->GetCharacterID());
+				BoxSlot->SetContentName(FText::FromName(CurrentCharacter->GetCharacterName()));
+				BoxSlot->SetContentLevel(CurrentCharacter->GetLevel());
 				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else

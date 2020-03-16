@@ -4,6 +4,7 @@
 #include "InGameBoxWidget.h"
 
 #include "Button.h"
+#include "TextBlock.h"
 #include "Image.h"
 #include "WidgetSwitcher.h"
 #include "UniformGridPanel.h"
@@ -11,6 +12,7 @@
 #include "ScrollBox.h"
 
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 
 void UBoxContentWidget::NativeConstruct()
 {
@@ -119,6 +121,36 @@ void UInGameBoxWidget::OnEquipmentBoxButtonClicked()
 	BoxContents[1]->OnOpen();
 }
 
+void UBoxSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (SelectContentButton)
+	{
+		SelectContentButton->OnClicked.AddUniqueDynamic(this, &UBoxSlot::OnSelectContentButtonClicked);
+	}
+}
+
+void UBoxSlot::OnSelectContentButtonClicked()
+{
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) :nullptr;
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	switch (BoxContentType)
+	{
+	case EBoxContentType::Character:
+		PokeHud->OpenInGameCharacterInfoWidget(ContentID);
+		break;
+	case EBoxContentType::Equipment:
+		break;
+	default:
+		break;
+	}
+}
+
 void UBoxSlot::SetContentImage(UTexture2D* InContentTexture)
 {
 	if (!InContentTexture)
@@ -133,4 +165,20 @@ void UBoxSlot::SetContentID(EBoxContentType InBoxContentType, int32 InContentID)
 {
 	BoxContentType = InBoxContentType;
 	ContentID = InContentID;
+}
+
+void UBoxSlot::SetContentName(const FText& InName)
+{
+	if (NameText)
+	{
+		NameText->SetText(InName);
+	}
+}
+
+void UBoxSlot::SetContentLevel(int32 InLevel)
+{
+	if (LevelText)
+	{
+		LevelText->SetText(FText::AsNumber(InLevel));
+	}
 }

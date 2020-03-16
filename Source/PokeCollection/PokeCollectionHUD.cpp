@@ -79,7 +79,7 @@ void APokeCollectionHUD::BeginPlay()
 		InGameCharacterInfoWidget = CreateWidget<UInGameCharacterInfoWidget>(GetWorld(), InGameCharacterInfoWidgetClass, FName("InGameCharacterInfoWidget"));
 		if (ensure(InGameCharacterInfoWidget))
 		{
-			InGameCharacterInfoWidget->SetPrevWidget(InGameCharacterBoxWidget);
+			InGameCharacterInfoWidget->SetPrevWidget(InGameBoxWidget);
 		}
 	}
 
@@ -161,9 +161,9 @@ void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsMakingParty)
 
 void APokeCollectionHUD::OpenInGameCharacterInfoWidget(int32 InCharacterID)
 {
-	if (ensure(InGameCharacterBoxWidget))
+	if (ensure(InGameBoxWidget))
 	{
-		InGameCharacterBoxWidget->RemoveFromViewport();
+		InGameBoxWidget->RemoveFromViewport();
 	}
 
 	if (ensure(InGameCharacterInfoWidget))
@@ -222,6 +222,11 @@ void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKe
 		BattleStageInfoPopUp->AddToViewport(2);
 		BattleStageInfoPopUp->InitInfo(InBattleStageKey);
 	}
+}
+
+void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
+{
+
 }
 
 void APokeCollectionHUD::OnStartBattle()

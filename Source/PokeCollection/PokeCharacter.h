@@ -68,6 +68,8 @@ public:
 	void SetJoinedSlotNum(int32 InSlotNum) { if (InSlotNum > 9) { ensure(0); return; } JoinedSlotNum = InSlotNum; }
 	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
 
+	int32 GetLevel() const { return Level; }
+
 	FName GetCharacterName() const;
 	class UTexture2D* GetCharacterProfileImage() const;
 	class UTexture2D* GetCharacterImage() const;
@@ -98,6 +100,8 @@ private:
 	 */
 	UPROPERTY()
 	FBaseStats BaseStats;
+
+	int32 Level = 1;
 
 	/** 
 	 * In Battle

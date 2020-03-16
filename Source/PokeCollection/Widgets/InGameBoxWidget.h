@@ -20,14 +20,15 @@ class POKECOLLECTION_API UBoxSlot : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	//virtual void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
-	//UFUNCTION()
-	//void OnSelectContentButtonClicked();
+	UFUNCTION()
+	void OnSelectContentButtonClicked();
 
 	void SetContentImage(UTexture2D* InContentTexture);
 	void SetContentID(EBoxContentType InBoxContentType, int32 InContentID);
-
+	void SetContentName(const FText& InName);
+	void SetContentLevel(int32 InLevel);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -38,6 +39,12 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SelectContentButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* NameText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* LevelText = nullptr;
 
 	int32 ContentID = 0;
 

@@ -24,6 +24,7 @@ public:
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
+	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 
 	UFUNCTION()
 	void OnStartBattle();
@@ -70,6 +71,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UBattleStageInfoPopUp> BattleStageInfoPopUpClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UEquipmentInfoPopUp> EquipmentInfoPopUpClass;
+
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
 
@@ -96,5 +100,8 @@ private:
 
 	UPROPERTY(Transient)
 	class UBattleStageInfoPopUp* BattleStageInfoPopUp = nullptr;
+
+	UPROPERTY(Transient)
+	class UEquipmentInfoPopUp* EquipmentInfoPopUp = nullptr;
 
 };
