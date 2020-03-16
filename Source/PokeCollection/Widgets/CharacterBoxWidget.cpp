@@ -8,6 +8,7 @@
 #include "ScrollBox.h"
 
 #include "PokeCollectionCharacter.h"
+#include "PokeCharacter.h"
 
 void UCharacterBoxWidget::NativeConstruct() 
 {

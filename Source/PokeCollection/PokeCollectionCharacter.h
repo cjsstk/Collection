@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "PokeCharacter.h"
+#include "CMSType.h"
 #include "PokeCollectionCharacter.generated.h"
 
 enum class EPlayerMode
@@ -27,6 +27,7 @@ public:
 	APokeCollectionCharacter();
 
 	void InitHaveCharacters();
+	void InitHaveEquipments();
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
 	FName GetPlayerNickName() const { return PlayerNickName; }
@@ -42,10 +43,12 @@ public:
 
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
 
-	const TArray<class APokeCharacter*>& GetHaveCharacters() const { return HaveCharacters; }
+	const TArray<class APokeCharacter*>& GetHaveCharacters() const;
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 	class APokeCharacter* GetCharacterByID(int32 InCharacterID) const;
 	class APokeCharacter* GetCharacterBySlotNum(int32 InPartyNum, int32 InSlotNum) const;
+
+	const TArray<class UPokeEquipment*>& GetHaveEquipments() const;
 
 	int32 GetBerryAmount() const { return BerryAmount; }
 	int32 GetMoneyAmount() const { return MoneyAmount; }
@@ -75,19 +78,31 @@ private:
 	int32 PlayerCurrentExp = 0;
 	int32 PlayerMaxExp = 1000;
 
-	/*
-	 * 
-	 */
-	int32 NextCharacterID = 0;
 	battleStageKey CurrentSelectedBattleStageKey = 0;
 	int32 CurrentSelectedStageNum = 1;
 	int32 MaxOpenedStageNum = 2;
+
+	/**
+	 * Characters
+	 */
+	int32 NextCharacterID = 0;
 
 	int32 MaxHaveCharactersNum = 100;
 
 	UPROPERTY(Transient)
 	TArray<class APokeCharacter*> HaveCharacters;
 	
+	/** 
+	 * Equipments
+	 */
+	int32 NextEquipmentID = 0;
+
+	int32 MaxHaveEquipmentsNum = 100;
+
+	UPROPERTY(Transient)
+	TArray<class UPokeEquipment*> HaveEquipments;
+
+
 	/** 
 	 * Character Party
 	 */
@@ -97,6 +112,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> SavedCharacterKeys;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<int32> SavedEquipmentKeys;
 
 	/** 
 	 * Resource

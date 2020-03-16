@@ -8,6 +8,7 @@
 #include "ScrollBox.h"
 
 #include "PokeCollectionCharacter.h"
+#include "PokeEquipment.h"
 
 void UEquipmentBoxWidget::NativeConstruct()
 {
@@ -37,7 +38,7 @@ void UEquipmentBoxWidget::OnOpen()
 		return;
 	}
 
-	const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
+	const TArray<UPokeEquipment*>& HaveEquipments = Player->GetHaveEquipments();
 
 	const int32 SlotNum = GridPanel->GetChildrenCount();
 
@@ -46,21 +47,21 @@ void UEquipmentBoxWidget::OnOpen()
 		UBoxSlot* BoxSlot = Cast<UBoxSlot>(GridPanel->GetChildAt(Index));
 		if (BoxSlot)
 		{
-			if (HaveCharacters.IsValidIndex(Index))
+			if (HaveEquipments.IsValidIndex(Index))
 			{
-				APokeCharacter* CurrentCharacter = HaveCharacters[Index];
-				if (!ensure(CurrentCharacter))
+				UPokeEquipment* CurrentEquipment = HaveEquipments[Index];
+				if (!ensure(CurrentEquipment))
 				{
 					continue;
 				}
 
-				//BoxSlot->SetProfileImage(CurrentCharacter->GetCharacterProfileImage());
-				//BoxSlot->SetCharacterID(CurrentCharacter->GetCharacterID());
+				BoxSlot->SetContentImage(CurrentEquipment->GetEquipmentProfileImage());
+				BoxSlot->SetContentID(EBoxContentType::Equipment, CurrentEquipment->GetEquipmentID());
 				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
 			{
-				if ((Index / ColumnNum) > ((HaveCharacters.Num() - 1) / ColumnNum))
+				if ((Index / ColumnNum) > ((HaveEquipments.Num() - 1) / ColumnNum))
 				{
 					BoxSlot->SetVisibility(ESlateVisibility::Collapsed);
 				}

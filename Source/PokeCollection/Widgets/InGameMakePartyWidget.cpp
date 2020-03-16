@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "BattleManager.h"
+#include "PokeCharacter.h"
 #include "PokeCore.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"

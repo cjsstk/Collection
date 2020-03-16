@@ -9,7 +9,9 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
+#include "PokeCharacter.h"
 #include "PokeCollectionGameMode.h"
+#include "PokeEquipment.h"
 #include "CMS.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -47,6 +49,31 @@ void APokeCollectionCharacter::InitHaveCharacters()
 	}
 }
 
+void APokeCollectionCharacter::InitHaveEquipments()
+{
+	NextEquipmentID = 0;
+
+	for (equipmentKey Key : SavedEquipmentKeys)
+	{
+		const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(Key);
+		if (!EquipmentInfo)
+		{
+			ensure(0);
+			continue;
+		}
+
+		UPokeEquipment* PokeEquipment = NewObject<UPokeEquipment>();
+		if (PokeEquipment)
+		{
+			PokeEquipment->Init(Key);
+			PokeEquipment->SetEquipmentID(NextEquipmentID);
+			++NextEquipmentID;
+		}
+
+		HaveEquipments.AddUnique(PokeEquipment);
+	}
+}
+
 void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 {
 	switch (NewPlayerMode)
@@ -73,6 +100,11 @@ void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey I
 	}
 
 	CurrentSelectedBattleStageKey = InBattleStageKey;
+}
+
+const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const 
+{
+	return HaveCharacters; 
 }
 
 const TMap<int32, class APokeCharacter*> APokeCollectionCharacter::GetPartyCharacters(int32 InPartyNum) const
@@ -119,11 +151,17 @@ APokeCharacter* APokeCollectionCharacter::GetCharacterBySlotNum(int32 InPartyNum
 	return *FoundCharacter;
 }
 
+const TArray<class UPokeEquipment*>& APokeCollectionCharacter::GetHaveEquipments() const
+{
+	return HaveEquipments;
+}
+
 void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	InitHaveCharacters();
+	InitHaveEquipments();
 
 	// Temp slot setting
 	for (int32 i = 1; i < 5; i++)

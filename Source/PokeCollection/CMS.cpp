@@ -4,12 +4,20 @@
 #include "CMS.h"
 #include "UObject/ConstructorHelpers.h"
 
+#include "PokeCharacter.h"
+
 void CMS::LoadCMS()
 {
     static ConstructorHelpers::FObjectFinder<UDataTable> CharacterDT(TEXT("/Game/CMS/CharacterInfo"));
     if (ensure(CharacterDT.Succeeded()))
     {
         CharacterDataTable = CharacterDT.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UDataTable> EquipmentDT(TEXT("/Game/CMS/EquipmentInfo"));
+    if (ensure(EquipmentDT.Succeeded()))
+    {
+        EquipmentDataTable = EquipmentDT.Object;
     }
 
     static ConstructorHelpers::FObjectFinder<UDataTable> StageDT(TEXT("/Game/CMS/StageInfo"));
@@ -35,6 +43,18 @@ const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
     FCharacterInfo* CharacterInfo = CharacterDataTable->FindRow<FCharacterInfo>(FName(*(FString::FormatAsNumber(CharacterKey))), FString(""));
 
     return CharacterInfo;
+}
+
+const FEquipmentInfo* CMS::GetEquipmentDataTable(equipmentKey EquipmentKey)
+{
+    if (EquipmentKey == INVALID_EQUIPMENTKEY)
+    {
+        return nullptr;
+    }
+
+    FEquipmentInfo* EquipmentInfo = EquipmentDataTable->FindRow<FEquipmentInfo>(FName(*(FString::FormatAsNumber(EquipmentKey))), FString(""));
+
+    return EquipmentInfo;
 }
 
 const FStageInfo* CMS::GetStageDataTable(int32 StageKey)

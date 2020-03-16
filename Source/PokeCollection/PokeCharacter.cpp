@@ -17,13 +17,13 @@ void APokeCharacter::Init(characterKey InCharacterKey)
 
 	CharacterKey = InCharacterKey;
 
-	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
+	/*const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (ensure(CharacterInfo))
 	{
-		//CharacterName = CharacterInfo->CharacterName;
-		//CharacterProfileImage = CharacterInfo->CharacterProfile;
-		//CharacterImage = CharacterInfo->CharacterImage;
-	}
+		CharacterName = CharacterInfo->CharacterName;
+		CharacterProfileImage = CharacterInfo->CharacterProfile;
+		CharacterImage = CharacterInfo->CharacterImage;
+	}*/
 }
 
 void APokeCharacter::Attack(APokeCharacter* TargetCharacter)
