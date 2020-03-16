@@ -11,6 +11,7 @@ enum class EPlayerMode
 {
 	BattleMode,
 	MakePartyMode,
+	UIMode,
 };
 
 

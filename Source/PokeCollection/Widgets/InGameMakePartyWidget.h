@@ -18,6 +18,7 @@ public:
 	virtual void NativeConstruct() override;
 
 	virtual void OnOpen() override;
+	virtual void OnBack() override;
 
 	void RefreshSlots();
 

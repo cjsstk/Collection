@@ -52,6 +52,19 @@ void UInGameMakePartyWidget::OnOpen()
 	RefreshSlots();
 }
 
+void UInGameMakePartyWidget::OnBack()
+{
+	Super::OnBack();
+
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	Player->SetPlayerMode(EPlayerMode::UIMode);
+}
+
 void UInGameMakePartyWidget::RefreshSlots()
 {
 	APokeCollectionCharacter* Player = GetPlayer();
@@ -97,6 +110,7 @@ void UInGameMakePartyWidget::OnDecisionButtonClicked()
 		if (PokeHud)
 		{
 			PokeHud->OnBackButtonClicked(this);
+			OnBack();
 		}
 	}
 }

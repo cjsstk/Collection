@@ -17,6 +17,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
+	void OpenInGameBoxWidget();
 	void OpenInGameCharacterBoxWidget(bool bIsMakingParty);
 	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
 	void OpenInGameAdventureWidget();
@@ -31,6 +32,7 @@ public:
 
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
 	class UInGameProfileWidget* GetInGameProfileWidget() const { return InGameProfileWidget; }
+	class UInGameBoxWidget* GetInGameBoxWidget() const { return InGameBoxWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
@@ -46,6 +48,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameProfileWidget> InGameProfileWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameBoxWidget> InGameBoxWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameCharacterBoxWidget> InGameCharacterBoxWidgetClass;
@@ -70,6 +75,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameProfileWidget* InGameProfileWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameBoxWidget* InGameBoxWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameCharacterBoxWidget* InGameCharacterBoxWidget = nullptr;

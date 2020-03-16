@@ -57,6 +57,9 @@ void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 	case EPlayerMode::MakePartyMode:
 		CameraComponent->SetRelativeRotation(FRotator(0, 180, 0));
 		break;
+	case EPlayerMode::UIMode:
+		CameraComponent->SetRelativeRotation(FRotator(0, 90, 0));
+		break;
 	default:
 		break;
 	}
@@ -102,11 +105,18 @@ APokeCharacter* APokeCollectionCharacter::GetCharacterByID(int32 InCharacterID) 
 
 APokeCharacter* APokeCollectionCharacter::GetCharacterBySlotNum(int32 InPartyNum, int32 InSlotNum) const
 {
-	return *HaveCharacters.FindByPredicate([InPartyNum, InSlotNum](APokeCharacter* PC)
-		{ 
+	APokeCharacter* const* FoundCharacter = HaveCharacters.FindByPredicate([InPartyNum, InSlotNum](APokeCharacter* PC)
+		{
 			return (PC->GetJoinedPartyNum() == InPartyNum && PC->GetJoinedSlotNum() == InSlotNum);
 		}
 	);
+
+	if (!FoundCharacter)
+	{
+		return nullptr;
+	}
+
+	return *FoundCharacter;
 }
 
 void APokeCollectionCharacter::BeginPlay()

@@ -4,6 +4,7 @@
 #include "PokeCollectionHUD.h"
 
 #include "Widgets/InGameAdventureWidget.h"
+#include "Widgets/InGameBoxWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
@@ -52,6 +53,15 @@ void APokeCollectionHUD::BeginPlay()
 		{
 			InGameProfileWidget->SetPrevWidget(InGameMainWidget);
 			InGameMainWidget->SetPrevWidget(InGameProfileWidget);
+		}
+	}
+
+	if (InGameBoxWidgetClass.Get())
+	{
+		InGameBoxWidget = CreateWidget<UInGameBoxWidget>(GetWorld(), InGameBoxWidgetClass, FName("InGameBoxWidget"));
+		if (ensure(InGameBoxWidget))
+		{
+			InGameBoxWidget->SetPrevWidget(InGameMainWidget);
 		}
 	}
 
@@ -106,6 +116,20 @@ void APokeCollectionHUD::BeginPlay()
 void APokeCollectionHUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+}
+
+void APokeCollectionHUD::OpenInGameBoxWidget()
+{
+	if (ensure(InGameMainWidget))
+	{
+		InGameMainWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameBoxWidget))
+	{
+		InGameBoxWidget->AddToViewport();
+		InGameBoxWidget->OnOpen();
+	}
 }
 
 void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsMakingParty)
@@ -232,4 +256,5 @@ void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)
 	{
 
 	}
+
 }
