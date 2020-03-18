@@ -15,6 +15,12 @@ class POKECOLLECTION_API UEquipmentInfoPopUp : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeConstruct() override;
+
+	void InitInfo(int32 InEquipmentID);
+
+	UFUNCTION()
+	void OnBackgroundClicked();
 
 private:
 	UPROPERTY(meta = (BindWidget))

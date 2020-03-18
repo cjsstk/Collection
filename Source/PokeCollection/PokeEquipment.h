@@ -27,6 +27,7 @@ public:
 
 	FName GetEquipmentName() const;
 	class UTexture2D* GetEquipmentProfileImage() const;
+	FText GetEquipmentDesc() const;
 
 private:
 	int32 EquipmentID = 0;

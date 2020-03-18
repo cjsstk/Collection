@@ -156,6 +156,19 @@ const TArray<class UPokeEquipment*>& APokeCollectionCharacter::GetHaveEquipments
 	return HaveEquipments;
 }
 
+class UPokeEquipment* APokeCollectionCharacter::GetEquipmentByID(int32 InEquipmentID) const
+{
+	for (UPokeEquipment* Equipment : HaveEquipments)
+	{
+		if (Equipment && Equipment->GetEquipmentID() == InEquipmentID)
+		{
+			return Equipment;
+		}
+	}
+
+	return nullptr;
+}
+
 void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();

@@ -6,6 +6,7 @@
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/InGameBoxWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
+#include "Widgets/EquipmentInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
 #include "Widgets/InGameProfileWidget.h"
@@ -81,6 +82,11 @@ void APokeCollectionHUD::BeginPlay()
 		{
 			InGameCharacterInfoWidget->SetPrevWidget(InGameBoxWidget);
 		}
+	}
+
+	if (EquipmentInfoPopUpClass.Get())
+	{
+		EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
 	}
 
 	if (InGameAdventureWidgetClass.Get())
@@ -226,7 +232,11 @@ void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKe
 
 void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 {
-
+	if (ensure(EquipmentInfoPopUp))
+	{
+		EquipmentInfoPopUp->AddToViewport(2);
+		EquipmentInfoPopUp->InitInfo(InEquipmentID);
+	}
 }
 
 void APokeCollectionHUD::OnStartBattle()

@@ -49,6 +49,7 @@ public:
 	class APokeCharacter* GetCharacterBySlotNum(int32 InPartyNum, int32 InSlotNum) const;
 
 	const TArray<class UPokeEquipment*>& GetHaveEquipments() const;
+	class UPokeEquipment* GetEquipmentByID(int32 InEquipmentID) const;
 
 	int32 GetBerryAmount() const { return BerryAmount; }
 	int32 GetMoneyAmount() const { return MoneyAmount; }

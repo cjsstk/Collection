@@ -48,3 +48,20 @@ UTexture2D* UPokeEquipment::GetEquipmentProfileImage() const
 
 	return EquipmentInfo->EquipmentProfile;
 }
+
+FText UPokeEquipment::GetEquipmentDesc() const
+{
+	if (EquipmentKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return FText::FromString("InvalidKey");
+	}
+
+	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(EquipmentKey);
+	if (!ensure(EquipmentInfo))
+	{
+		return FText::FromString("InvalidCMS");
+	}
+
+	return EquipmentInfo->EquipmentDesc;
+}

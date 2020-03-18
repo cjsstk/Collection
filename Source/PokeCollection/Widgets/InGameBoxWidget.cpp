@@ -145,6 +145,7 @@ void UBoxSlot::OnSelectContentButtonClicked()
 		PokeHud->OpenInGameCharacterInfoWidget(ContentID);
 		break;
 	case EBoxContentType::Equipment:
+		PokeHud->OpenEquipmentInfoPopUp(ContentID);
 		break;
 	default:
 		break;
