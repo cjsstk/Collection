@@ -47,6 +47,11 @@ void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Typ
 		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
 		if (PokeHud)
 		{
+			if (PokeHud->GetInGameCharacterBoxWidget()->IsInViewport())
+			{
+				return;
+			}
+
 			PokeHud->OpenInGameCharacterBoxWidget(true);
 			UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
 			if (CharacterBoxWidget)

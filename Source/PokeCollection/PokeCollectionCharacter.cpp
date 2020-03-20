@@ -12,6 +12,7 @@
 #include "PokeCharacter.h"
 #include "PokeCollectionGameMode.h"
 #include "PokeEquipment.h"
+#include "PokePlayerController.h"
 #include "CMS.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -76,16 +77,26 @@ void APokeCollectionCharacter::InitHaveEquipments()
 
 void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 {
+	APokePlayerController* PC = Cast<APokePlayerController>(GetController());
+	if (!PC)
+	{
+		return;
+	}
+
 	switch (NewPlayerMode)
 	{
 	case EPlayerMode::BattleMode:
 		CameraComponent->SetRelativeRotation(FRotator(0, 0, 0));
+		PC->SetInputMode(FInputModeGameAndUI());
 		break;
 	case EPlayerMode::MakePartyMode:
 		CameraComponent->SetRelativeRotation(FRotator(0, 180, 0));
+		PC->SetInputMode(FInputModeGameOnly());
 		break;
 	case EPlayerMode::UIMode:
 		CameraComponent->SetRelativeRotation(FRotator(0, 90, 0));
+		PC->SetInputMode(FInputModeUIOnly());
+
 		break;
 	default:
 		break;
