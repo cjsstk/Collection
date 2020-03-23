@@ -6,7 +6,7 @@
 
 class ABattleManager;
 
-extern enum class EType;
+enum class EType;
 
 namespace PokeCore
 {
