@@ -77,7 +77,7 @@ void UInGameMainWidget::NativeConstruct()
 		ensure(0);
 	}
 
-	//ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
+	ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnShopButtonClicked);
 	CharacterBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnCharacterBoxButtonClicked);
 	//InventoryButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
 	//SecretBaseButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
@@ -100,6 +100,15 @@ void UInGameMainWidget::OnPartyMakeButtonClicked()
 	if (Hud)
 	{
 		Hud->OpenInGameMakePartyWidget(false);
+	}
+}
+
+void UInGameMainWidget::OnShopButtonClicked()
+{
+	APokeCollectionHUD* Hud = GetPokeHud();
+	if (Hud)
+	{
+		Hud->OpenInGameShopWidget();
 	}
 }
 

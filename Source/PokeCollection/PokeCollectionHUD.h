@@ -20,6 +20,7 @@ public:
 	void OpenInGameBoxWidget();
 	void OpenInGameCharacterBoxWidget(bool bIsMakingParty);
 	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
+	void OpenInGameShopWidget();
 	void OpenInGameAdventureWidget();
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
@@ -34,11 +35,13 @@ public:
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
 	class UInGameProfileWidget* GetInGameProfileWidget() const { return InGameProfileWidget; }
 	class UInGameBoxWidget* GetInGameBoxWidget() const { return InGameBoxWidget; }
+	class UInGameShopWidget* GetInGameShopWidget() const { return InGameShopWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
 	class UInGameCharacterInfoWidget* GetInGameCharacterInfoWidget() const { return InGameCharacterInfoWidget; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
@@ -58,6 +61,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameCharacterInfoWidget> InGameCharacterInfoWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameShopWidget> InGameShopWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
@@ -88,6 +94,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameCharacterInfoWidget* InGameCharacterInfoWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameShopWidget* InGameShopWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;

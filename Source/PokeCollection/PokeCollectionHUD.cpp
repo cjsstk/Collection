@@ -9,6 +9,7 @@
 #include "Widgets/EquipmentInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
+#include "Widgets/InGameShopWidget.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
 #include "PokeCollectionCharacter.h"
@@ -81,6 +82,15 @@ void APokeCollectionHUD::BeginPlay()
 		if (ensure(InGameCharacterInfoWidget))
 		{
 			InGameCharacterInfoWidget->SetPrevWidget(InGameBoxWidget);
+		}
+	}
+
+	if (InGameShopWidgetClass.Get())
+	{
+		InGameShopWidget = CreateWidget<UInGameShopWidget>(GetWorld(), InGameShopWidgetClass, FName("InGameShopWidget"));
+		if (ensure(InGameShopWidget))
+		{
+			InGameShopWidget->SetPrevWidget(InGameMainWidget);
 		}
 	}
 
@@ -177,6 +187,20 @@ void APokeCollectionHUD::OpenInGameCharacterInfoWidget(int32 InCharacterID)
 		InGameCharacterInfoWidget->AddToViewport();
 		InGameCharacterInfoWidget->SetSelectedCharacterID(InCharacterID);
 		InGameCharacterInfoWidget->OnOpen();
+	}
+}
+
+void APokeCollectionHUD::OpenInGameShopWidget()
+{
+	if (ensure(InGameMainWidget))
+	{
+		InGameMainWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameShopWidget))
+	{
+		InGameShopWidget->AddToViewport();
+		InGameShopWidget->OnOpen();
 	}
 }
 

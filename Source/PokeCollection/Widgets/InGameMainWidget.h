@@ -56,6 +56,9 @@ private:
 	void OnPartyMakeButtonClicked();
 
 	UFUNCTION()
+	void OnShopButtonClicked();
+
+	UFUNCTION()
 	void OnCharacterBoxButtonClicked();
 
 	UFUNCTION()
