@@ -16,10 +16,14 @@ void UInGameShopWidget::NativeConstruct()
 		return;
 	}
 
+	CatergoryMenuScrollBox->ClearChildren();
+
 	if (!ensure(ShopContentsBox))
 	{
 		return;
 	}
+
+	ShopContentsBox->ClearChildren();
 
 	for (int32 ContextIndex = 0; ContextIndex < ShopContentWidgets.Num(); ++ContextIndex)
 	{
@@ -68,4 +72,6 @@ void UShopCategoryButtonWidget::SetCategoryName(const FText& InCategoryName)
 void UShopContentWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	OnOpen();
 }
