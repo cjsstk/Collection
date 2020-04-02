@@ -15,13 +15,14 @@ UCLASS()
 class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 {
 	GENERATED_BODY()
-	
+
 public:
 	void OpenInGameBoxWidget();
 	void OpenInGameCharacterBoxWidget(bool bIsMakingParty);
 	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
 	void OpenInGameShopWidget();
 	void OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType);
+	void OpenEggHatchingWidget(characterKey NewCharacterKey);
 	void OpenInGameAdventureWidget();
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
@@ -29,7 +30,7 @@ public:
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 
 	UFUNCTION()
-	void OnStartBattle();
+		void OnStartBattle();
 
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 
@@ -38,6 +39,7 @@ public:
 	class UInGameBoxWidget* GetInGameBoxWidget() const { return InGameBoxWidget; }
 	class UInGameShopWidget* GetInGameShopWidget() const { return InGameShopWidget; }
 	class UBuyConfirmPopUp* GetBuyConfirmPopUp() const { return BuyConfirmPopUp; }
+	class UEggHatchingWidget* GetEggHatchingWidget() const { return EggHatchingWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
@@ -69,6 +71,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UBuyConfirmPopUp> BuyConfirmPopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UEggHatchingWidget> EggHatchingWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
@@ -106,6 +111,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UBuyConfirmPopUp* BuyConfirmPopUp = nullptr;
+
+	UPROPERTY(Transient)
+	class UEggHatchingWidget* EggHatchingWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;

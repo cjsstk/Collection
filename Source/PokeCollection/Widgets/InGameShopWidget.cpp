@@ -231,8 +231,15 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 		}
 
 		Player->AddNewCharacter(OutCharacterKey);
+
+		APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+		if (ensure(PokeHud))
+		{
+			PokeHud->OpenEggHatchingWidget(OutCharacterKey);
+		}
 	}
 
+	
 }
 
 void UShopSlot::OnBuyItemSlot(int32 InSlotKey)

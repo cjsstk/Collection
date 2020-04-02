@@ -6,6 +6,7 @@
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/InGameBoxWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
+#include "Widgets/EggHatchingWidget.h"
 #include "Widgets/EquipmentInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
@@ -98,6 +99,11 @@ void APokeCollectionHUD::BeginPlay()
 	if (BuyConfirmPopUpClass.Get())
 	{
 		BuyConfirmPopUp = CreateWidget<UBuyConfirmPopUp>(GetWorld(), BuyConfirmPopUpClass, FName("BuyConfirmPopUp"));
+	}
+
+	if (EggHatchingWidgetClass.Get())
+	{
+		EggHatchingWidget = CreateWidget<UEggHatchingWidget>(GetWorld(), EggHatchingWidgetClass, FName("EggHatchingWidget"));
 	}
 
 	if (EquipmentInfoPopUpClass.Get())
@@ -216,6 +222,15 @@ void APokeCollectionHUD::OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSl
 	{
 		BuyConfirmPopUp->InitText(InSlotKey, InSlotType);
 		BuyConfirmPopUp->AddToViewport();
+	}
+}
+
+void APokeCollectionHUD::OpenEggHatchingWidget(characterKey NewCharacterKey)
+{
+	if (ensure(EggHatchingWidget))
+	{
+		EggHatchingWidget->StartHatching(NewCharacterKey);
+		EggHatchingWidget->AddToViewport();
 	}
 }
 
