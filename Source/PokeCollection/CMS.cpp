@@ -20,6 +20,12 @@ void CMS::LoadCMS()
         EquipmentDataTable = EquipmentDT.Object;
     }
 
+    static ConstructorHelpers::FObjectFinder<UDataTable> CharacterShopDT(TEXT("/Game/CMS/CharacterShopInfo"));
+    if (ensure(CharacterShopDT.Succeeded()))
+    {
+        CharacterShopDataTable = CharacterShopDT.Object;
+    }
+
     static ConstructorHelpers::FObjectFinder<UDataTable> StageDT(TEXT("/Game/CMS/StageInfo"));
     if (ensure(StageDT.Succeeded()))
     {
@@ -57,6 +63,18 @@ const FEquipmentInfo* CMS::GetEquipmentDataTable(equipmentKey EquipmentKey)
     return EquipmentInfo;
 }
 
+const FCharacterShopInfo* CMS::GetCharacterShopDataTable(int32 CharShopKey)
+{
+    if (CharShopKey <= 0)
+    {
+        return nullptr;
+    }
+
+    FCharacterShopInfo* CharacterShopInfo = CharacterShopDataTable->FindRow<FCharacterShopInfo>(FName(*(FString::FormatAsNumber(CharShopKey))), FString(""));
+
+    return CharacterShopInfo;
+}
+
 const FStageInfo* CMS::GetStageDataTable(int32 StageKey)
 {
     if (StageKey <= 0)
@@ -84,4 +102,29 @@ const FBattleStageInfo* CMS::GetBattleStageDataTable(battleStageKey BattleStageK
 	FBattleStageInfo* BattleStageInfo = BattleStageDataTable->FindRow<FBattleStageInfo>(FName(*(FString::FormatAsNumber(BattleStageKey))), FString(""));
 
 	return BattleStageInfo;
+}
+
+const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()
+{
+    TArray<FCharacterShopInfo*> OutInfos;
+
+    CharacterShopDataTable->GetAllRows(FString(""), OutInfos);
+ 
+    return OutInfos;
+}
+
+void CMS::GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank)
+{
+    OutArray.Empty();
+
+    TArray<FCharacterInfo*> AllCharacter;
+    CharacterDataTable->GetAllRows(FString(""), AllCharacter);
+ 
+    for (FCharacterInfo* Character : AllCharacter)
+    {
+        if (Character && Character->CharacterRank == InRank)
+        {
+            OutArray.Add(Character);
+        }
+    }
 }

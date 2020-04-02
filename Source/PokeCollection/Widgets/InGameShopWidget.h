@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameMainWidget.h"
-#include "Button.h"
+#include "CMSType.h"
 #include "InGameShopWidget.generated.h"
 
 UCLASS()
@@ -31,10 +31,38 @@ class POKECOLLECTION_API UShopSlot : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	//virtual void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
-protected:
+	void InitSlot(int32 InSlotKey, EShopSlotType InSlotType);
 
+	void SetSlotImage(UTexture2D* InContentTexture);
+	void SetSlotName(const FText& InName);
+	void SetSlotPrice(const FText& InPrice);
+
+	UFUNCTION()
+	void OnSlotSelected();
+
+	UFUNCTION()
+	void OnBuyThisSlot(int32 InSlotKey);
+
+private:
+	void OnBuyCharacterSlot(int32 InSlotKey);
+	void OnBuyItemSlot(int32 InSlotKey);
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SelectButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* SlotImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotNameText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotPriceText = nullptr;
+
+	int32 SlotKey = 0;
+	EShopSlotType SlotType = EShopSlotType::Character;
 };
 
 UCLASS(abstract)

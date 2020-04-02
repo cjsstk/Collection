@@ -31,22 +31,7 @@ void APokeCollectionCharacter::InitHaveCharacters()
 
 	for (characterKey Key : SavedCharacterKeys)
 	{
-		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(Key);
-		if (!CharacterInfo)
-		{
-			ensure(0);
-			continue;
-		}
-
-		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
-		if (PokeCharacter)
-		{
-			PokeCharacter->Init(Key);
-			PokeCharacter->SetCharacterID(NextCharacterID);
-			++NextCharacterID;
-		}
-
-		HaveCharacters.AddUnique(PokeCharacter);
+		AddNewCharacter(Key);
 	}
 }
 
@@ -101,6 +86,28 @@ void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 	default:
 		break;
 	}
+}
+
+void APokeCollectionCharacter::AddNewCharacter(characterKey NewCharacterKey)
+{
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(NewCharacterKey);
+	if (!CharacterInfo)
+	{
+		ensure(0);
+		return;
+	}
+
+	APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
+	if (PokeCharacter)
+	{
+		PokeCharacter->Init(NewCharacterKey);
+		PokeCharacter->SetCharacterID(NextCharacterID);
+		++NextCharacterID;
+	}
+
+	HaveCharacters.AddUnique(PokeCharacter);
+
+	OnAddedNewCharacter.Broadcast();
 }
 
 void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey)

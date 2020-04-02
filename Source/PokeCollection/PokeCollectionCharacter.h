@@ -7,6 +7,9 @@
 #include "CMSType.h"
 #include "PokeCollectionCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAddedNewCharacter);
+
+
 enum class EPlayerMode
 {
 	BattleMode,
@@ -29,6 +32,8 @@ public:
 	void InitHaveCharacters();
 	void InitHaveEquipments();
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
+
+	void AddNewCharacter(characterKey NewCharacterKey);
 
 	FName GetPlayerNickName() const { return PlayerNickName; }
 	int32 GetPlayerLevel() const { return PlayerLevel; }
@@ -58,6 +63,8 @@ public:
 	int32 GetMoneyChargingAmount() const { return MoneyChargingAmount; }
 	int32 GetBerryChargingIntervalMinutes() const { return BerryChargingIntervalSeconds / 60; }
 	int32 GetMoneyChargingIntervalMinutes() const { return MoneyChargingIntervalSeconds / 60; }
+
+	FOnAddedNewCharacter OnAddedNewCharacter;
 
 protected:
 	virtual void BeginPlay() override;

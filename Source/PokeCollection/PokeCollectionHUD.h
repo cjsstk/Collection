@@ -21,6 +21,7 @@ public:
 	void OpenInGameCharacterBoxWidget(bool bIsMakingParty);
 	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
 	void OpenInGameShopWidget();
+	void OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType);
 	void OpenInGameAdventureWidget();
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
@@ -36,6 +37,7 @@ public:
 	class UInGameProfileWidget* GetInGameProfileWidget() const { return InGameProfileWidget; }
 	class UInGameBoxWidget* GetInGameBoxWidget() const { return InGameBoxWidget; }
 	class UInGameShopWidget* GetInGameShopWidget() const { return InGameShopWidget; }
+	class UBuyConfirmPopUp* GetBuyConfirmPopUp() const { return BuyConfirmPopUp; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
 	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
@@ -66,6 +68,9 @@ private:
 	TSubclassOf<class UInGameShopWidget> InGameShopWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UBuyConfirmPopUp> BuyConfirmPopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -80,6 +85,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UEquipmentInfoPopUp> EquipmentInfoPopUpClass;
 
+	//
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
 
@@ -97,6 +103,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameShopWidget* InGameShopWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UBuyConfirmPopUp* BuyConfirmPopUp = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;

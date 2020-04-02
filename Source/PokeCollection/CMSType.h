@@ -21,3 +21,9 @@ enum class ERank : uint8
 	SRare,
 	SSRare,
 };
+
+enum class EShopSlotType
+{
+	Character,
+	Item,
+};

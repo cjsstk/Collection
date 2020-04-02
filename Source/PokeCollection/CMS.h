@@ -20,6 +20,9 @@ struct FCharacterInfo : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CharacterKey;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName CharacterName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -65,6 +68,26 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FCharacterShopInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FText EggName;
+
+	UPROPERTY(EditDefaultsOnly)
+	UTexture2D* EggImage;
+
+	UPROPERTY(EditDefaultsOnly)
+	FText EggPrice;
+
+	/** Key: characterkey, Value: percent */
+	UPROPERTY(EditDefaultsOnly)
+	TMap<ERank, float> ComeOutCharacterInfo;
+};
+
+USTRUCT(BlueprintType)
 struct FStageInfo : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -94,12 +117,18 @@ namespace CMS
 
 	const FCharacterInfo* GetCharacterDataTable(characterKey CharacterKey);
 	const FEquipmentInfo* GetEquipmentDataTable(equipmentKey EquipmentKey);
+	const FCharacterShopInfo* GetCharacterShopDataTable(int32 CharShopKey);
 	const FStageInfo* GetStageDataTable(int32 StageKey);
 	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);
 	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
 
+	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
+
+	void GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank);
+
 	static UDataTable* CharacterDataTable;
 	static UDataTable* EquipmentDataTable;
+	static UDataTable* CharacterShopDataTable;
 	static UDataTable* StageDataTable;
 	static UDataTable* BattleStageDataTable;
 };

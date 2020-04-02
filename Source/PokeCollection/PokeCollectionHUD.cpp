@@ -10,6 +10,7 @@
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
 #include "Widgets/InGameShopWidget.h"
+#include "Widgets/BuyConfirmPopUp.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
 #include "PokeCollectionCharacter.h"
@@ -92,6 +93,11 @@ void APokeCollectionHUD::BeginPlay()
 		{
 			InGameShopWidget->SetPrevWidget(InGameMainWidget);
 		}
+	}
+
+	if (BuyConfirmPopUpClass.Get())
+	{
+		BuyConfirmPopUp = CreateWidget<UBuyConfirmPopUp>(GetWorld(), BuyConfirmPopUpClass, FName("BuyConfirmPopUp"));
 	}
 
 	if (EquipmentInfoPopUpClass.Get())
@@ -201,6 +207,15 @@ void APokeCollectionHUD::OpenInGameShopWidget()
 	{
 		InGameShopWidget->AddToViewport();
 		InGameShopWidget->OnOpen();
+	}
+}
+
+void APokeCollectionHUD::OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType)
+{
+	if (ensure(BuyConfirmPopUp))
+	{
+		BuyConfirmPopUp->InitText(InSlotKey, InSlotType);
+		BuyConfirmPopUp->AddToViewport();
 	}
 }
 

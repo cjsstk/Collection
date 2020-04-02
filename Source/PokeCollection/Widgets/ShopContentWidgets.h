@@ -7,17 +7,24 @@
 #include "ShopContentWidgets.generated.h"
 
 
+
 UCLASS()
 class POKECOLLECTION_API UCharacterShopWidget : public UShopContentWidget
 {
 	GENERATED_BODY()
 	
+public:
+	virtual void OnOpen() override;
+
 };
 
 
 UCLASS()
-class POKECOLLECTION_API UCharacterShopWidget : public UShopContentWidget
+class POKECOLLECTION_API UEquipmentShopWidget : public UShopContentWidget
 {
 	GENERATED_BODY()
+
+public:
+	virtual void OnOpen() override;
 
 };
