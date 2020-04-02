@@ -49,6 +49,8 @@ private:
 	void OnBuyCharacterSlot(int32 InSlotKey);
 	void OnBuyItemSlot(int32 InSlotKey);
 
+	bool PayEggPrice(int32 InEggMoney);
+
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SelectButton = nullptr;
 

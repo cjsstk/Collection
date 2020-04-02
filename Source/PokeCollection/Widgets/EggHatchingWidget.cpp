@@ -32,16 +32,6 @@ void UEggHatchingWidget::NativeConstruct()
 		OnAnimationFinished.BindUFunction(this, FName("OnHatchingAnimationFinished"));
 		BindToAnimationFinished(HatchingAnim, OnAnimationFinished);
 	}
-
-	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
-	if (ensure(PokeHud))
-	{
-		UUserWidget* TopStatusBar = PokeHud->GetInGameTopStatusBar();
-		if (ensure(TopStatusBar))
-		{
-			TopStatusBar->SetVisibility(ESlateVisibility::Collapsed);
-		}
-	}
 }
 
 void UEggHatchingWidget::NativeDestruct()
@@ -63,15 +53,6 @@ void UEggHatchingWidget::NativeDestruct()
 		UnbindAllFromAnimationFinished(HatchingAnim);
 	}
 
-	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
-	if (ensure(PokeHud))
-	{
-		UUserWidget* TopStatusBar = PokeHud->GetInGameTopStatusBar();
-		if (ensure(TopStatusBar))
-		{
-			TopStatusBar->SetVisibility(ESlateVisibility::Visible);
-		}
-	}
 }
 
 void UEggHatchingWidget::StartHatching(characterKey InCharacterKey)
@@ -104,12 +85,12 @@ void UEggHatchingWidget::StartHatching(characterKey InCharacterKey)
 
 void UEggHatchingWidget::OnSkipButtonClicked()
 {
-	RemoveFromViewport();
+	CloseWidget();
 }
 
 void UEggHatchingWidget::OnBackgroundButtonClicked()
 {
-	RemoveFromViewport();
+	CloseWidget();
 }
 
 void UEggHatchingWidget::OnHatchingAnimationFinished()
@@ -117,6 +98,21 @@ void UEggHatchingWidget::OnHatchingAnimationFinished()
 	if (BackgroundButton)
 	{
 		BackgroundButton->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UEggHatchingWidget::CloseWidget()
+{
+	APokeCollectionHUD* PokeHud = GetPokeHud();
+	if (ensure(PokeHud))
+	{
+		UUserWidget* TopStatusBar = PokeHud->GetInGameTopStatusBar();
+		if (ensure(TopStatusBar))
+		{
+			TopStatusBar->AddToViewport(1);
+		}
+
+		PokeHud->OnBackButtonClicked(this);
 	}
 }
 

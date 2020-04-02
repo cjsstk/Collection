@@ -187,6 +187,19 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 		return;
 	}
 
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (!ensure(PokeHud))
+	{
+		return;
+	}
+
+	int32 EggPrice = FCString::Atoi(*(CurrentShopInfo->EggPrice).ToString());
+
+	if (!PayEggPrice(EggPrice))
+	{
+		return;
+	}
+
 	ERank ComeOutRankResult = ERank::Normal;
 
 	const TMap<ERank, float> ComeOutInfo = CurrentShopInfo->ComeOutCharacterInfo;
@@ -231,12 +244,7 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 		}
 
 		Player->AddNewCharacter(OutCharacterKey);
-
-		APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
-		if (ensure(PokeHud))
-		{
-			PokeHud->OpenEggHatchingWidget(OutCharacterKey);
-		}
+		PokeHud->OpenEggHatchingWidget(OutCharacterKey);
 	}
 
 	
@@ -244,4 +252,22 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 
 void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
 {
+}
+
+bool UShopSlot::PayEggPrice(int32 InEggMoney)
+{
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return false;
+	}
+
+	if (InEggMoney > Player->GetMoneyAmount())
+	{
+		return false;
+	}
+
+	Player->SetMoneyAmount(Player->GetMoneyAmount() - InEggMoney);
+
+	return true;
 }

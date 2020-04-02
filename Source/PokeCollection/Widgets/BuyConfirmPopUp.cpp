@@ -7,6 +7,7 @@
 #include "TextBlock.h"
 
 #include "CMS.h"
+#include "PokeCollectionCharacter.h"
 
 #define LOCTEXT_NAMESPACE "BuyConfirm"
 
@@ -25,6 +26,13 @@ void UBuyConfirmPopUp::NativeConstruct()
 	}
 }
 
+void UBuyConfirmPopUp::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	TickCheckBuyEnable();
+}
+
 void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 {
 	SelectedSlotKey = InSlotKey;
@@ -38,6 +46,9 @@ void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 		const FCharacterShopInfo* ShopInfo = CMS::GetCharacterShopDataTable(InSlotKey);
 		if (ensure(ShopInfo))
 		{
+			SlotName = ShopInfo->EggName;
+			SlotPrice = FCString::Atoi(*(ShopInfo->EggPrice).ToString());
+
 			FFormatNamedArguments Arguments;
 			Arguments.Add(TEXT("SlotName"), ShopInfo->EggName);
 			Arguments.Add(TEXT("SlotPrice"), ShopInfo->EggPrice);
@@ -65,6 +76,32 @@ void UBuyConfirmPopUp::OnBuyButtonClick()
 	OnBuyButtonClicked.Broadcast(SelectedSlotKey);
 
 	RemoveFromViewport();
+}
+
+void UBuyConfirmPopUp::TickCheckBuyEnable()
+{
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!Player)
+	{
+		return;
+	}
+
+	if (!BuyButton || !BuyButtonText)
+	{
+		ensure(0);
+		return;
+	}
+
+	if (Player->GetMoneyAmount() >= SlotPrice)
+	{
+		BuyButton->SetIsEnabled(true);
+		BuyButtonText->SetText(FText::FromString(TEXT("확인")));
+	}
+	else
+	{
+		BuyButton->SetIsEnabled(false);
+		BuyButtonText->SetText(FText::FromString(TEXT("돈이 부족합니다")));
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

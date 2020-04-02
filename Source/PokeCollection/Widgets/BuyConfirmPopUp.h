@@ -16,6 +16,7 @@ class POKECOLLECTION_API UBuyConfirmPopUp : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void InitText(int32 InSlotKey, EShopSlotType InSlotType);
 
@@ -28,6 +29,8 @@ public:
 	FOnBuyButtonClicked OnBuyButtonClicked;
 
 private:
+	void TickCheckBuyEnable();
+
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BackgroundButton = nullptr;
 
@@ -37,6 +40,11 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BuyButton = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BuyButtonText = nullptr;
+
 	int32 SelectedSlotKey = 0;
 
+	FText SlotName;
+	int32 SlotPrice = 0;
 };

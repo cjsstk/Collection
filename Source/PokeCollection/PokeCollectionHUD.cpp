@@ -104,6 +104,10 @@ void APokeCollectionHUD::BeginPlay()
 	if (EggHatchingWidgetClass.Get())
 	{
 		EggHatchingWidget = CreateWidget<UEggHatchingWidget>(GetWorld(), EggHatchingWidgetClass, FName("EggHatchingWidget"));
+		if (EggHatchingWidget)
+		{
+			EggHatchingWidget->SetPrevWidget(InGameShopWidget);
+		}
 	}
 
 	if (EquipmentInfoPopUpClass.Get())
@@ -227,6 +231,16 @@ void APokeCollectionHUD::OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSl
 
 void APokeCollectionHUD::OpenEggHatchingWidget(characterKey NewCharacterKey)
 {
+	if (ensure(InGameShopWidget))
+	{
+		InGameShopWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameTopStatusBar))
+	{
+		InGameTopStatusBar->RemoveFromViewport();
+	}
+
 	if (ensure(EggHatchingWidget))
 	{
 		EggHatchingWidget->StartHatching(NewCharacterKey);

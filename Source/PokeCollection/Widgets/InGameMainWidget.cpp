@@ -13,6 +13,8 @@
 
 void UInGameWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	APokeCollectionHUD* Hud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
 	if (ensure(Hud))
 	{

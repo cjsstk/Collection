@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CMSType.h"
+#include "Widgets/InGameMainWidget.h"
 #include "EggHatchingWidget.generated.h"
 
 
 
 UCLASS()
-class POKECOLLECTION_API UEggHatchingWidget : public UUserWidget
+class POKECOLLECTION_API UEggHatchingWidget : public UInGameWidget
 {
 	GENERATED_BODY()
 	
@@ -32,6 +33,7 @@ public:
 	FWidgetAnimationDynamicEvent OnAnimationFinished;
 
 private:
+	void CloseWidget();
 	void StartAnim();
 
 	UPROPERTY(meta = (BindWidget))

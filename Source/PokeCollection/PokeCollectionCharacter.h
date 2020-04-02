@@ -64,6 +64,8 @@ public:
 	int32 GetBerryChargingIntervalMinutes() const { return BerryChargingIntervalSeconds / 60; }
 	int32 GetMoneyChargingIntervalMinutes() const { return MoneyChargingIntervalSeconds / 60; }
 
+	void SetMoneyAmount(int32 NewMoneyAmount) { MoneyAmount = FMath::Clamp(NewMoneyAmount, 0, INT32_MAX); }
+
 	FOnAddedNewCharacter OnAddedNewCharacter;
 
 protected:
