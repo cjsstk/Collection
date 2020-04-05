@@ -32,6 +32,7 @@ void ABattleManager::BattleStart()
 
 	PlayerCharacter->SetPlayerMode(EPlayerMode::BattleMode);
 
+	/** Set my characters */
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetPartyCharacters(1);
 
 	for (auto&& PartyMember : CurrentPartyCharacters)
@@ -39,10 +40,31 @@ void ABattleManager::BattleStart()
 		BattleMembers.AddUnique(PartyMember.Value);
 	}
 
+	/** Set enemy characters */
+	const FBattleStageInfo* BattleStageInfo = CMS::GetBattleStageDataTable(CurrentBattleStageKey);
+	if (ensure(BattleStageInfo))
+	{
+		TArray<FEnemyInfo> EnemyInfos = BattleStageInfo->FirstEnemyKeys;
+
+		for (auto&& EnemyInfo : EnemyInfos)
+		{
+			APokeCharacter* EnemyCharacter = NewObject<APokeCharacter>();
+			if (ensure(EnemyCharacter))
+			{
+				EnemyCharacter->Init(EnemyInfo.EnemyCharacterKey);
+				EnemyCharacter->SetLevel(EnemyInfo.EnemyCharacterLevel);
+				EnemyCharacter->SetJoinedSlotNum(EnemyInfo.EnemySlotNum);
+				EnemyCharacter->SetIsEnemy(true);
+				BattleMembers.AddUnique(EnemyCharacter);
+			}
+		}
+	}
+
+
 	for (APokeCharacter* BattleMember : BattleMembers)
 	{
 		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(BattleMember->GetCharacterKey());
-		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(BattleMember->GetJoinedSlotNum(), false);
+		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(BattleMember->GetJoinedSlotNum(), BattleMember->GetIsEnemy());
 		if (ensure(BattlePanel) && ensure(CharacterInfo) && BattleCharacterActorClass.Get())
 		{
 			ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(BattleCharacterActorClass.Get(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
@@ -51,6 +73,7 @@ void ABattleManager::BattleStart()
 			{
 				BattleCharacter->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
 				CreatedBattleCharacters.Add(BattleCharacter);
+				BattleMember->SetBattleCharacterActor(BattleCharacter);
 			}
 		}
 	}

@@ -12,6 +12,22 @@
 //using characterKey = int32;
 //const static characterKey INVALID_CHARACTERKEY = 0;
 
+USTRUCT()
+struct FEnemyInfo
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	int32 EnemyCharacterKey;
+
+	UPROPERTY(EditAnywhere)
+	int32 EnemyCharacterLevel;
+
+	UPROPERTY(EditAnywhere)
+	int32 EnemySlotNum;
+};
+
 
 USTRUCT(BlueprintType)
 struct FCharacterInfo : public FTableRowBase
@@ -45,6 +61,27 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bRangeAttack = false;
+
+	/** Base Stats */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BaseStat_HP = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BaseStat_Attack= 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BaseStat_Defence = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BaseStat_SPAtk = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BaseStat_SPDef = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 BaseStat_Speed = 0;
+	//
+
 
 };
 
@@ -109,6 +146,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> DropCharacterIDs;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FEnemyInfo> FirstEnemyKeys;
 };
 
 namespace CMS

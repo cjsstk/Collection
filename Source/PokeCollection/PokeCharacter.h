@@ -8,7 +8,7 @@
 #include "PokeCharacter.generated.h"
 
 USTRUCT(Atomic)
-struct FBaseStats
+struct FStatus
 {
 	GENERATED_BODY()
 
@@ -31,6 +31,7 @@ public:
 	UPROPERTY()
 	int32 Speed = 0;
 };
+
 
 struct SlotNum
 {
@@ -55,6 +56,8 @@ public:
 
 	void Attack(/*int32 SkillIndex,*/ APokeCharacter* TargetCharacter);
 
+	void SetBattleCharacterActor(ABattleCharacterActor* InBattleCharacterActor);
+
 	void AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/);
 
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
@@ -65,10 +68,14 @@ public:
 	void SetJoinedPartyNum(int32 InPartyNum) { JoinedPartyNum = InPartyNum; }
 	int32 GetJoinedPartyNum() const { return JoinedPartyNum; }
 
-	void SetJoinedSlotNum(int32 InSlotNum) { if (InSlotNum > 9) { ensure(0); return; } JoinedSlotNum = InSlotNum; }
+	void SetJoinedSlotNum(int32 InSlotNum) { if (InSlotNum > 6) { ensure(0); return; } JoinedSlotNum = InSlotNum; }
 	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
 
+	void SetLevel(int32 NewLevel) { Level = NewLevel; }
 	int32 GetLevel() const { return Level; }
+
+	void SetIsEnemy(bool bInIsEnemy) { bIsEnemy = bInIsEnemy; }
+	bool GetIsEnemy() const { return bIsEnemy; }
 
 	FName GetCharacterName() const;
 	class UTexture2D* GetCharacterProfileImage() const;
@@ -76,10 +83,15 @@ public:
 	class UPaperFlipbook* GetCharacterFlipbook() const;
 	bool IsRangeAttack() const;
 
+	const FStatus GetFinalStatus();
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
+	void InitBaseStatus();
+	int32 CalcFinalStatus(int32 InBaseStat, int32 InEvStat, bool bIsHP = false);
+
 	int32 CharacterID = 0;
 	int32 CharacterKey = 1;
 	
@@ -99,7 +111,10 @@ private:
 	 * Stats
 	 */
 	UPROPERTY()
-	FBaseStats BaseStats;
+	FStatus BaseStats;
+
+	UPROPERTY()
+	FStatus EvStats;
 
 	int32 Level = 1;
 
@@ -108,9 +123,13 @@ private:
 	 */
 	class AInBattleCharacterPanel* CurrentBattlePanel = nullptr;
 	bool bAttacking = false;
-	
+	bool bIsEnemy = false;
+
 	UPROPERTY(Transient)
 	APokeCharacter* CurrentTargetCharacter = nullptr;
+
+	UPROPERTY(Transient)
+	ABattleCharacterActor* MyBattleCharacter = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABattleCharacterActor> BattleCharacterActor;

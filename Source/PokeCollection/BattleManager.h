@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "CMSType.h"
 #include "BattleManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleStart);
@@ -21,6 +22,8 @@ public:
 	ABattleManager();
 
 	void BattleStart();
+
+	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };
 
 	class AInBattleCharacterPanel* GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel);
 
@@ -46,4 +49,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABattleCharacterActor> BattleCharacterActorClass;
+
+	battleStageKey CurrentBattleStageKey = INVALID_BATTLESTAGEKEY;
 };

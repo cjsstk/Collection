@@ -17,6 +17,8 @@ void APokeCharacter::Init(characterKey InCharacterKey)
 
 	CharacterKey = InCharacterKey;
 
+	InitBaseStatus();
+
 	/*const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (ensure(CharacterInfo))
 	{
@@ -37,6 +39,16 @@ void APokeCharacter::Attack(APokeCharacter* TargetCharacter)
 
 	CurrentTargetCharacter = TargetCharacter;
 	bAttacking = true;
+}
+
+void APokeCharacter::SetBattleCharacterActor(ABattleCharacterActor* InBattleCharacterActor)
+{
+	if (!InBattleCharacterActor)
+	{
+		return;
+	}
+
+	MyBattleCharacter = InBattleCharacterActor;
 }
 
 void APokeCharacter::AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/)
@@ -134,6 +146,20 @@ bool APokeCharacter::IsRangeAttack() const
 	return CharacterInfo->bRangeAttack;
 }
 
+const FStatus APokeCharacter::GetFinalStatus()
+{
+	FStatus FinalStatus;
+
+	FinalStatus.HealthPoint = CalcFinalStatus(BaseStats.HealthPoint, EvStats.HealthPoint, true);
+	FinalStatus.Attack = CalcFinalStatus(BaseStats.Attack, EvStats.Attack);
+	FinalStatus.Defense = CalcFinalStatus(BaseStats.Defense, EvStats.Defense);
+	FinalStatus.SpecialAttack = CalcFinalStatus(BaseStats.SpecialAttack, EvStats.SpecialAttack);
+	FinalStatus.SpecialDefense = CalcFinalStatus(BaseStats.SpecialDefense, EvStats.SpecialDefense);
+	FinalStatus.Speed = CalcFinalStatus(BaseStats.Speed, EvStats.Speed);
+
+	return FinalStatus;
+}
+
 void APokeCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -160,4 +186,34 @@ void APokeCharacter::Tick(float DeltaSeconds)
 
 		DebugString.Empty();
 	}
+}
+
+void APokeCharacter::InitBaseStatus()
+{
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (ensure(CharacterInfo))
+	{
+		BaseStats.HealthPoint = CharacterInfo->BaseStat_Attack;
+		BaseStats.Attack = CharacterInfo->BaseStat_Attack;
+		BaseStats.Defense = CharacterInfo->BaseStat_Defence;
+		BaseStats.SpecialAttack = CharacterInfo->BaseStat_SPAtk;
+		BaseStats.SpecialDefense = CharacterInfo->BaseStat_SPDef;
+		BaseStats.Speed = CharacterInfo->BaseStat_Speed;
+	}
+}
+
+int32 APokeCharacter::CalcFinalStatus(int32 InBaseStat, int32 InEvStat, bool bIsHP)
+{
+	int FinalStat = 0;
+
+	if (!bIsHP)
+	{
+		FinalStat = (InBaseStat * 2 * ((float)Level * 0.01f)) + ((float)InEvStat * 0.5f);
+	}
+	else
+	{
+		FinalStat = (InBaseStat * 2 * ((float)Level * 0.01f)) + ((float)InEvStat * 0.5f) + Level;
+	}
+
+	return FinalStat;
 }

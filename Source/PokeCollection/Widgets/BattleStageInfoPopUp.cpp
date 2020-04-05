@@ -6,7 +6,9 @@
 #include "Button.h"
 #include "TextBlock.h"
 
+#include "BattleManager.h"
 #include "PokeCollectionHUD.h"
+#include "PokeCore.h"
 
 void UBattleStageSignboard::NativeConstruct()
 {
@@ -75,6 +77,12 @@ void UBattleStageInfoPopUp::InitInfo(battleStageKey InBattleStageKey)
 	if (BattleStageName)
 	{
 		BattleStageName->SetText(BattleStageInfo->BattleStageName);
+	}
+
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (BattleManager)
+	{
+		BattleManager->SetBattleStageKey(InBattleStageKey);
 	}
 }
 
