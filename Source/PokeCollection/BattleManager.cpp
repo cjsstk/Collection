@@ -54,7 +54,7 @@ void ABattleManager::BattleStart()
 				EnemyCharacter->Init(EnemyInfo.EnemyCharacterKey);
 				EnemyCharacter->SetLevel(EnemyInfo.EnemyCharacterLevel);
 				EnemyCharacter->SetJoinedSlotNum(EnemyInfo.EnemySlotNum);
-				EnemyCharacter->SetIsEnemy(true);
+				EnemyCharacter->SetEnemy(true);
 				BattleMembers.AddUnique(EnemyCharacter);
 			}
 		}
@@ -63,17 +63,26 @@ void ABattleManager::BattleStart()
 
 	for (APokeCharacter* BattleMember : BattleMembers)
 	{
-		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(BattleMember->GetCharacterKey());
-		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(BattleMember->GetJoinedSlotNum(), BattleMember->GetIsEnemy());
-		if (ensure(BattlePanel) && ensure(CharacterInfo) && BattleCharacterActorClass.Get())
+		bool bIsEnemy = BattleMember->IsEnemy();
+		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(BattleMember->GetJoinedSlotNum(), bIsEnemy);
+		if (ensure(BattlePanel) && BattleCharacterActorClass.Get())
 		{
-			ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(BattleCharacterActorClass.Get(), BattlePanel->GetActorLocation(), FRotator::ZeroRotator, FActorSpawnParameters());
+			FHitResult HitResult;
+			const FVector EndLocation = BattlePanel->GetActorLocation() + FVector(0, 0, -1000);
 
-			if (BattleCharacter)
+			bool bTraced = GetWorld()->LineTraceSingleByChannel(HitResult, BattlePanel->GetActorLocation(), EndLocation, ECollisionChannel::ECC_WorldStatic);
+			if (ensure(bTraced))
 			{
-				BattleCharacter->GetRenderComponent()->SetFlipbook(CharacterInfo->CharacterSprite);
-				CreatedBattleCharacters.Add(BattleCharacter);
-				BattleMember->SetBattleCharacterActor(BattleCharacter);
+				FVector SpawnedActorLocation = HitResult.Location;
+				FRotator SpawnedActorRotator = FRotator(0, bIsEnemy ? 180 : 0, 0);
+				ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(BattleCharacterActorClass.Get(), SpawnedActorLocation, SpawnedActorRotator, FActorSpawnParameters());
+
+				if (BattleCharacter)
+				{
+					BattleCharacter->InitBattleCharacter(*BattleMember);
+					CreatedBattleCharacters.Add(BattleCharacter);
+					BattleMember->SetBattleCharacterActor(BattleCharacter);
+				}
 			}
 		}
 	}

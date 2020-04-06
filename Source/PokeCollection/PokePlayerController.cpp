@@ -3,6 +3,13 @@
 
 #include "PokePlayerController.h"
 
+void APokePlayerController::AddBattleLogString(const FString& InBattleLogString)
+{
+	BattleLogString += InBattleLogString;
+
+	BattleLogString += TEXT("\n");
+}
+
 void APokePlayerController::BeginPlay()
 {
 	Super::BeginPlay();

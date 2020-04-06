@@ -56,9 +56,7 @@ public:
 
 	void Attack(/*int32 SkillIndex,*/ APokeCharacter* TargetCharacter);
 
-	void SetBattleCharacterActor(ABattleCharacterActor* InBattleCharacterActor);
-
-	void AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/);
+	void SetBattleCharacterActor(class ABattleCharacterActor* InBattleCharacterActor);
 
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
 	int32 GetCharacterID() const { return CharacterID; }
@@ -74,14 +72,14 @@ public:
 	void SetLevel(int32 NewLevel) { Level = NewLevel; }
 	int32 GetLevel() const { return Level; }
 
-	void SetIsEnemy(bool bInIsEnemy) { bIsEnemy = bInIsEnemy; }
-	bool GetIsEnemy() const { return bIsEnemy; }
+	void SetEnemy(bool bInIsEnemy) { bIsEnemy = bInIsEnemy; }
+	bool IsEnemy() const { return bIsEnemy; }
 
 	FName GetCharacterName() const;
 	class UTexture2D* GetCharacterProfileImage() const;
 	class UTexture2D* GetCharacterImage() const;
 	class UPaperFlipbook* GetCharacterFlipbook() const;
-	bool IsRangeAttack() const;
+	float GetAttackRange() const;
 
 	const FStatus GetFinalStatus();
 
@@ -129,7 +127,7 @@ private:
 	APokeCharacter* CurrentTargetCharacter = nullptr;
 
 	UPROPERTY(Transient)
-	ABattleCharacterActor* MyBattleCharacter = nullptr;
+	class ABattleCharacterActor* MyBattleCharacter = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABattleCharacterActor> BattleCharacterActor;
@@ -139,6 +137,4 @@ private:
 	 */
 	int32 JoinedPartyNum = 0;
 	int32 JoinedSlotNum = 0;
-
-	FString DebugString;
 };

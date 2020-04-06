@@ -51,16 +51,6 @@ void APokeCharacter::SetBattleCharacterActor(ABattleCharacterActor* InBattleChar
 	MyBattleCharacter = InBattleCharacterActor;
 }
 
-void APokeCharacter::AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/)
-{
-	DebugString += InDebugString;
-
-	if (bAddNewLine)
-	{
-		DebugString += TEXT("\n");
-	}
-}
-
 FName APokeCharacter::GetCharacterName() const
 { 
 	if (CharacterKey == INVALID_CHARACTERKEY)
@@ -129,7 +119,7 @@ UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const
 	return CharacterInfo->CharacterSprite;
 }
 
-bool APokeCharacter::IsRangeAttack() const
+float APokeCharacter::GetAttackRange() const
 {
 	if (CharacterKey == INVALID_CHARACTERKEY)
 	{
@@ -143,7 +133,7 @@ bool APokeCharacter::IsRangeAttack() const
 		return false;
 	}
 
-	return CharacterInfo->bRangeAttack;
+	return CharacterInfo->AttackRange;
 }
 
 const FStatus APokeCharacter::GetFinalStatus()
@@ -179,13 +169,6 @@ void APokeCharacter::Tick(float DeltaSeconds)
 		}
 	}
 
-
-	if (!DebugString.IsEmpty())
-	{
-		DrawDebugString(GetWorld(), FVector(0, 0, 100), DebugString, this, FColor::White, 0, true);
-
-		DebugString.Empty();
-	}
 }
 
 void APokeCharacter::InitBaseStatus()

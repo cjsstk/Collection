@@ -15,11 +15,13 @@ class POKECOLLECTION_API APokePlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
-
+	void AddBattleLogString(const FString& InBattleLogString);
 
 private:
 	virtual void BeginPlay() override;
 
 private:
+	FString BattleLogString;
+
 
 };

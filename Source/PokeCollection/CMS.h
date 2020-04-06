@@ -60,7 +60,7 @@ public:
 	EType Type2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bRangeAttack = false;
+	float AttackRange = 80.0f;
 
 	/** Base Stats */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
