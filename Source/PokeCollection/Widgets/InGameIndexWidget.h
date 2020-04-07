@@ -35,6 +35,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* NameText = nullptr;
 
+	UPROPERTY(EditDefaultsOnly)
+	UMaterialInterface* SlotMaterial = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* SlotMaterialInstance = nullptr;
+
 	int32 CharacterKey = 0;
 	bool bEnabled = false;
 };

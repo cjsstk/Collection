@@ -9,7 +9,7 @@
 #include "ScrollBox.h"
 #include "Image.h"
 #include "TextBlock.h"
-#include "MaterialInstanceDynamic.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 #include "CMS.h"
 #include "PokeCharacter.h"
@@ -95,6 +95,11 @@ void UCharacterIndexSlot::NativeConstruct()
 	{
 		SelectSlotButton->OnClicked.AddUniqueDynamic(this, &UCharacterIndexSlot::OnSelectCharacterButtonClicked);
 	}
+
+	if (SlotMaterial)
+	{
+		SlotMaterialInstance = UMaterialInstanceDynamic::Create(SlotMaterial, this);
+	}
 }
 
 void UCharacterIndexSlot::Init(int32 InCharacterKey)
@@ -109,12 +114,13 @@ void UCharacterIndexSlot::Init(int32 InCharacterKey)
 
 	if (ProfileImage)
 	{
-		ProfileImage->SetBrushFromTexture(CharacterInfo->CharacterProfile);
+		//ProfileImage->SetBrushFromTexture(CharacterInfo->CharacterProfile);
+		if (CharacterInfo->CharacterIndexProfile && SlotMaterialInstance)
+		{
+			SlotMaterialInstance->SetTextureParameterValue("TextureParam", CharacterInfo->CharacterIndexProfile);
 
-		UMaterialInstanceDynamic* matInstance_ = UMaterialInstanceDynamic::Create(materials[i], this);
-
-		matInstance_->SetVectorParameterValue(FName(TEXT("_BodyColor")), characterColor);
-		ProfileImage->SetBrushFromMaterial(matInstance_);
+			ProfileImage->SetBrushFromMaterial(SlotMaterialInstance->GetMaterial());
+		}
 	}
 
 	if (NameText)
