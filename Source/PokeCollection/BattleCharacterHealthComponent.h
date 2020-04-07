@@ -4,25 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "BattleCharacterCombatComponent.generated.h"
+#include "BattleCharacterHealthComponent.generated.h"
 
 
 UCLASS()
-class POKECOLLECTION_API UBattleCharacterCombatComponent : public UActorComponent
+class POKECOLLECTION_API UBattleCharacterHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	UBattleCharacterCombatComponent();
+	UBattleCharacterHealthComponent();
+
+	void SetHealthPoint(int32 InHealthPoint);
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	void TickFindNewTarget();
-
-	UPROPERTY(Transient)
-	class ABattleCharacterActor* TargetCharacter = nullptr;
+	int32 CurrentHealthPoint = 0;
+	int32 MaxHealthPoint = 0;
 		
 };

@@ -165,6 +165,7 @@ namespace CMS
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
 	void GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank);
+	void GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray);
 
 	static UDataTable* CharacterDataTable;
 	static UDataTable* EquipmentDataTable;

@@ -12,6 +12,7 @@
 #include "Widgets/InGameCharacterInfoWidget.h"
 #include "Widgets/InGameShopWidget.h"
 #include "Widgets/BuyConfirmPopUp.h"
+#include "Widgets/InGameIndexWidget.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
 #include "PokeCollectionCharacter.h"
@@ -113,6 +114,15 @@ void APokeCollectionHUD::BeginPlay()
 	if (EquipmentInfoPopUpClass.Get())
 	{
 		EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
+	}
+
+	if (InGameIndexWidgetClass.Get())
+	{
+		InGameIndexWidget = CreateWidget<UInGameIndexWidget>(GetWorld(), InGameIndexWidgetClass, FName("InGameIndexWidget"));
+		if (ensure(InGameIndexWidget))
+		{
+			InGameIndexWidget->SetPrevWidget(InGameMainWidget);
+		}
 	}
 
 	if (InGameAdventureWidgetClass.Get())
@@ -245,6 +255,20 @@ void APokeCollectionHUD::OpenEggHatchingWidget(characterKey NewCharacterKey)
 	{
 		EggHatchingWidget->StartHatching(NewCharacterKey);
 		EggHatchingWidget->AddToViewport();
+	}
+}
+
+void APokeCollectionHUD::OpenInGameIndexWidget()
+{
+	if (ensure(InGameMainWidget))
+	{
+		InGameMainWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameIndexWidget))
+	{
+		InGameIndexWidget->AddToViewport();
+		InGameIndexWidget->OnOpen();
 	}
 }
 

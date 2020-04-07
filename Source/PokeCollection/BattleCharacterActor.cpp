@@ -9,6 +9,8 @@
 #include "DrawDebugHelpers.h"
 
 #include "BattleCharacterMovementComponent.h"
+#include "BattleCharacterCombatComponent.h"
+#include "BattleCharacterHealthComponent.h"
 #include "CMS.h"
 
 
@@ -27,6 +29,9 @@ ABattleCharacterActor::ABattleCharacterActor()
 
 	MovementComponent = CreateDefaultSubobject<UBattleCharacterMovementComponent>(TEXT("MovementComponent"));
 
+	CombatComponent = CreateDefaultSubobject<UBattleCharacterCombatComponent>(TEXT("CombatComponent"));
+
+	HealthPointComponent = CreateDefaultSubobject<UBattleCharacterHealthComponent>(TEXT("HealthPointComponent"));
 	//RootComponent->SetWorldRotation(FRotator(0, 90, 0));
 }
 

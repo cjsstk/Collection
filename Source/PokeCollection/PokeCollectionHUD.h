@@ -23,6 +23,7 @@ public:
 	void OpenInGameShopWidget();
 	void OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType);
 	void OpenEggHatchingWidget(characterKey NewCharacterKey);
+	void OpenInGameIndexWidget();
 	void OpenInGameAdventureWidget();
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
@@ -30,7 +31,7 @@ public:
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 
 	UFUNCTION()
-		void OnStartBattle();
+	void OnStartBattle();
 
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 
@@ -76,6 +77,9 @@ private:
 	TSubclassOf<class UEggHatchingWidget> EggHatchingWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameIndexWidget> InGameIndexWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameAdventureWidget> InGameAdventureWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -114,6 +118,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UEggHatchingWidget* EggHatchingWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameIndexWidget* InGameIndexWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameAdventureWidget* InGameAdventureWidget = nullptr;

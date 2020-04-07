@@ -44,6 +44,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class UBattleCharacterMovementComponent* MovementComponent = nullptr;
 
+	UPROPERTY(VisibleAnywhere)
+	class UBattleCharacterCombatComponent* CombatComponent = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	class UBattleCharacterHealthComponent* HealthPointComponent = nullptr;
+
 	UPROPERTY(Transient)
 	TArray<AActor*> AttackOverlapActors;
 

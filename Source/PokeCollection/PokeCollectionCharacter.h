@@ -48,6 +48,8 @@ public:
 
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
 
+	bool IsCompleteIndexCharacter(characterKey InCharacterKey) { return CharacterIndex.Contains(InCharacterKey); };
+
 	const TArray<class APokeCharacter*>& GetHaveCharacters() const;
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 	class APokeCharacter* GetCharacterByID(int32 InCharacterID) const;
@@ -75,6 +77,7 @@ protected:
 
 private:
 	void TickResourceCharge(float DeltaSeconds);
+	void AddCharacterToIndex(characterKey InCharacterKey);
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;
@@ -101,7 +104,9 @@ private:
 
 	UPROPERTY(Transient)
 	TArray<class APokeCharacter*> HaveCharacters;
-	
+
+	TMap<int32, bool> CharacterIndex;
+
 	/** 
 	 * Equipments
 	 */

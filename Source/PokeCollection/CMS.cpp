@@ -128,3 +128,10 @@ void CMS::GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERan
         }
     }
 }
+
+void CMS::GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray)
+{
+	OutArray.Empty();
+
+	CharacterDataTable->GetAllRows(FString(""), OutArray);
+}

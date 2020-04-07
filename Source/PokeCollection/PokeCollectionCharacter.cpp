@@ -23,6 +23,7 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(RootComponent);
 
+
 }
 
 void APokeCollectionCharacter::InitHaveCharacters()
@@ -106,6 +107,7 @@ void APokeCollectionCharacter::AddNewCharacter(characterKey NewCharacterKey)
 	}
 
 	HaveCharacters.AddUnique(PokeCharacter);
+	AddCharacterToIndex(NewCharacterKey);
 
 	OnAddedNewCharacter.Broadcast();
 }
@@ -191,6 +193,19 @@ void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	TArray<FCharacterInfo*> AllCharacterData;
+	CMS::GetAllCharacterDataTable(AllCharacterData);
+	for (FCharacterInfo* CharacterData : AllCharacterData)
+	{
+		if (!CharacterData)
+		{
+			continue;
+		}
+
+		CharacterIndex.Emplace(CharacterData->CharacterKey, false);
+	}
+
+
 	InitHaveCharacters();
 	InitHaveEquipments();
 
@@ -232,5 +247,14 @@ void APokeCollectionCharacter::TickResourceCharge(float DeltaSeconds)
 	{
 		MoneyChargingIntervalAgeSeconds -= MoneyChargingIntervalSeconds;
 		MoneyAmount += MoneyChargingAmount;
+	}
+}
+
+void APokeCollectionCharacter::AddCharacterToIndex(characterKey InCharacterKey)
+{
+	bool* IndexCharacter = CharacterIndex.Find(InCharacterKey);
+	if (ensure(IndexCharacter))
+	{
+		*IndexCharacter = true;
 	}
 }

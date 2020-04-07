@@ -62,6 +62,9 @@ private:
 	void OnCharacterBoxButtonClicked();
 
 	UFUNCTION()
+	void OnIndexButtonClicked();
+
+	UFUNCTION()
 	void OnAdventureButtonClicked();
 
 	bool CheckAllButtonsExist();
