@@ -27,3 +27,8 @@ enum class EShopSlotType
 	Character,
 	Item,
 };
+
+static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));
+static FLinearColor SRareColor = FLinearColor::FromSRGBColor(FColor(204, 153, 255));
+static FLinearColor RareColor = FLinearColor::FromSRGBColor(FColor(153, 255, 255));
+static FLinearColor NormalColor = FLinearColor::FromSRGBColor(FColor(204, 204, 204));

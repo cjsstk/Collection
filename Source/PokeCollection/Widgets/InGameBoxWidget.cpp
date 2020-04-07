@@ -183,3 +183,31 @@ void UBoxSlot::SetContentLevel(int32 InLevel)
 		LevelText->SetText(FText::AsNumber(InLevel));
 	}
 }
+
+void UBoxSlot::SetBackgroundColor(ERank InRank)
+{
+	if (BackgroundImage)
+	{
+		FLinearColor Color;
+
+		switch (InRank)
+		{
+		case ERank::Normal:
+			Color = NormalColor;
+			break;
+		case ERank::Rare:
+			Color = RareColor;
+			break;
+		case ERank::SRare:
+			Color = SRareColor;
+			break;
+		case ERank::SSRare:
+			Color = SSRareColor;
+			break;
+		default:
+			break;
+		}
+
+		BackgroundImage->SetColorAndOpacity(Color);
+	}
+}

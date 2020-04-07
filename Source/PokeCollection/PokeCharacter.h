@@ -79,6 +79,7 @@ public:
 	class UTexture2D* GetCharacterProfileImage() const;
 	class UTexture2D* GetCharacterImage() const;
 	class UPaperFlipbook* GetCharacterFlipbook() const;
+	ERank GetCharacterRank() const;
 	float GetAttackRange() const;
 
 	const FStatus GetFinalStatus();

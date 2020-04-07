@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameMainWidget.h"
+#include "CMSType.h"
 #include "InGameBoxWidget.generated.h"
 
 
@@ -29,6 +30,7 @@ public:
 	void SetContentID(EBoxContentType InBoxContentType, int32 InContentID);
 	void SetContentName(const FText& InName);
 	void SetContentLevel(int32 InLevel);
+	void SetBackgroundColor(ERank InRank);
 
 protected:
 	UPROPERTY(meta = (BindWidget))

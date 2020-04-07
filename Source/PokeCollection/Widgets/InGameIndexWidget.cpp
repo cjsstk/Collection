@@ -114,18 +114,42 @@ void UCharacterIndexSlot::Init(int32 InCharacterKey)
 
 	if (ProfileImage)
 	{
-		//ProfileImage->SetBrushFromTexture(CharacterInfo->CharacterProfile);
 		if (CharacterInfo->CharacterIndexProfile && SlotMaterialInstance)
 		{
 			SlotMaterialInstance->SetTextureParameterValue("TextureParam", CharacterInfo->CharacterIndexProfile);
 
-			ProfileImage->SetBrushFromMaterial(SlotMaterialInstance->GetMaterial());
+			ProfileImage->SetBrushFromMaterial(SlotMaterialInstance);
 		}
 	}
 
 	if (NameText)
 	{
 		NameText->SetText(FText::FromName(CharacterInfo->CharacterName));
+	}
+
+	if (BackgroundImage)
+	{
+		FLinearColor Color;
+
+		switch (CharacterInfo->CharacterRank)
+		{
+		case ERank::Normal:
+			Color = NormalColor;
+			break;
+		case ERank::Rare:
+			Color = RareColor;
+			break;
+		case ERank::SRare:
+			Color = SRareColor;
+			break;
+		case ERank::SSRare:
+			Color = SSRareColor;
+			break;
+		default:
+			break;
+		}
+
+		BackgroundImage->SetColorAndOpacity(Color);
 	}
 }
 
@@ -135,6 +159,11 @@ void UCharacterIndexSlot::RefreshSlot()
 	if (ensure(Player))
 	{
 		bEnabled = Player->IsCompleteIndexCharacter(CharacterKey);
+
+		if (SlotMaterialInstance)
+		{
+			SlotMaterialInstance->SetScalarParameterValue("GrayParam", bEnabled ? 0 : 1);
+		}
 	}
 }
 

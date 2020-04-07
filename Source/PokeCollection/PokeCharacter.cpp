@@ -119,6 +119,23 @@ UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const
 	return CharacterInfo->CharacterSprite;
 }
 
+ERank APokeCharacter::GetCharacterRank() const
+{
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return ERank::Normal;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return ERank::Normal;
+	}
+
+	return CharacterInfo->CharacterRank;
+}
+
 float APokeCharacter::GetAttackRange() const
 {
 	if (CharacterKey == INVALID_CHARACTERKEY)

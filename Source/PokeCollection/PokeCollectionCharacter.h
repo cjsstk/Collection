@@ -48,7 +48,7 @@ public:
 
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
 
-	bool IsCompleteIndexCharacter(characterKey InCharacterKey) { return CharacterIndex.Contains(InCharacterKey); };
+	bool IsCompleteIndexCharacter(characterKey InCharacterKey);;
 
 	const TArray<class APokeCharacter*>& GetHaveCharacters() const;
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;

@@ -122,7 +122,12 @@ void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey I
 	CurrentSelectedBattleStageKey = InBattleStageKey;
 }
 
-const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const 
+bool APokeCollectionCharacter::IsCompleteIndexCharacter(characterKey InCharacterKey)
+{
+	return (CharacterIndex.Contains(InCharacterKey) && *CharacterIndex.Find(InCharacterKey)); 
+}
+
+const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const
 {
 	return HaveCharacters; 
 }

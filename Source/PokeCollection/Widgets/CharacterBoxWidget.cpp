@@ -58,6 +58,7 @@ void UCharacterBoxWidget::OnOpen()
 				BoxSlot->SetContentID(EBoxContentType::Character, CurrentCharacter->GetCharacterID());
 				BoxSlot->SetContentName(FText::FromName(CurrentCharacter->GetCharacterName()));
 				BoxSlot->SetContentLevel(CurrentCharacter->GetLevel());
+				BoxSlot->SetBackgroundColor(CurrentCharacter->GetCharacterRank());
 				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
