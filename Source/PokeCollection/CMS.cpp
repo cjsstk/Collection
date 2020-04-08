@@ -37,6 +37,12 @@ void CMS::LoadCMS()
 	{
 		BattleStageDataTable = BattleStageDT.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> TypeDT(TEXT("/Game/CMS/TypeInfo"));
+	if (ensure(TypeDT.Succeeded()))
+	{
+		TypeDataTable = TypeDT.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -102,6 +108,22 @@ const FBattleStageInfo* CMS::GetBattleStageDataTable(battleStageKey BattleStageK
 	FBattleStageInfo* BattleStageInfo = BattleStageDataTable->FindRow<FBattleStageInfo>(FName(*(FString::FormatAsNumber(BattleStageKey))), FString(""));
 
 	return BattleStageInfo;
+}
+
+const FTypeInfo* CMS::GetTypeDataTable(EType InType)
+{
+	TArray<FTypeInfo*> AllTypes;
+	TypeDataTable->GetAllRows(FString(""), AllTypes);
+
+	for (FTypeInfo* Type : AllTypes)
+	{
+		if (Type && Type->Type == InType)
+		{
+			return Type;
+		}
+	}
+	
+	return nullptr;
 }
 
 const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()

@@ -52,12 +52,12 @@ void UInGameIndexWidget::NativeConstruct()
 		if (GridSlot)
 		{
 			GridSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
-			//GridSlot->SetVerticalAlignment(VAlign_Fill);
 		}
 
 		if (AllCharacters.IsValidIndex(Index))
 		{
-			IndexSlot->Init(AllCharacters[Index]->CharacterKey);
+			//IndexSlot->Init(AllCharacters[Index]->CharacterKey);
+			IndexSlot->InitByKey(AllCharacters[Index]->CharacterKey);
 		}
 		else
 		{
@@ -91,7 +91,7 @@ void UCharacterIndexSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (SelectSlotButton)
+	/*if (SelectSlotButton)
 	{
 		SelectSlotButton->OnClicked.AddUniqueDynamic(this, &UCharacterIndexSlot::OnSelectCharacterButtonClicked);
 	}
@@ -99,12 +99,12 @@ void UCharacterIndexSlot::NativeConstruct()
 	if (SlotMaterial)
 	{
 		SlotMaterialInstance = UMaterialInstanceDynamic::Create(SlotMaterial, this);
-	}
+	}*/
 }
 
 void UCharacterIndexSlot::Init(int32 InCharacterKey)
 {
-	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
+	/*const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (!ensure(CharacterInfo))
 	{
 		return;
@@ -150,7 +150,7 @@ void UCharacterIndexSlot::Init(int32 InCharacterKey)
 		}
 
 		BackgroundImage->SetColorAndOpacity(Color);
-	}
+	}*/
 }
 
 void UCharacterIndexSlot::RefreshSlot()
@@ -160,14 +160,14 @@ void UCharacterIndexSlot::RefreshSlot()
 	{
 		bEnabled = Player->IsCompleteIndexCharacter(CharacterKey);
 
-		if (SlotMaterialInstance)
+		/*if (SlotMaterialInstance)
 		{
 			SlotMaterialInstance->SetScalarParameterValue("GrayParam", bEnabled ? 0 : 1);
+		}*/
+
+		if (UnKnownImage)
+		{
+			UnKnownImage->SetVisibility(bEnabled ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
 		}
 	}
-}
-
-void UCharacterIndexSlot::OnSelectCharacterButtonClicked()
-{
-
 }

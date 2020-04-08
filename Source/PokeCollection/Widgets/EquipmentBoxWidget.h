@@ -8,6 +8,21 @@
 #include "EquipmentBoxWidget.generated.h"
 
 
+UCLASS()
+class POKECOLLECTION_API UEquipmentSlot : public UBoxSlot
+{
+	GENERATED_BODY()
+
+public:
+	virtual void NativeConstruct() override;
+
+	virtual void OnSelectButtonClicked() override;
+
+protected:
+
+
+};
+
 
 UCLASS()
 class POKECOLLECTION_API UEquipmentBoxWidget : public UBoxContentWidget

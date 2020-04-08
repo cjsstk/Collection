@@ -4,44 +4,33 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameMainWidget.h"
+#include "Widgets/CharacterBoxWidget.h"
 #include "InGameIndexWidget.generated.h"
 
 
 UCLASS()
-class POKECOLLECTION_API UCharacterIndexSlot : public UUserWidget
+class POKECOLLECTION_API UCharacterIndexSlot : public UCharacterSlot
 {
 	GENERATED_BODY()
 
 public:
 	virtual void NativeConstruct() override;
+	//virtual void OnSelectButtonClicked() override;
 
 	void Init(int32 InCharacterKey);
 	void RefreshSlot();
 
-	UFUNCTION()
-	void OnSelectCharacterButtonClicked();
-
 
 private:
-	UPROPERTY(meta = (BindWidget))
-	class UImage* BackgroundImage = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* ProfileImage = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* SelectSlotButton = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* NameText = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
+	/*UPROPERTY(EditDefaultsOnly)
 	UMaterialInterface* SlotMaterial = nullptr;
 
 	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* SlotMaterialInstance = nullptr;
+	UMaterialInstanceDynamic* SlotMaterialInstance = nullptr;*/
 
-	int32 CharacterKey = 0;
+	UPROPERTY(meta = (BindWidget))
+	class UImage* UnKnownImage;
+
 	bool bEnabled = false;
 };
 

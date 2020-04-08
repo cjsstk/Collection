@@ -8,6 +8,7 @@
 UENUM()
 enum class EType : int32
 {
+	None,
 	Normal,
 	Fire,
 	Water,
@@ -27,6 +28,14 @@ enum class EType : int32
 	Steal,
 	Fairy,
 	Count,
+};
+
+struct CharacterType
+{
+public:
+	EType Type1;
+
+	EType Type2;
 };
 
 //namespace TypeChart

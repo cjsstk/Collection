@@ -4,37 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameMainWidget.h"
+#include "Widgets/CharacterBoxWidget.h"
 #include "InGameCharacterBoxWidget.generated.h"
 
-
+/** Character slot on making party */
 UCLASS()
-class POKECOLLECTION_API UCharacterBoxSlot : public UUserWidget
+class POKECOLLECTION_API UCharacterBoxSlot : public UCharacterSlot
 {
 	GENERATED_BODY()
 
 public:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION()
-	void OnSelectCharacterButtonClicked();
-
-	void SetProfileImage(UTexture2D* InProfileTexture);
-	void SetCharacterID(int32 InCharacterID);
+	virtual void OnSelectButtonClicked() override;
 
 	void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
 
 private:
-	UPROPERTY(meta = (BindWidget))
-	class UImage* BackgroundImage = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* ProfileImage = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* SelectCharacterButton = nullptr;
-
-	int32 CharacterID = 0;
-
 	bool bIsMakingParty = false;
 };
 

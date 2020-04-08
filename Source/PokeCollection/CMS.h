@@ -44,6 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UPaperFlipbook* CharacterSprite;
 
+	/** Slot Image */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* CharacterProfile;
 
@@ -154,6 +155,22 @@ public:
 	TArray<FEnemyInfo> FirstEnemyKeys;
 };
 
+USTRUCT(BlueprintType)
+struct FTypeInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName TypeName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 TextureNum;
+};
+
 namespace CMS
 {
 	void LoadCMS();
@@ -164,6 +181,7 @@ namespace CMS
 	const FStageInfo* GetStageDataTable(int32 StageKey);
 	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);
 	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
+	const FTypeInfo* GetTypeDataTable(EType InType);
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
@@ -175,6 +193,7 @@ namespace CMS
 	static UDataTable* CharacterShopDataTable;
 	static UDataTable* StageDataTable;
 	static UDataTable* BattleStageDataTable;
+	static UDataTable* TypeDataTable;
 };
 
 /**

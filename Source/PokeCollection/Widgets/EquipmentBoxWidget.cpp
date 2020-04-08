@@ -8,6 +8,7 @@
 #include "ScrollBox.h"
 
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 #include "PokeEquipment.h"
 
 void UEquipmentBoxWidget::NativeConstruct()
@@ -44,7 +45,7 @@ void UEquipmentBoxWidget::OnOpen()
 
 	for (int32 Index = 0; Index < SlotNum; Index++)
 	{
-		UBoxSlot* BoxSlot = Cast<UBoxSlot>(GridPanel->GetChildAt(Index));
+		UEquipmentSlot* BoxSlot = Cast<UEquipmentSlot>(GridPanel->GetChildAt(Index));
 		if (BoxSlot)
 		{
 			if (HaveEquipments.IsValidIndex(Index))
@@ -55,8 +56,7 @@ void UEquipmentBoxWidget::OnOpen()
 					continue;
 				}
 
-				BoxSlot->SetContentImage(CurrentEquipment->GetEquipmentProfileImage());
-				BoxSlot->SetContentID(EBoxContentType::Equipment, CurrentEquipment->GetEquipmentID());
+				BoxSlot->InitByID(CurrentEquipment->GetEquipmentID());
 				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
@@ -73,4 +73,24 @@ void UEquipmentBoxWidget::OnOpen()
 		}
 
 	}
+}
+
+void UEquipmentSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	BoxContentType = EBoxContentType::Equipment;
+}
+
+void UEquipmentSlot::OnSelectButtonClicked()
+{
+	Super::OnSelectButtonClicked();
+
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	PokeHud->OpenEquipmentInfoPopUp(ContentID);
 }

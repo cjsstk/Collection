@@ -98,8 +98,7 @@ void UInGameCharacterBoxWidget::OnOpen()
 					continue;
 				}
 
-				CharacterSlot->SetProfileImage(CurrentCharacter->GetCharacterProfileImage());
-				CharacterSlot->SetCharacterID(CurrentCharacter->GetCharacterID());
+				CharacterSlot->InitByID(CurrentCharacter->GetCharacterID());
 				CharacterSlot->SetIsMakingParty(bIsMakingParty);
 				CharacterSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
@@ -123,15 +122,12 @@ void UInGameCharacterBoxWidget::OnOpen()
 void UCharacterBoxSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if (SelectCharacterButton)
-	{
-		SelectCharacterButton->OnClicked.AddUniqueDynamic(this, &UCharacterBoxSlot::OnSelectCharacterButtonClicked);
-	}
 }
 
-void UCharacterBoxSlot::OnSelectCharacterButtonClicked()
+void UCharacterBoxSlot::OnSelectButtonClicked()
 {
+	Super::OnSelectButtonClicked();
+
 	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
 	if (!ensure(PokeHud))
 	{
@@ -158,7 +154,7 @@ void UCharacterBoxSlot::OnSelectCharacterButtonClicked()
 				CurrentCharacter->SetJoinedPartyNum(0);
 			}
 
-			APokeCharacter* NextCharacter = Player->GetCharacterByID(CharacterID);
+			APokeCharacter* NextCharacter = Player->GetCharacterByID(ContentID);
 			if (NextCharacter)
 			{
 				NextCharacter->SetJoinedSlotNum(SelectedSlotNum);
@@ -170,21 +166,6 @@ void UCharacterBoxSlot::OnSelectCharacterButtonClicked()
 	}
 	else
 	{
-		PokeHud->OpenInGameCharacterInfoWidget(CharacterID);
+		PokeHud->OpenInGameCharacterInfoWidget(ContentID);
 	}
-}
-
-void UCharacterBoxSlot::SetProfileImage(UTexture2D* InProfileTexture)
-{
-	if (!InProfileTexture)
-	{
-		return;
-	}
-
-	ProfileImage->SetBrushFromTexture(InProfileTexture);
-}
-
-void UCharacterBoxSlot::SetCharacterID(int32 InCharacterID)
-{
-	CharacterID = InCharacterID;
 }

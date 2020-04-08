@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "PaperFlipbookActor.h"
 #include "CMSType.h"
+#include "TypeChart.h"
 #include "PokeCharacter.generated.h"
 
 USTRUCT(Atomic)
@@ -81,6 +82,7 @@ public:
 	class UPaperFlipbook* GetCharacterFlipbook() const;
 	ERank GetCharacterRank() const;
 	float GetAttackRange() const;
+	CharacterType GetCharacterType() const { return MyType; }
 
 	const FStatus GetFinalStatus();
 
@@ -116,6 +118,8 @@ private:
 	FStatus EvStats;
 
 	int32 Level = 1;
+
+	CharacterType MyType;
 
 	/** 
 	 * In Battle

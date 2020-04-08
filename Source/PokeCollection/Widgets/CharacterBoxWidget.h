@@ -5,7 +5,46 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Widgets/InGameBoxWidget.h"
+#include "TypeChart.h"
 #include "CharacterBoxWidget.generated.h"
+
+
+UCLASS()
+class POKECOLLECTION_API UCharacterSlot : public UBoxSlot
+{
+	GENERATED_BODY()
+
+public:
+	virtual void NativeConstruct() override;
+	virtual void OnSelectButtonClicked() override;
+	virtual void InitByID(int32 InContentID) override;
+	virtual void InitByKey(int32 InContentKey);
+
+	void SetContentLevel(int32 InLevel);
+	void SetTypeImages(CharacterType InCharacterType);
+
+protected:
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* LevelText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Type1Image = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Type2Image = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMaterialInterface* TypeMaterial = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 CharacterTypeColumnNum = 6;
+};
 
 
 UCLASS()

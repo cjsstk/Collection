@@ -11,8 +11,10 @@
 #include "UniformGridSlot.h"
 #include "ScrollBox.h"
 
+#include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
+#include "PokeEquipment.h"
 
 void UBoxContentWidget::NativeConstruct()
 {
@@ -131,10 +133,45 @@ void UBoxSlot::NativeConstruct()
 	}
 }
 
-void UBoxSlot::OnSelectContentButtonClicked()
+void UBoxSlot::InitByKey(int32 InContentKey)
 {
-	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) :nullptr;
-	if (!PokeHud)
+	CharacterKey = InContentKey;
+
+	switch (BoxContentType)
+	{
+	case EBoxContentType::Character:
+	{
+		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InContentKey);
+		if (ensure(CharacterInfo))
+		{
+			SetContentImage(CharacterInfo->CharacterProfile);
+			SetContentName(FText::FromName(CharacterInfo->CharacterName));
+			SetBackgroundColor(CharacterInfo->CharacterRank);
+		}
+		break;
+	}
+	case EBoxContentType::Equipment:
+	{
+		const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InContentKey);
+		if (ensure(EquipmentInfo))
+		{
+			SetContentImage(EquipmentInfo->EquipmentProfile);
+			SetContentName(FText::FromName(EquipmentInfo->EquipmentName));
+			SetBackgroundColor(EquipmentInfo->EquipmentRank);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void UBoxSlot::InitByID(int32 InContentID)
+{
+	SetContentID(InContentID);
+
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
 	{
 		return;
 	}
@@ -142,14 +179,37 @@ void UBoxSlot::OnSelectContentButtonClicked()
 	switch (BoxContentType)
 	{
 	case EBoxContentType::Character:
-		PokeHud->OpenInGameCharacterInfoWidget(ContentID);
+	{
+		APokeCharacter* Character = Player->GetCharacterByID(InContentID);
+		if (!Character)
+		{
+			return;
+		}
+
+		int32 CharacterKey = Character->GetCharacterKey();
+		InitByKey(CharacterKey);
 		break;
+	}
 	case EBoxContentType::Equipment:
-		PokeHud->OpenEquipmentInfoPopUp(ContentID);
+	{
+		UPokeEquipment* Equipment = Player->GetEquipmentByID(InContentID);
+		if (!Equipment)
+		{
+			return;
+		}
+
+		int32 EquipmentKey = Equipment->GetEquipmentKey();
+		InitByKey(EquipmentKey);
 		break;
+	}
 	default:
 		break;
 	}
+}
+
+void UBoxSlot::OnSelectContentButtonClicked()
+{
+	OnSelectButtonClicked();
 }
 
 void UBoxSlot::SetContentImage(UTexture2D* InContentTexture)
@@ -162,9 +222,8 @@ void UBoxSlot::SetContentImage(UTexture2D* InContentTexture)
 	ProfileImage->SetBrushFromTexture(InContentTexture);
 }
 
-void UBoxSlot::SetContentID(EBoxContentType InBoxContentType, int32 InContentID)
+void UBoxSlot::SetContentID(int32 InContentID)
 {
-	BoxContentType = InBoxContentType;
 	ContentID = InContentID;
 }
 
@@ -173,14 +232,6 @@ void UBoxSlot::SetContentName(const FText& InName)
 	if (NameText)
 	{
 		NameText->SetText(InName);
-	}
-}
-
-void UBoxSlot::SetContentLevel(int32 InLevel)
-{
-	if (LevelText)
-	{
-		LevelText->SetText(FText::AsNumber(InLevel));
 	}
 }
 

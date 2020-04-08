@@ -199,6 +199,9 @@ void APokeCharacter::InitBaseStatus()
 		BaseStats.SpecialAttack = CharacterInfo->BaseStat_SPAtk;
 		BaseStats.SpecialDefense = CharacterInfo->BaseStat_SPDef;
 		BaseStats.Speed = CharacterInfo->BaseStat_Speed;
+
+		MyType.Type1 = CharacterInfo->Type1;
+		MyType.Type2 = CharacterInfo->Type2;
 	}
 }
 
