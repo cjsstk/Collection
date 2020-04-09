@@ -10,11 +10,13 @@
 #include "UniformGridPanel.h"
 #include "UniformGridSlot.h"
 #include "ScrollBox.h"
+#include "LogMacros.h"
 
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
 #include "PokeEquipment.h"
+#include "Widgets/SortWidget.h"
 
 void UBoxContentWidget::NativeConstruct()
 {
@@ -66,6 +68,18 @@ void UBoxContentWidget::NativeConstruct()
 
 }
 
+//FReply UBoxContentWidget::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+//{
+//	FVector2D SP = InGestureEvent.GetScreenSpacePosition();
+//	FVector2D LSP = InGestureEvent.GetLastScreenSpacePosition();
+//
+//	InGeometry.AbsoluteToLocal(SP);
+//
+//	UE_LOG(LogTemp, Log, TEXT("SP (%.1f, %.1f) / LSP (%.1f, %.1f)"), SP.X, SP.Y, LSP.X, LSP.Y);
+//
+//	return Super::NativeOnTouchMoved(InGeometry, InGestureEvent);
+//}
+
 void UInGameBoxWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -95,7 +109,8 @@ void UInGameBoxWidget::NativeConstruct()
 		BoxContents.AddUnique(BoxContentWidget);
 	}
 
-	ContentsBox->SetActiveWidgetIndex(0);
+	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
+	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInGameBoxWidget::OnOpen()
@@ -113,14 +128,24 @@ void UInGameBoxWidget::OnOpen()
 
 void UInGameBoxWidget::OnCharacterBoxButtonClicked()
 {
-	ContentsBox->SetActiveWidgetIndex(0);
+	CurrentBoxContentType = EBoxContentType::Character;
+
+	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
 	BoxContents[0]->OnOpen();
+
+	CharacterSortWidget->SetVisibility(ESlateVisibility::Visible);
+	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInGameBoxWidget::OnEquipmentBoxButtonClicked()
 {
-	ContentsBox->SetActiveWidgetIndex(1);
+	CurrentBoxContentType = EBoxContentType::Equipment;
+
+	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
 	BoxContents[1]->OnOpen();
+
+	CharacterSortWidget->SetVisibility(ESlateVisibility::Collapsed);
+	EquipmentSortWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UBoxSlot::NativeConstruct()
@@ -129,6 +154,7 @@ void UBoxSlot::NativeConstruct()
 
 	if (SelectContentButton)
 	{
+		SelectContentButton->SetTouchMethod(EButtonTouchMethod::PreciseTap);
 		SelectContentButton->OnClicked.AddUniqueDynamic(this, &UBoxSlot::OnSelectContentButtonClicked);
 	}
 }
@@ -186,8 +212,8 @@ void UBoxSlot::InitByID(int32 InContentID)
 			return;
 		}
 
-		int32 CharacterKey = Character->GetCharacterKey();
-		InitByKey(CharacterKey);
+		int32 CurrentCharacterKey = Character->GetCharacterKey();
+		InitByKey(CurrentCharacterKey);
 		break;
 	}
 	case EBoxContentType::Equipment:

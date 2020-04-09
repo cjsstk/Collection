@@ -64,6 +64,8 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void OnOpen() {};
 
+	//virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent);
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackgroundImage = nullptr;
@@ -125,9 +127,17 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UWidgetSwitcher* ContentsBox = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class USortWidget* CharacterSortWidget = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class USortWidget* EquipmentSortWidget = nullptr;
+
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FBoxContentStruct> ContentWidgets;
 
 	UPROPERTY(Transient)
 	TArray<class UBoxContentWidget*> BoxContents;
+
+	EBoxContentType CurrentBoxContentType = EBoxContentType::Character;
 };
