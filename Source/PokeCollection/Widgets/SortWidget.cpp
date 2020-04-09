@@ -29,7 +29,7 @@ void USortWidget::OnSortButtonClicked()
 
 	if (ensure(SortMenuPopUpClass.Get()))
 	{
-		SortMenuPopUp = CreateWidget<USortMenuPopUp>(GetWorld(), SortMenuPopUpClass, FName("SortMenuPopUp"));
+		SortMenuPopUp = CreateWidget<USortMenuPopUp>(GetWorld(), SortMenuPopUpClass);
 		if (!SortMenuPopUp)
 		{
 			ensure(0);
