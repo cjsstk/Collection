@@ -6,6 +6,7 @@
 #include "PaperFlipbookActor.h"
 #include "CMSType.h"
 #include "TypeChart.h"
+#include "SortObjectInterface.h"
 #include "PokeCharacter.generated.h"
 
 USTRUCT(Atomic)
@@ -48,7 +49,7 @@ private:
 };
 
 UCLASS()
-class POKECOLLECTION_API APokeCharacter : public AActor
+class POKECOLLECTION_API APokeCharacter : public AActor, public ISortObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -85,6 +86,14 @@ public:
 	CharacterType GetCharacterType() const { return MyType; }
 
 	const FStatus GetFinalStatus();
+
+	/** 
+	 * ISortObjectInterface Interface
+	 */
+	virtual int32 GetObjectLevel() const override { return Level; };
+	virtual int32 GetObjectKey() const override { return CharacterKey; };
+	virtual ERank GetObjectRank() const override { return GetCharacterRank(); };
+	virtual int32 GetObjectID() const override { return CharacterID; };
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;

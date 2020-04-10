@@ -23,6 +23,22 @@ void UEquipmentBoxWidget::OnOpen()
 
 	SetFocus();
 
+	RefreshSlot();
+}
+
+void UEquipmentBoxWidget::SortContent(FPokeSortInfo InSortInfo)
+{
+	Super::SortContent(InSortInfo);
+
+	CurrentSortInfo = InSortInfo;
+
+	RefreshSlot();
+}
+
+void UEquipmentBoxWidget::RefreshSlot()
+{
+	Super::RefreshSlot();
+
 	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 	if (!ensure(Player))
 	{

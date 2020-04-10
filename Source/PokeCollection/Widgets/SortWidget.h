@@ -4,21 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Button.h"
+#include "PokeCore.h"
+#include "PokeSortInfo.h"
 #include "SortWidget.generated.h"
 
-UENUM()
-enum class ESortKinds
-{
-	Level_Ascending,
-	Level_Descending,
-	Rank_Ascending,
-	Rank_Descending,
-	Index_Ascending,
-	Index_Descending,
-	ID_Ascending,	// È¹µæ ¼ø
-	ID_Descending,
-};
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSortPopUpButtonClicked, FPokeSortInfo, InSortInfo);
+
 
 //UENUM()
 //enum class ESortContent
@@ -64,6 +55,9 @@ public:
 	void OnSelectButtonClicked();
 
 	void SetSortName(FText InSortName);
+	void SetSortInfo(FPokeSortInfo InSortInfo);
+	
+	FOnSortPopUpButtonClicked OnSortPopUpButtonClicked;
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -71,6 +65,8 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SortNameText = nullptr;
+
+	FPokeSortInfo SortInfo;
 
 };
 
@@ -95,7 +91,7 @@ private:
 	class UUniformGridPanel* ButtonGridPanel = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<ESortKinds> SortKinds;
+	TArray<FPokeSortInfo> SortInfos;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class USortPopUpButton> SortPopUpButtonClass;

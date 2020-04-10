@@ -68,6 +68,65 @@ void UBoxContentWidget::NativeConstruct()
 
 }
 
+TArray<class ISortObjectInterface*> UBoxContentWidget::SortObject(TArray<class ISortObjectInterface*> InObjects)
+{
+	QuickSort(0, InObjects.Num() - 1, InObjects);
+
+	return InObjects;
+}
+
+void UBoxContentWidget::QuickSort(int32 Start, int32 End, TArray<class ISortObjectInterface*>& InObjects)
+{
+	if (Start >= End)
+	{
+		return;
+	}
+
+	ISortObjectInterface* Pivot = InObjects[(Start + End) / 2];
+	int Left = Start;
+	int Right = End;
+
+	bool bAscending = CurrentSortInfo.SortAscending == ESortAscending::Ascending;
+
+	while (Left <= Right)
+	{
+		if (bAscending)
+		{
+			while (InObjects[Left]->GetObjectKey() < Pivot->GetObjectKey())
+			{
+				Left++;
+			}
+
+			while (InObjects[Right]->GetObjectKey() > Pivot->GetObjectKey())
+			{
+				Right--;
+			}
+		}
+		else
+		{
+			while (InObjects[Left]->GetObjectKey() > Pivot->GetObjectKey())
+			{
+				Left++;
+			}
+
+			while (InObjects[Right]->GetObjectKey() < Pivot->GetObjectKey())
+			{
+				Right--;
+			}
+		}
+
+		if (Left <= Right)
+		{
+			InObjects.Swap(Left, Right);
+			Left++;
+			Right--;
+		}
+	}
+
+	QuickSort(Start, Right, InObjects);
+	QuickSort(Left, End, InObjects);
+}
+
 //FReply UBoxContentWidget::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 //{
 //	FVector2D SP = InGestureEvent.GetScreenSpacePosition();
@@ -96,6 +155,7 @@ void UInGameBoxWidget::NativeConstruct()
 
 	ContentsBox->ClearChildren();
 	BoxContents.Empty();
+	BoxContents.Init(nullptr, ContentWidgets.Num());
 
 	for (auto&& ContentWidget : ContentWidgets)
 	{
@@ -106,7 +166,7 @@ void UInGameBoxWidget::NativeConstruct()
 		}
 
 		ContentsBox->AddChild(BoxContentWidget);
-		BoxContents.AddUnique(BoxContentWidget);
+		BoxContents[(int32)ContentWidget.BoxContentType] = BoxContentWidget;
 	}
 
 	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
@@ -130,8 +190,14 @@ void UInGameBoxWidget::OnCharacterBoxButtonClicked()
 {
 	CurrentBoxContentType = EBoxContentType::Character;
 
+	if (!BoxContents[(int32)CurrentBoxContentType])
+	{
+		ensure(0);
+		return;
+	}
+
 	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
-	BoxContents[0]->OnOpen();
+	BoxContents[(int32)CurrentBoxContentType]->OnOpen();
 
 	CharacterSortWidget->SetVisibility(ESlateVisibility::Visible);
 	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
@@ -141,11 +207,30 @@ void UInGameBoxWidget::OnEquipmentBoxButtonClicked()
 {
 	CurrentBoxContentType = EBoxContentType::Equipment;
 
+	if (!BoxContents[(int32)CurrentBoxContentType])
+	{
+		ensure(0);
+		return;
+	}
+
 	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
-	BoxContents[1]->OnOpen();
+	BoxContents[(int32)CurrentBoxContentType]->OnOpen();
 
 	CharacterSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 	EquipmentSortWidget->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UInGameBoxWidget::SortContentWidget(FPokeSortInfo InSortInfo)
+{
+	UE_LOG(LogTemp, Log, TEXT("SortButtonClicked"));
+
+	if (!BoxContents[(int32)CurrentBoxContentType])
+	{
+		ensure(0);
+		return;
+	}
+
+	BoxContents[(int32)CurrentBoxContentType]->SortContent(InSortInfo);
 }
 
 void UBoxSlot::NativeConstruct()

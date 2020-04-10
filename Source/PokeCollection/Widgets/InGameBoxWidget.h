@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Widgets/InGameMainWidget.h"
 #include "CMSType.h"
+#include "PokeCore.h"
+#include "PokeSortInfo.h"
 #include "InGameBoxWidget.generated.h"
 
 
@@ -63,10 +65,15 @@ class POKECOLLECTION_API UBoxContentWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void OnOpen() {};
+	virtual void SortContent(FPokeSortInfo InSortInfo) {};
+	virtual void RefreshSlot() {};
 
 	//virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent);
 
 protected:
+	TArray<class ISortObjectInterface*> SortObject(TArray<class ISortObjectInterface*> InObjects);
+	void QuickSort(int32 Left, int32 Right, TArray<class ISortObjectInterface*>& InObjects);
+
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackgroundImage = nullptr;
 
@@ -85,6 +92,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	int32 ColumnNum = 7;
 
+	FPokeSortInfo CurrentSortInfo;
 };
 
 
@@ -95,7 +103,7 @@ struct FBoxContentStruct
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	FText ContentName;
+	EBoxContentType BoxContentType;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UBoxContentWidget> ContentWidgetClass = nullptr;
@@ -116,6 +124,8 @@ public:
 	UFUNCTION()
 	void OnEquipmentBoxButtonClicked();
 
+	UFUNCTION()
+	void SortContentWidget(FPokeSortInfo InSortInfo);
 
 private:
 	UPROPERTY(meta = (BindWidget))

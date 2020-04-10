@@ -4,10 +4,14 @@
 #include "SortWidget.h"
 
 #include "Image.h"
+#include "Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "UniformGridPanel.h"
 #include "UniformGridSlot.h"
 #include "TextBlock.h"
+
+#include "PokeCollectionHUD.h"
+#include "Widgets/InGameBoxWidget.h"
 
 void USortWidget::NativeConstruct()
 {
@@ -56,7 +60,7 @@ void USortMenuPopUp::NativeConstruct()
 
 	ButtonGridPanel->ClearChildren();
 
-	for (int32 KindIndex = 0; KindIndex < SortKinds.Num(); ++KindIndex)
+	for (int32 KindIndex = 0; KindIndex < SortInfos.Num(); ++KindIndex)
 	{
 		USortPopUpButton* SortPopUpButton = CreateWidget<USortPopUpButton>(GetWorld(), SortPopUpButtonClass);
 		if (!SortPopUpButton)
@@ -65,17 +69,29 @@ void USortMenuPopUp::NativeConstruct()
 			continue;
 		}
 
-		ESortKinds CurrentSort = SortKinds[KindIndex];
+		//
+		ESortCategory CurrentCategory = SortInfos[KindIndex].SortCategory;
+		ESortAscending CurrentAscending = SortInfos[KindIndex].SortAscending;
 
-		const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("ESortKinds"), true);
+		const UEnum* enumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("ESortCategory"), true);
 		if (!ensure(enumPtr))
 		{
 			return;
 		}
 
-		FString SortNameString = enumPtr->GetNameStringByIndex((int32)CurrentSort);
+		const UEnum* AenumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("ESortAscending"), true);
+		if (!ensure(AenumPtr))
+		{
+			return;
+		}
 
-		SortPopUpButton->SetSortName(FText::FromString(SortNameString));
+		FString CurrentCategoryString = enumPtr->GetNameStringByIndex((int32)CurrentCategory);
+		FString CurrentAscendingString = AenumPtr->GetNameStringByIndex((int32)CurrentAscending);
+
+		SortPopUpButton->SetSortName(FText::FromString(CurrentCategoryString + CurrentAscendingString));
+		//
+
+		SortPopUpButton->SetSortInfo(SortInfos[KindIndex]);
 
 		UUniformGridSlot* GridSlot = ButtonGridPanel->AddChildToUniformGrid(SortPopUpButton, KindIndex / ColumnNum, KindIndex % ColumnNum);
 		if (ensure(GridSlot))
@@ -99,12 +115,22 @@ void USortPopUpButton::NativeConstruct()
 	if (SortSelectButton)
 	{
 		SortSelectButton->OnClicked.AddUniqueDynamic(this, &USortPopUpButton::OnSelectButtonClicked);
+
+		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+		if (PokeHud)
+		{
+			UInGameBoxWidget* BoxWidget = PokeHud->GetInGameBoxWidget();
+			if (BoxWidget)
+			{
+				OnSortPopUpButtonClicked.AddUniqueDynamic(BoxWidget, &UInGameBoxWidget::SortContentWidget);
+			}
+		}
 	}
 }
 
 void USortPopUpButton::OnSelectButtonClicked()
 {
-
+	OnSortPopUpButtonClicked.Broadcast(SortInfo);
 }
 
 void USortPopUpButton::SetSortName(FText InSortName)
@@ -113,4 +139,9 @@ void USortPopUpButton::SetSortName(FText InSortName)
 	{
 		SortNameText->SetText(InSortName);
 	}
+}
+
+void USortPopUpButton::SetSortInfo(FPokeSortInfo InSortInfo)
+{
+	SortInfo = InSortInfo;
 }

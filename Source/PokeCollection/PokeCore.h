@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
 
 class ABattleManager;
 
@@ -35,3 +36,16 @@ namespace PokeCore
 
 	float GetTypeEffective(EType InAttackType, EType InDefenseType);
 };
+
+//UENUM()
+//enum class ESortKinds
+//{
+//	Level_Ascending,
+//	Level_Descending,
+//	Rank_Ascending,
+//	Rank_Descending,
+//	Index_Ascending,
+//	Index_Descending,
+//	ID_Ascending,	// È¹µæ ¼ø
+//	ID_Descending,
+//};

@@ -146,6 +146,22 @@ void UCharacterBoxWidget::OnOpen()
 
 	SetFocus();
 
+	RefreshSlot();
+}
+
+void UCharacterBoxWidget::SortContent(FPokeSortInfo InSortInfo)
+{
+	Super::SortContent(InSortInfo);
+
+	CurrentSortInfo = InSortInfo;
+
+	RefreshSlot();
+}
+
+void UCharacterBoxWidget::RefreshSlot()
+{
+	Super::RefreshSlot();
+
 	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 	if (!ensure(Player))
 	{
@@ -163,7 +179,18 @@ void UCharacterBoxWidget::OnOpen()
 	}
 
 	const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
+	//
 
+	TArray<ISortObjectInterface*> HaveSortCharacters;
+
+	for (auto&& HaveCharacter : HaveCharacters)
+	{
+		HaveSortCharacters.Add(HaveCharacter);
+	}
+
+	HaveSortCharacters = SortObject(HaveSortCharacters);
+
+	//
 	const int32 SlotNum = GridPanel->GetChildrenCount();
 
 	for (int32 Index = 0; Index < SlotNum; Index++)
@@ -171,9 +198,9 @@ void UCharacterBoxWidget::OnOpen()
 		UCharacterSlot* BoxSlot = Cast<UCharacterSlot>(GridPanel->GetChildAt(Index));
 		if (BoxSlot)
 		{
-			if (HaveCharacters.IsValidIndex(Index))
+			if (HaveSortCharacters.IsValidIndex(Index))
 			{
-				APokeCharacter* CurrentCharacter = HaveCharacters[Index];
+				APokeCharacter* CurrentCharacter = Cast<APokeCharacter>(HaveSortCharacters[Index]);
 				if (!ensure(CurrentCharacter))
 				{
 					continue;
@@ -184,7 +211,7 @@ void UCharacterBoxWidget::OnOpen()
 			}
 			else
 			{
-				if ((Index / ColumnNum) > ((HaveCharacters.Num() - 1) / ColumnNum))
+				if ((Index / ColumnNum) > ((HaveSortCharacters.Num() - 1) / ColumnNum))
 				{
 					BoxSlot->SetVisibility(ESlateVisibility::Collapsed);
 				}
