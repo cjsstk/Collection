@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "CMSType.h"
+#include "PokeSortInfo.h"
 #include "SortObjectInterface.generated.h"
 
 // This class does not need to be modified.
@@ -22,9 +23,5 @@ class POKECOLLECTION_API ISortObjectInterface
 	GENERATED_BODY()
 
 public:
-	virtual int32 GetObjectLevel() const = 0;
-	virtual int32 GetObjectKey() const = 0;
-	virtual ERank GetObjectRank() const = 0;
-	virtual int32 GetObjectID() const = 0;
-
+	virtual int32 GetObjectSortValue(ESortCategory InSortCategory) const = 0;
 };

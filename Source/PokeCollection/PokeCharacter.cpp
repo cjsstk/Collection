@@ -167,6 +167,31 @@ const FStatus APokeCharacter::GetFinalStatus()
 	return FinalStatus;
 }
 
+int32 APokeCharacter::GetObjectSortValue(ESortCategory InSortCategory) const
+{
+	int32 SortValue = 0;
+
+	switch (InSortCategory)
+	{
+	case ESortCategory::Level:
+		SortValue = Level;
+		break;
+	case ESortCategory::Rank:
+		SortValue = (int32)GetCharacterRank();
+		break;
+	case ESortCategory::Index:
+		SortValue = CharacterKey;
+		break;
+	case ESortCategory::ID:
+		SortValue = CharacterID;
+		break;
+	default:
+		break;
+	}
+
+	return SortValue;
+}
+
 void APokeCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

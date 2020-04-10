@@ -33,10 +33,7 @@ public:
 	/**
 	 * ISortObjectInterface Interface
 	 */
-	virtual int32 GetObjectLevel() const override { return Level; };
-	virtual int32 GetObjectKey() const override { return EquipmentKey; };
-	virtual ERank GetObjectRank() const override { return ERank::Normal; };
-	virtual int32 GetObjectID() const override { return EquipmentID; };
+	virtual int32 GetObjectSortValue(ESortCategory InSortCategory) const override;
 
 private:
 	int32 EquipmentID = 0;

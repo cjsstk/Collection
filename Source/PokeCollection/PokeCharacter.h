@@ -90,10 +90,7 @@ public:
 	/** 
 	 * ISortObjectInterface Interface
 	 */
-	virtual int32 GetObjectLevel() const override { return Level; };
-	virtual int32 GetObjectKey() const override { return CharacterKey; };
-	virtual ERank GetObjectRank() const override { return GetCharacterRank(); };
-	virtual int32 GetObjectID() const override { return CharacterID; };
+	virtual int32 GetObjectSortValue(ESortCategory InSortCategory) const override;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;

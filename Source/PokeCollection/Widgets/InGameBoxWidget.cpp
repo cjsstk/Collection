@@ -92,24 +92,24 @@ void UBoxContentWidget::QuickSort(int32 Start, int32 End, TArray<class ISortObje
 	{
 		if (bAscending)
 		{
-			while (InObjects[Left]->GetObjectKey() < Pivot->GetObjectKey())
+			while (InObjects[Left]->GetObjectSortValue(CurrentSortInfo.SortCategory) < Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
 			{
 				Left++;
 			}
 
-			while (InObjects[Right]->GetObjectKey() > Pivot->GetObjectKey())
+			while (InObjects[Right]->GetObjectSortValue(CurrentSortInfo.SortCategory) > Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
 			{
 				Right--;
 			}
 		}
 		else
 		{
-			while (InObjects[Left]->GetObjectKey() > Pivot->GetObjectKey())
+			while (InObjects[Left]->GetObjectSortValue(CurrentSortInfo.SortCategory) > Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
 			{
 				Left++;
 			}
 
-			while (InObjects[Right]->GetObjectKey() < Pivot->GetObjectKey())
+			while (InObjects[Right]->GetObjectSortValue(CurrentSortInfo.SortCategory) < Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
 			{
 				Right--;
 			}

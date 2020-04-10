@@ -65,3 +65,28 @@ FText UPokeEquipment::GetEquipmentDesc() const
 
 	return EquipmentInfo->EquipmentDesc;
 }
+
+int32 UPokeEquipment::GetObjectSortValue(ESortCategory InSortCategory) const
+{
+	int32 SortValue = 0;
+
+	switch (InSortCategory)
+	{
+	case ESortCategory::Level:
+		SortValue = Level;
+		break;
+	case ESortCategory::Rank:
+		SortValue = 0;
+		break;
+	case ESortCategory::Index:
+		SortValue = EquipmentKey;
+		break;
+	case ESortCategory::ID:
+		SortValue = EquipmentID;
+		break;
+	default:
+		break;
+	}
+
+	return SortValue;
+}
