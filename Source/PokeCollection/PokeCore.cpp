@@ -25,14 +25,14 @@ ABattleManager* PokeCore::GetBattleManager(const UWorld* WorldContext)
 	return PokeGameMode->GetBattleManager();
 }
 
-float PokeCore::GetTypeEffective(EType InAttackType, EType InDefenseType)
-{
-	int32 EffectiveIndex = ((int32)InAttackType * (int32)EType::Count) + (int32)InDefenseType;
-	if (!TypeCharts.IsValidIndex(EffectiveIndex))
-	{
-		ensure(0);
-		return 0;
-	}
-
-	return TypeCharts[EffectiveIndex];
-}
+//float PokeCore::GetTypeEffective(EType InAttackType, EType InDefenseType)
+//{
+//	int32 EffectiveIndex = ((int32)InAttackType * (int32)EType::Count) + (int32)InDefenseType;
+//	if (!TypeCharts.IsValidIndex(EffectiveIndex))
+//	{
+//		ensure(0);
+//		return 0;
+//	}
+//
+//	return TypeCharts[EffectiveIndex];
+//}

@@ -157,3 +157,10 @@ void CMS::GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray)
 
 	CharacterDataTable->GetAllRows(FString(""), OutArray);
 }
+
+void CMS::GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray)
+{
+	OutArray.Empty();
+
+	TypeDataTable->GetAllRows(FString(""), OutArray);
+}

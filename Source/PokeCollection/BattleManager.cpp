@@ -8,6 +8,7 @@
 #include "InBattleCharacterPanel.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCharacter.h"
+#include "PokeCore.h"
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -107,6 +108,18 @@ AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIs
 	return nullptr;
 }
 
+float ABattleManager::GetTypeEffective(EType InAttackType, EType InDefenseType)
+{
+	int32 EffectiveIndex = ((int32)InAttackType * (int32)EType::Count) + (int32)InDefenseType;
+	if (!TypeCharts.IsValidIndex(EffectiveIndex))
+	{
+		ensure(0);
+		return 0;
+	}
+
+	return TypeCharts[EffectiveIndex];
+}
+
 void ABattleManager::BeginPlay()
 {
 	Super::BeginPlay();
@@ -132,9 +145,43 @@ void ABattleManager::BeginPlay()
 			BattleCharacterPanels.Add(Panel);
 		}
 	}
+
+	InitTypeEffect();
 }
 
 void ABattleManager::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+}
+
+void ABattleManager::InitTypeEffect()
+{
+	TArray<FTypeInfo*> AllTypeInfos;
+	CMS::GetAllTypeDataTable(AllTypeInfos);
+
+	int32 TypeNum = (int32)EType::Count;
+
+	TypeCharts.Init(1, TypeNum * TypeNum);
+
+	for (int32 TypeIndex = 0; TypeIndex < AllTypeInfos.Num(); ++TypeIndex)
+	{
+		FTypeInfo* CurrentTypeInfo = AllTypeInfos[TypeIndex];
+		if (!CurrentTypeInfo)
+		{
+			return;
+		}
+
+		EType CurrentType = CurrentTypeInfo->Type;
+
+		for (auto&& AttackEffect : CurrentTypeInfo->TypeAttackEffect)
+		{
+			EType DefenseType = AttackEffect.Key;
+			float CurrentAttackEffect = AttackEffect.Value;
+
+			int32 ChartIndex = ((int32)CurrentType * TypeNum) + (int32)DefenseType;
+			TypeCharts[ChartIndex] = CurrentAttackEffect;
+		}
+
+	}
 
 }

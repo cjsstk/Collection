@@ -13,7 +13,7 @@ namespace PokeCore
 {
     class ABattleManager* GetBattleManager(const UWorld* WorldContext);
 
-	static TArray<float> TypeCharts = {
+	/*static TArray<float> TypeCharts = {
 		1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, 0.5f,    0,    1,    1, 0.5f,    1,
 		1, 0.5f, 0.5f,    1,    2,    2,    1,    1,    1,    1,    1,    2, 0.5f,    1, 0.5f,    1,    2,    1,
 		1,    2, 0.5f,    1, 0.5f,    1,    1,    1,    2,    1,    1,    1,    2,    1, 0.5f,    1,    1,    1,
@@ -32,9 +32,9 @@ namespace PokeCore
 		1,    1,    1,    1,    1,    1, 0.5f,    1,    1,    1,    2,    1,    1,    2,    1, 0.5f,    1, 0.5f,
 		1, 0.5f, 0.5f, 0.5f,    1,    2,    1,    1,    1,    1,    1,    1,    2,    1,    1,    1, 0.5f,    2,
 		1, 0.5f,    1,    1,    1,    1,    2, 0.5f,    1,    1,    1,    1,    1,    1,    2,    2, 0.5f,    1
-	};
+	};*/
 
-	float GetTypeEffective(EType InAttackType, EType InDefenseType);
+	//float GetTypeEffective(EType InAttackType, EType InDefenseType);
 };
 
 //UENUM()

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CMSType.h"
+#include "TypeChart.h"
 #include "BattleManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleStart);
@@ -27,6 +28,8 @@ public:
 
 	class AInBattleCharacterPanel* GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel);
 
+	float GetTypeEffective(EType InAttackType, EType InDefenseType);
+
 	FOnBattleStart OnBattleStart;
 	FOnBattleEnd OnBattleEnd;
 
@@ -35,6 +38,8 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	void InitTypeEffect();
+
 	UPROPERTY(Transient)
 	TArray<class APokeCharacter*> BattleMembers;
 
@@ -51,4 +56,6 @@ private:
 	TSubclassOf<class ABattleCharacterActor> BattleCharacterActorClass;
 
 	battleStageKey CurrentBattleStageKey = INVALID_BATTLESTAGEKEY;
+
+	TArray<float> TypeCharts;
 };

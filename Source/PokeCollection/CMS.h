@@ -169,6 +169,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 TextureNum;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<EType, float> TypeAttackEffect;
 };
 
 namespace CMS
@@ -187,6 +190,7 @@ namespace CMS
 
 	void GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank);
 	void GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray);
+	void GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray);
 
 	static UDataTable* CharacterDataTable;
 	static UDataTable* EquipmentDataTable;
