@@ -78,7 +78,7 @@ void UInGameCharacterBoxWidget::OnOpen()
 
 	// Exclude joined party character
 	TArray<APokeCharacter*> ShowCharacters = HaveCharacters;
-	if (bIsMakingParty)
+	//if (bIsMakingParty)
 	{
 		ShowCharacters.RemoveAll([](const APokeCharacter* PC) { return PC->GetJoinedPartyNum() > 0; });
 	}
@@ -99,7 +99,7 @@ void UInGameCharacterBoxWidget::OnOpen()
 				}
 
 				CharacterSlot->InitByID(CurrentCharacter->GetCharacterID());
-				CharacterSlot->SetIsMakingParty(bIsMakingParty);
+				//CharacterSlot->SetIsMakingParty(bIsMakingParty);
 				CharacterSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
@@ -126,7 +126,7 @@ void UCharacterBoxSlot::NativeConstruct()
 
 void UCharacterBoxSlot::OnSelectButtonClicked()
 {
-	Super::OnSelectButtonClicked();
+	//Super::OnSelectButtonClicked();
 
 	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
 	if (!ensure(PokeHud))

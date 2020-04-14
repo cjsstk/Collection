@@ -176,26 +176,24 @@ void APokeCollectionHUD::OpenInGameBoxWidget()
 
 void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsMakingParty)
 {
-	if (bIsMakingParty)
+	if (ensure(InGameMakePartyWidget))
 	{
-		if (ensure(InGameMakePartyWidget))
-		{
-			InGameMakePartyWidget->RemoveFromViewport();
-			InGameCharacterBoxWidget->SetPrevWidget(InGameMakePartyWidget);
-		}
+		InGameMakePartyWidget->RemoveFromViewport();
+		InGameCharacterBoxWidget->SetPrevWidget(InGameMakePartyWidget);
 	}
-	else
+
+	/*else
 	{
 		if (ensure(InGameMainWidget))
 		{
 			InGameMainWidget->RemoveFromViewport();
 			InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
 		}
-	}
+	}*/
 
 	if (ensure(InGameCharacterBoxWidget))
 	{
-		InGameCharacterBoxWidget->SetIsMakingParty(bIsMakingParty);
+		//InGameCharacterBoxWidget->SetIsMakingParty(bIsMakingParty);
 		InGameCharacterBoxWidget->AddToViewport();
 		InGameCharacterBoxWidget->OnOpen();
 	}

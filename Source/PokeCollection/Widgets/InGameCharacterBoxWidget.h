@@ -18,10 +18,10 @@ public:
 
 	virtual void OnSelectButtonClicked() override;
 
-	void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+	//void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
 
 private:
-	bool bIsMakingParty = false;
+	bool bIsMakingParty = true;
 };
 
 
@@ -38,7 +38,7 @@ public:
 
 	virtual void OnOpen() override;
 
-	void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+	//void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
 
 	void SetSelectedPartySlotNum(int32 InSelectedPartySlotNum) { SelectedPartySlotNum = InSelectedPartySlotNum; }
 	int32 GetSelectedPartySlotNum() const { return SelectedPartySlotNum; }
@@ -59,7 +59,7 @@ private:
 	int32 ColumnNum = 7;
 	
 	/** Make party */
-	bool bIsMakingParty = false;
+	bool bIsMakingParty = true;
 
 	int32 SelectedPartySlotNum = 0;
 };
