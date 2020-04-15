@@ -28,9 +28,6 @@ private:
 	UPROPERTY(Transient)
 	UMaterialInstanceDynamic* SlotMaterialInstance = nullptr;*/
 
-	UPROPERTY(meta = (BindWidget))
-	class UImage* UnKnownImage;
-
 	bool bEnabled = false;
 };
 

@@ -44,6 +44,9 @@ protected:
 	class UImage* ProfileImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
+	class UVerticalBox* ContentInfoBox = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
 	class UButton* SelectContentButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))

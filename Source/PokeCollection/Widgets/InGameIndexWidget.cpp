@@ -10,6 +10,7 @@
 #include "Image.h"
 #include "TextBlock.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "VerticalBox.h"
 
 #include "CMS.h"
 #include "PokeCharacter.h"
@@ -165,9 +166,14 @@ void UCharacterIndexSlot::RefreshSlot()
 			SlotMaterialInstance->SetScalarParameterValue("GrayParam", bEnabled ? 0 : 1);
 		}*/
 
-		if (UnKnownImage)
+		if (ContentInfoBox)
 		{
-			UnKnownImage->SetVisibility(bEnabled ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+			ContentInfoBox->SetVisibility(bEnabled ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Collapsed);
+		}
+
+		if (ProfileImage)
+		{
+			ProfileImage->SetColorAndOpacity(bEnabled ? FLinearColor(1, 1, 1) : FLinearColor(0, 0, 0));
 		}
 	}
 }
