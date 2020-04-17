@@ -29,14 +29,18 @@ class APokeCollectionCharacter : public ACharacter
 public:
 	APokeCollectionCharacter();
 
-	void InitHaveCharacters();
-	void InitHaveEquipments();
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
 	void AddNewCharacter(characterKey NewCharacterKey);
 
+	/** 
+	 * Player Info
+	 */
 	FName GetPlayerNickName() const { return PlayerNickName; }
+	
 	int32 GetPlayerLevel() const { return PlayerLevel; }
+	void SetPlayerLevel(int32 NewLevel);
+
 	int32 GetPlayerCurrentExp() const { return PlayerCurrentExp; }
 	int32 GetPlayerMaxExp() const { return PlayerMaxExp; }
 
@@ -76,6 +80,10 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void InitHaveCharacters();
+	void InitHaveEquipments();
+	void InitPlayerInfo();
+
 	void TickResourceCharge(float DeltaSeconds);
 	void AddCharacterToIndex(characterKey InCharacterKey);
 

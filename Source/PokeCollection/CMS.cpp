@@ -43,6 +43,12 @@ void CMS::LoadCMS()
 	{
 		TypeDataTable = TypeDT.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> PlayerExperienceDT(TEXT("/Game/CMS/PlayerExperienceTable"));
+	if (ensure(PlayerExperienceDT.Succeeded()))
+	{
+		PlayerExperienceDataTable = PlayerExperienceDT.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -123,6 +129,22 @@ const FTypeInfo* CMS::GetTypeDataTable(EType InType)
 		}
 	}
 	
+	return nullptr;
+}
+
+const FPlayerExperienceTable* CMS::GetPlayerExperienceTable(int32 InCurrentLevel)
+{
+	TArray<FPlayerExperienceTable*> AllTable;
+	PlayerExperienceDataTable->GetAllRows(FString(""), AllTable);
+
+	for (FPlayerExperienceTable* ET : AllTable)
+	{
+		if (ET && ET->Level == InCurrentLevel)
+		{
+			return ET;
+		}
+	}
+
 	return nullptr;
 }
 

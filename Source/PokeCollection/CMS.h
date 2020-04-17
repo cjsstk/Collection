@@ -174,6 +174,19 @@ public:
 	TMap<EType, float> TypeAttackEffect;
 };
 
+USTRUCT(BlueprintType)
+struct FPlayerExperienceTable : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 NeedExperienceForNextLevel;
+};
+
 namespace CMS
 {
 	void LoadCMS();
@@ -185,6 +198,7 @@ namespace CMS
 	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);
 	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
 	const FTypeInfo* GetTypeDataTable(EType InType);
+	const FPlayerExperienceTable* GetPlayerExperienceTable(int32 InCurrentLevel);
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
@@ -198,6 +212,7 @@ namespace CMS
 	static UDataTable* StageDataTable;
 	static UDataTable* BattleStageDataTable;
 	static UDataTable* TypeDataTable;
+	static UDataTable* PlayerExperienceDataTable;
 };
 
 /**

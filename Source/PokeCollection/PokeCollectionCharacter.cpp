@@ -61,6 +61,11 @@ void APokeCollectionCharacter::InitHaveEquipments()
 	}
 }
 
+void APokeCollectionCharacter::InitPlayerInfo()
+{
+	SetPlayerLevel(1);
+}
+
 void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 {
 	APokePlayerController* PC = Cast<APokePlayerController>(GetController());
@@ -110,6 +115,11 @@ void APokeCollectionCharacter::AddNewCharacter(characterKey NewCharacterKey)
 	AddCharacterToIndex(NewCharacterKey);
 
 	OnAddedNewCharacter.Broadcast();
+}
+
+void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
+{
+	PlayerLevel = NewLevel;
 }
 
 void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey)
@@ -213,6 +223,7 @@ void APokeCollectionCharacter::BeginPlay()
 
 	InitHaveCharacters();
 	InitHaveEquipments();
+	InitPlayerInfo();
 
 	// Temp slot setting
 	for (int32 i = 1; i < 5; i++)
