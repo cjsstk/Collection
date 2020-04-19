@@ -33,8 +33,24 @@ void UInGameCharacterBoxWidget::NativeConstruct()
 
 	CharacterGridPanel->ClearChildren();
 
-	const int32 MaxHaveCharactersNum = Player->GetMaxHaveCharactersNum();
-	for (int32 Index = 0; Index < MaxHaveCharactersNum; ++Index)
+	int32 NeedExcludeSlot = 0;
+	if (!bSelectEmptySlot)
+	{
+		NeedExcludeSlot = 1;
+
+		UExcludeCharacterSlot* ExcludeSlot = CreateWidget<UExcludeCharacterSlot>(GetWorld(), ExcludeCharacterSlotClass.Get());
+		if (ensure(ExcludeSlot))
+		{
+			UUniformGridSlot* GridSlot = CharacterGridPanel->AddChildToUniformGrid(ExcludeSlot, 0, 0);
+			if (GridSlot)
+			{
+				GridSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+			}
+		}
+	}
+
+	const int32 MaxHaveCharactersNum = Player->GetMaxHaveCharactersNum() + NeedExcludeSlot;
+	for (int32 Index = NeedExcludeSlot; Index < MaxHaveCharactersNum; ++Index)
 	{
 		UCharacterBoxSlot* CharacterSlot = CreateWidget<UCharacterBoxSlot>(GetWorld(), CharacterBoxSlotClass.Get());
 		if (!ensure(CharacterSlot))
@@ -78,11 +94,9 @@ void UInGameCharacterBoxWidget::OnOpen()
 
 	// Exclude joined party character
 	TArray<APokeCharacter*> ShowCharacters = HaveCharacters;
-	//if (bIsMakingParty)
-	{
-		ShowCharacters.RemoveAll([](const APokeCharacter* PC) { return PC->GetJoinedPartyNum() > 0; });
-	}
+	ShowCharacters.RemoveAll([](const APokeCharacter* PC) { return PC->GetJoinedPartyNum() > 0; });
 
+	int32 HasExcludeSlot = bSelectEmptySlot ? 0 : 1;
 	const int32 SlotNum = CharacterGridPanel->GetChildrenCount();
 
 	for (int32 Index = 0; Index < SlotNum; Index++)
@@ -90,9 +104,9 @@ void UInGameCharacterBoxWidget::OnOpen()
 		UCharacterBoxSlot* CharacterSlot = Cast<UCharacterBoxSlot>(CharacterGridPanel->GetChildAt(Index));
 		if (CharacterSlot)
 		{
-			if (ShowCharacters.IsValidIndex(Index))
+			if (ShowCharacters.IsValidIndex(Index - HasExcludeSlot))
 			{
-				APokeCharacter* CurrentCharacter = ShowCharacters[Index];
+				APokeCharacter* CurrentCharacter = ShowCharacters[Index - HasExcludeSlot];
 				if (!ensure(CurrentCharacter))
 				{
 					continue;
@@ -134,38 +148,71 @@ void UCharacterBoxSlot::OnSelectButtonClicked()
 		return;
 	}
 
-	if (bIsMakingParty)
+	APokeCollectionCharacter* Player = GetOwningPlayerPawn() ? Cast<APokeCollectionCharacter>(GetOwningPlayerPawn()) : nullptr;
+	if (ensure(Player))
 	{
-		APokeCollectionCharacter* Player = GetOwningPlayerPawn() ? Cast<APokeCollectionCharacter>(GetOwningPlayerPawn()) : nullptr;
-		if (ensure(Player))
+		UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
+		if (!CharacterBoxWidget)
 		{
-			UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
-			if (!CharacterBoxWidget)
-			{
-				return;
-			}
-
-			int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
-
-			APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(1, SelectedSlotNum);
-			if (CurrentCharacter)
-			{
-				CurrentCharacter->SetJoinedSlotNum(0);
-				CurrentCharacter->SetJoinedPartyNum(0);
-			}
-
-			APokeCharacter* NextCharacter = Player->GetCharacterByID(ContentID);
-			if (NextCharacter)
-			{
-				NextCharacter->SetJoinedSlotNum(SelectedSlotNum);
-				NextCharacter->SetJoinedPartyNum(1);
-			}
-
-			PokeHud->OnBackButtonClicked(CharacterBoxWidget);
+			return;
 		}
+
+		int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
+
+		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(1, SelectedSlotNum);
+		if (CurrentCharacter)
+		{
+			CurrentCharacter->SetJoinedSlotNum(0);
+			CurrentCharacter->SetJoinedPartyNum(0);
+		}
+
+		APokeCharacter* NextCharacter = Player->GetCharacterByID(ContentID);
+		if (NextCharacter)
+		{
+			NextCharacter->SetJoinedSlotNum(SelectedSlotNum);
+			NextCharacter->SetJoinedPartyNum(1);
+		}
+
+		PokeHud->OnBackButtonClicked(CharacterBoxWidget);
 	}
-	else
+}
+
+void UExcludeCharacterSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (ExcludeButton)
 	{
-		PokeHud->OpenInGameCharacterInfoWidget(ContentID);
+		ExcludeButton->OnClicked.AddUniqueDynamic(this, &UExcludeCharacterSlot::OnExcludeButtonClicked);
+	}
+}
+
+void UExcludeCharacterSlot::OnExcludeButtonClicked()
+{
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (!ensure(PokeHud))
+	{
+		return;
+	}
+
+	APokeCollectionCharacter* Player = GetOwningPlayerPawn() ? Cast<APokeCollectionCharacter>(GetOwningPlayerPawn()) : nullptr;
+	if (ensure(Player))
+	{
+		UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
+		if (!CharacterBoxWidget)
+		{
+			return;
+		}
+
+		int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
+
+		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(1, SelectedSlotNum);
+		if (CurrentCharacter)
+		{
+			CurrentCharacter->SetJoinedSlotNum(0);
+			CurrentCharacter->SetJoinedPartyNum(0);
+		}
+
+		PokeHud->OnBackButtonClicked(CharacterBoxWidget);
 	}
 }

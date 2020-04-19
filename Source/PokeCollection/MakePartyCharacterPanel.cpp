@@ -52,7 +52,7 @@ void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Typ
 				return;
 			}
 
-			PokeHud->OpenInGameCharacterBoxWidget(true);
+			PokeHud->OpenInGameCharacterBoxWidget(bIsEmptySlot);
 			UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
 			if (CharacterBoxWidget)
 			{

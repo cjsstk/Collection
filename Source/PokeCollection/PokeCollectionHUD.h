@@ -18,7 +18,7 @@ class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 
 public:
 	void OpenInGameBoxWidget();
-	void OpenInGameCharacterBoxWidget(bool bIsMakingParty);
+	void OpenInGameCharacterBoxWidget(bool bIsEmpySlot);
 	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
 	void OpenInGameShopWidget();
 	void OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType);

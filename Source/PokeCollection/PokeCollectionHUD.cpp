@@ -174,7 +174,7 @@ void APokeCollectionHUD::OpenInGameBoxWidget()
 	}
 }
 
-void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsMakingParty)
+void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsEmpySlot)
 {
 	if (ensure(InGameMakePartyWidget))
 	{
@@ -182,18 +182,9 @@ void APokeCollectionHUD::OpenInGameCharacterBoxWidget(bool bIsMakingParty)
 		InGameCharacterBoxWidget->SetPrevWidget(InGameMakePartyWidget);
 	}
 
-	/*else
-	{
-		if (ensure(InGameMainWidget))
-		{
-			InGameMainWidget->RemoveFromViewport();
-			InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}*/
-
 	if (ensure(InGameCharacterBoxWidget))
 	{
-		//InGameCharacterBoxWidget->SetIsMakingParty(bIsMakingParty);
+		InGameCharacterBoxWidget->SetEmptySlotSelected(bIsEmpySlot);
 		InGameCharacterBoxWidget->AddToViewport();
 		InGameCharacterBoxWidget->OnOpen();
 	}

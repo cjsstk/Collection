@@ -15,18 +15,32 @@ class POKECOLLECTION_API UCharacterBoxSlot : public UCharacterSlot
 
 public:
 	virtual void NativeConstruct() override;
-
 	virtual void OnSelectButtonClicked() override;
 
-	//void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+private:
+
+};
+
+/** exclude character from slot */
+UCLASS()
+class POKECOLLECTION_API UExcludeCharacterSlot : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	virtual void NativeConstruct() override;
+	
+	UFUNCTION()
+	void OnExcludeButtonClicked();
 
 private:
-	bool bIsMakingParty = true;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ExcludeButton = nullptr;
 };
 
 
 /**
- * Character Box Widget
+ * Making Party Character Box Widget
  */
 UCLASS()
 class POKECOLLECTION_API UInGameCharacterBoxWidget : public UInGameWidget
@@ -39,6 +53,7 @@ public:
 	virtual void OnOpen() override;
 
 	//void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
+	void SetEmptySlotSelected(bool bInIsEmptySlot) { bSelectEmptySlot = bInIsEmptySlot; };
 
 	void SetSelectedPartySlotNum(int32 InSelectedPartySlotNum) { SelectedPartySlotNum = InSelectedPartySlotNum; }
 	int32 GetSelectedPartySlotNum() const { return SelectedPartySlotNum; }
@@ -56,10 +71,15 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UCharacterBoxSlot> CharacterBoxSlotClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UExcludeCharacterSlot> ExcludeCharacterSlotClass;
+
 	int32 ColumnNum = 7;
 	
 	/** Make party */
 	bool bIsMakingParty = true;
+
+	bool bSelectEmptySlot = false;
 
 	int32 SelectedPartySlotNum = 0;
 };

@@ -85,11 +85,13 @@ void UInGameMakePartyWidget::RefreshSlots()
 			if (ensure(CurrentSlotCharacter))
 			{
 				CharacterSlot->SetFlipbook(CurrentSlotCharacter->GetCharacterFlipbook());
+				CharacterSlot->SetIsEmptySlot(false);
 			}
 		}
 		else
 		{
 			CharacterSlot->SetFlipbook(nullptr);
+			CharacterSlot->SetIsEmptySlot(true);
 		}
 	}
 

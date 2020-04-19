@@ -16,6 +16,7 @@ public:
 
 	int32 GetSlotNum() const { return SlotNum; }
 	void SetFlipbook(class UPaperFlipbook* NewFlipbook);
+	void SetIsEmptySlot(bool bInIsEmptySlot) { bIsEmptySlot = bInIsEmptySlot; }
 
 	virtual void NotifyActorOnReleased(FKey PressedButton = EKeys::LeftMouseButton) override;
 	virtual void NotifyActorOnInputTouchEnd(const ETouchIndex::Type FingerIndex = ETouchIndex::Type::Touch1) override;
@@ -36,5 +37,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 SlotNum = 0;
+
+	bool bIsEmptySlot = false;
 
 };
