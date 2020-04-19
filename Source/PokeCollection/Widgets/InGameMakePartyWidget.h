@@ -25,11 +25,35 @@ public:
 	UFUNCTION()
 	void OnDecisionButtonClicked();
 
+	UFUNCTION()
+	void OnParty1ButtonClicked();
+
+	UFUNCTION()
+	void OnParty2ButtonClicked();
+
+	UFUNCTION()
+	void OnParty3ButtonClicked();
+
+	UFUNCTION()
+	void OnParty4ButtonClicked();
+
 	void SetJustBeforeBattle(bool bNewJustBeforeBattle) { bJustBeforeBattle = bNewJustBeforeBattle; }
 
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* DecisionButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Party1Button = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Party2Button = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Party3Button = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Party4Button = nullptr;
 
 	UPROPERTY(Transient)
 	TArray<class AMakePartyCharacterPanel*> CharacterSlots;

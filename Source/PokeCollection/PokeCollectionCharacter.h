@@ -50,6 +50,9 @@ public:
 	void SetCurrentSelectedStageNum(int32 NewSelectedStageNum) { CurrentSelectedStageNum = FMath::Clamp(NewSelectedStageNum, 1, MaxOpenedStageNum); }
 	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
 
+	void SetCurrentSelectedPartyNum(int32 NewSelectedPartyNum) { CurrentSelectedParty = NewSelectedPartyNum; }
+	int32 GetCurrentSelectedPartyNum() const { return CurrentSelectedParty; }
+
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
 
 	bool IsCompleteIndexCharacter(characterKey InCharacterKey);;
@@ -102,6 +105,8 @@ private:
 	battleStageKey CurrentSelectedBattleStageKey = 0;
 	int32 CurrentSelectedStageNum = 1;
 	int32 MaxOpenedStageNum = 2;
+
+	int32 CurrentSelectedParty = 1;
 
 	/**
 	 * Characters

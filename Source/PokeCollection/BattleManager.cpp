@@ -34,7 +34,8 @@ void ABattleManager::BattleStart()
 	PlayerCharacter->SetPlayerMode(EPlayerMode::BattleMode);
 
 	/** Set my characters */
-	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetPartyCharacters(1);
+	int32 CurrentPartyNum = PlayerCharacter->GetCurrentSelectedPartyNum();
+	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetPartyCharacters(CurrentPartyNum);
 
 	for (auto&& PartyMember : CurrentPartyCharacters)
 	{

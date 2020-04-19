@@ -23,6 +23,26 @@ void UInGameMakePartyWidget::NativeConstruct()
 		DecisionButton->OnClicked.AddUniqueDynamic(this, &UInGameMakePartyWidget::OnDecisionButtonClicked);
 	}
 
+	if (Party1Button)
+	{
+		Party1Button->OnClicked.AddUniqueDynamic(this, &UInGameMakePartyWidget::OnParty1ButtonClicked);
+	}
+
+	if (Party2Button)
+	{
+		Party2Button->OnClicked.AddUniqueDynamic(this, &UInGameMakePartyWidget::OnParty2ButtonClicked);
+	}
+
+	if (Party3Button)
+	{
+		Party3Button->OnClicked.AddUniqueDynamic(this, &UInGameMakePartyWidget::OnParty3ButtonClicked);
+	}
+
+	if (Party4Button)
+	{
+		Party4Button->OnClicked.AddUniqueDynamic(this, &UInGameMakePartyWidget::OnParty4ButtonClicked);
+	}
+
 	CharacterSlots.Empty();
 
 	TArray<AActor*> OutPartySlots;
@@ -74,7 +94,9 @@ void UInGameMakePartyWidget::RefreshSlots()
 		return;
 	}
 
-	const TMap<int32, APokeCharacter*> PartyCharacters = Player->GetPartyCharacters(1);
+	int32 CurrentPartyNum = Player->GetCurrentSelectedPartyNum();
+
+	const TMap<int32, APokeCharacter*> PartyCharacters = Player->GetPartyCharacters(CurrentPartyNum);
 
 	for (AMakePartyCharacterPanel* CharacterSlot : CharacterSlots)
 	{
@@ -116,4 +138,56 @@ void UInGameMakePartyWidget::OnDecisionButtonClicked()
 			OnBack();
 		}
 	}
+}
+
+void UInGameMakePartyWidget::OnParty1ButtonClicked()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	Player->SetCurrentSelectedPartyNum(1);
+
+	RefreshSlots();
+}
+
+void UInGameMakePartyWidget::OnParty2ButtonClicked()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	Player->SetCurrentSelectedPartyNum(2);
+
+	RefreshSlots();
+}
+
+void UInGameMakePartyWidget::OnParty3ButtonClicked()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	Player->SetCurrentSelectedPartyNum(3);
+
+	RefreshSlots();
+}
+
+void UInGameMakePartyWidget::OnParty4ButtonClicked()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	Player->SetCurrentSelectedPartyNum(4);
+
+	RefreshSlots();
 }

@@ -158,8 +158,9 @@ void UCharacterBoxSlot::OnSelectButtonClicked()
 		}
 
 		int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
+		int32 SelectedPartyNum = Player->GetCurrentSelectedPartyNum();
 
-		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(1, SelectedSlotNum);
+		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(SelectedPartyNum, SelectedSlotNum);
 		if (CurrentCharacter)
 		{
 			CurrentCharacter->SetJoinedSlotNum(0);
@@ -170,7 +171,7 @@ void UCharacterBoxSlot::OnSelectButtonClicked()
 		if (NextCharacter)
 		{
 			NextCharacter->SetJoinedSlotNum(SelectedSlotNum);
-			NextCharacter->SetJoinedPartyNum(1);
+			NextCharacter->SetJoinedPartyNum(SelectedPartyNum);
 		}
 
 		PokeHud->OnBackButtonClicked(CharacterBoxWidget);
@@ -205,8 +206,9 @@ void UExcludeCharacterSlot::OnExcludeButtonClicked()
 		}
 
 		int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
+		int32 SelectedPartyNum = Player->GetCurrentSelectedPartyNum();
 
-		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(1, SelectedSlotNum);
+		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(SelectedPartyNum, SelectedSlotNum);
 		if (CurrentCharacter)
 		{
 			CurrentCharacter->SetJoinedSlotNum(0);

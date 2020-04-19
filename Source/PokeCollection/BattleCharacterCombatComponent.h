@@ -21,8 +21,12 @@ protected:
 
 private:
 	void TickFindNewTarget();
+	void TickAttackTarget(float DeltaTime);
 
 	UPROPERTY(Transient)
 	class ABattleCharacterActor* TargetCharacter = nullptr;
 		
+	float AttackDelaySeconds = 2.0f;
+	float AttackDelayAgeSeconds = 0.0f;
+
 };

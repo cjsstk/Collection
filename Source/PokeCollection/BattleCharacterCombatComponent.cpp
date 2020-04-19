@@ -22,6 +22,7 @@ void UBattleCharacterCombatComponent::TickComponent(float DeltaTime, ELevelTick 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	TickFindNewTarget();
+	TickAttackTarget(DeltaTime);
 }
 
 void UBattleCharacterCombatComponent::TickFindNewTarget()
@@ -37,15 +38,43 @@ void UBattleCharacterCombatComponent::TickFindNewTarget()
 		return;
 	}
 
+	// Temp
+	if (BattleCharacter->IsEnemy())
+	{
+		return;
+	}
+	//
+
 	const TArray<AActor*> AttackOverlapActors = BattleCharacter->GetAttackOverlapActors();
 	for (AActor* AttackOverlapActor : AttackOverlapActors)
 	{
 		ABattleCharacterActor* OverlapCharacter = Cast<ABattleCharacterActor>(AttackOverlapActor);
-		if (!OverlapCharacter)
+		if (OverlapCharacter)
 		{
-			//OverlapCharacter->g
+			// TODO : Need Target Rule
+			TargetCharacter = OverlapCharacter;
+			break;
 		}
 	}
 
+}
+
+void UBattleCharacterCombatComponent::TickAttackTarget(float DeltaTime)
+{
+	AttackDelayAgeSeconds += DeltaTime;
+
+	if (AttackDelayAgeSeconds < AttackDelaySeconds)
+	{
+		return;
+	}
+
+	if (!TargetCharacter)
+	{
+		return;
+	}
+
+	TargetCharacter->Destroy();
+	AttackDelayAgeSeconds = 0.0f;
+	TargetCharacter = nullptr;
 }
 
