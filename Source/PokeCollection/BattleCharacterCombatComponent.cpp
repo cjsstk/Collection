@@ -11,6 +11,11 @@ UBattleCharacterCombatComponent::UBattleCharacterCombatComponent()
 }
 
 
+void UBattleCharacterCombatComponent::AttackTarget()
+{
+
+}
+
 void UBattleCharacterCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,6 +34,10 @@ void UBattleCharacterCombatComponent::TickFindNewTarget()
 {
 	if (TargetCharacter)
 	{
+		if (TargetCharacter->IsDead())
+		{
+			TargetCharacter = nullptr;
+		}
 		return;
 	}
 
@@ -73,8 +82,14 @@ void UBattleCharacterCombatComponent::TickAttackTarget(float DeltaTime)
 		return;
 	}
 
-	TargetCharacter->Destroy();
+	if (TargetCharacter->IsDead())
+	{
+		TargetCharacter = nullptr;
+		return;
+	}
+
+	AttackTarget();
 	AttackDelayAgeSeconds = 0.0f;
-	TargetCharacter = nullptr;
+	
 }
 

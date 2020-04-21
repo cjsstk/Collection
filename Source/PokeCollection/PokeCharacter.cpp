@@ -232,7 +232,7 @@ void APokeCharacter::InitBaseStatus()
 
 int32 APokeCharacter::CalcFinalStatus(int32 InBaseStat, int32 InEvStat, bool bIsHP)
 {
-	int FinalStat = 0;
+	int32 FinalStat = 0;
 
 	if (!bIsHP)
 	{
@@ -241,6 +241,10 @@ int32 APokeCharacter::CalcFinalStatus(int32 InBaseStat, int32 InEvStat, bool bIs
 	else
 	{
 		FinalStat = (InBaseStat * 2 * ((float)Level * 0.01f)) + ((float)InEvStat * 0.5f) + Level;
+		if (FinalStat <= 0)
+		{
+			ensure(0);
+		}
 	}
 
 	return FinalStat;

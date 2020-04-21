@@ -15,14 +15,19 @@ class POKECOLLECTION_API UBattleCharacterHealthComponent : public UActorComponen
 public:	
 	UBattleCharacterHealthComponent();
 
-	void SetHealthPoint(int32 InHealthPoint);
+	void TakeDamage(int32 InDamage);
+
+	bool IsDead() const { return bIsDead; }
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+	void SetHealthPoint(int32 InHealthPoint);
+
 	int32 CurrentHealthPoint = 0;
 	int32 MaxHealthPoint = 0;
-		
+	
+	bool bIsDead = false;
 };

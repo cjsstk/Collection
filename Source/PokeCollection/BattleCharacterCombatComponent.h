@@ -15,6 +15,8 @@ class POKECOLLECTION_API UBattleCharacterCombatComponent : public UActorComponen
 public:	
 	UBattleCharacterCombatComponent();
 
+	void AttackTarget();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

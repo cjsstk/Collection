@@ -57,6 +57,19 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 	AttackRangeSphereComponent->SetSphereRadius(AttackRange);
 }
 
+void ABattleCharacterActor::TakeDamage(int32 InDamage)
+{
+	if (HealthPointComponent)
+	{
+		HealthPointComponent->TakeDamage(InDamage);
+	}
+}
+
+bool ABattleCharacterActor::IsDead() const
+{
+	return HealthPointComponent && HealthPointComponent->IsDead();
+}
+
 void ABattleCharacterActor::AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/)
 {
 	DebugString += InDebugString;

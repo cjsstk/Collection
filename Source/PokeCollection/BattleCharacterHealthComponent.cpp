@@ -12,9 +12,20 @@ UBattleCharacterHealthComponent::UBattleCharacterHealthComponent()
 }
 
 
+void UBattleCharacterHealthComponent::TakeDamage(int32 InDamage)
+{
+	SetHealthPoint(CurrentHealthPoint - InDamage);
+}
+
 void UBattleCharacterHealthComponent::SetHealthPoint(int32 InHealthPoint)
 {
 	CurrentHealthPoint = FMath::Clamp(InHealthPoint, 0, MaxHealthPoint);
+
+	if (CurrentHealthPoint <= 0)
+	{
+		bIsDead = true;
+		GetOwner()->Destroy();
+	}
 }
 
 void UBattleCharacterHealthComponent::BeginPlay()
@@ -35,5 +46,12 @@ void UBattleCharacterHealthComponent::TickComponent(float DeltaTime, ELevelTick 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	ABattleCharacterActor* BattleCharacter = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(BattleCharacter))
+	{
+		return;
+	}
+
+	BattleCharacter->AddDebugString(FString::Printf(TEXT("HP : %d/%d"), CurrentHealthPoint, MaxHealthPoint), true);
 }
 

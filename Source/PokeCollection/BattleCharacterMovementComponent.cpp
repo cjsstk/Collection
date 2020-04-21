@@ -30,7 +30,7 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 	const TArray<AActor*>& AttackOverlapCharacters = BattleCharacter->GetAttackOverlapActors();
 	if (AttackOverlapCharacters.Num() > 0)
 	{
-		BattleCharacter->AddDebugString(FString::Printf(TEXT("%d"), AttackOverlapCharacters.Num()), true);
+		//BattleCharacter->AddDebugString(FString::Printf(TEXT("%d"), AttackOverlapCharacters.Num()), true);
 		return;
 	}
 

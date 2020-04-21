@@ -18,13 +18,20 @@ public:
 
 	void InitBattleCharacter(class APokeCharacter& InPokeCharacter);
 
+	void TakeDamage(int32 InDamage);
+
 	const TArray<AActor*>& GetAttackOverlapActors() const { return AttackOverlapActors; };
 	const FStatus& GetFinalStatus() const { return CurrentFinalStatus; }
 	bool IsEnemy() const { return bIsEnemy; }
 
+	bool IsDead() const;
+
 	void AddDebugString(const FString& InDebugString, bool bAddNewLine = true);
 
 	class UPaperFlipbookComponent* GetRenderComponent() const { return RenderComponent; }
+	class UBattleCharacterMovementComponent* GetCharacterMovementComponent() const { return MovementComponent; }
+	class UBattleCharacterCombatComponent* GetCombatComponent() const { return CombatComponent; }
+	class UBattleCharacterHealthComponent* GetHealthComponent() const { return HealthPointComponent; }
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
