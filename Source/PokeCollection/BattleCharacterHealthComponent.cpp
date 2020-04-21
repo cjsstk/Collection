@@ -12,6 +12,12 @@ UBattleCharacterHealthComponent::UBattleCharacterHealthComponent()
 }
 
 
+void UBattleCharacterHealthComponent::InitHP(int32 InHealthPoint)
+{
+	SetMaxHealthPoint(InHealthPoint);
+	SetHealthPoint(InHealthPoint);
+}
+
 void UBattleCharacterHealthComponent::TakeDamage(int32 InDamage)
 {
 	SetHealthPoint(CurrentHealthPoint - InDamage);
@@ -28,18 +34,15 @@ void UBattleCharacterHealthComponent::SetHealthPoint(int32 InHealthPoint)
 	}
 }
 
+void UBattleCharacterHealthComponent::SetMaxHealthPoint(int32 InMaxHealthPoint)
+{
+	MaxHealthPoint = InMaxHealthPoint;
+}
+
 void UBattleCharacterHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ABattleCharacterActor* BattleCharacter = Cast<ABattleCharacterActor>(GetOwner());
-	if (!ensure(BattleCharacter))
-	{
-		return;
-	}
-
-	MaxHealthPoint = BattleCharacter->GetFinalStatus().HealthPoint;
-	CurrentHealthPoint = MaxHealthPoint;
 }
 
 void UBattleCharacterHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

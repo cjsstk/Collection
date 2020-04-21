@@ -33,6 +33,9 @@ public:
 	UFUNCTION()
 	void OnStartBattle();
 
+	UFUNCTION()
+	void OnShutdownBattle();
+
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }

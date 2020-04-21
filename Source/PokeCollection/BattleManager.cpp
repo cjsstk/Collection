@@ -7,15 +7,18 @@
 #include "CMS.h"
 #include "InBattleCharacterPanel.h"
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 #include "PokeCharacter.h"
 #include "PokeCore.h"
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "PaperFlipbookComponent.h"
+#include "TimerManager.h"
 
 ABattleManager::ABattleManager()
 {
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ABattleManager::BattleStart()
@@ -89,7 +92,41 @@ void ABattleManager::BattleStart()
 		}
 	}
 
+	bIsBattlePlaying = true;
 	OnBattleStart.Broadcast();
+}
+
+void ABattleManager::BattleEnd()
+{
+	GetWorldTimerManager().SetTimer(BattleEndTimerHandle, this, &ABattleManager::BattleShutdown, BattleEndDelaySeconds, false);
+
+	bIsBattlePlaying = false;
+	OnBattleEnd.Broadcast();
+}
+
+void ABattleManager::BattleShutdown()
+{
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
+		if (PokeHud)
+		{
+			PokeHud->OpenInGameMakePartyWidget(true);
+		}
+	}
+
+	FBattleReward Reward;
+	GetBattleReward(CurrentBattleStageKey, Reward);
+
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->GetReward(Reward);
+	}
+
+	ClearBattleManager();
+
+	OnBattleShutdown.Broadcast();
 }
 
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)
@@ -153,6 +190,44 @@ void ABattleManager::BeginPlay()
 void ABattleManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	TickCheckBattleEnd();
+}
+
+void ABattleManager::TickCheckBattleEnd()
+{
+	if (!bIsBattlePlaying)
+	{
+		return;
+	}
+
+	int32 LeaveMyCharacterNum = 0;
+	int32 LeaveEnemyCharacterNum = 0;
+
+	for (auto&& BattleCharacter : CreatedBattleCharacters)
+	{
+		if (!BattleCharacter)
+		{
+			continue;
+		}
+
+		if (!BattleCharacter->IsDead())
+		{
+			if (BattleCharacter->IsEnemy())
+			{
+				LeaveEnemyCharacterNum += 1;
+			}
+			else
+			{
+				LeaveMyCharacterNum += 1;
+			}
+		}
+	}
+
+	if (LeaveMyCharacterNum == 0 || LeaveEnemyCharacterNum == 0)
+	{
+		BattleEnd();
+	}
 }
 
 void ABattleManager::InitTypeEffect()
@@ -185,4 +260,46 @@ void ABattleManager::InitTypeEffect()
 
 	}
 
+}
+
+void ABattleManager::ClearBattleManager()
+{
+	BattleMembers.Empty();
+
+	for (auto&& CreatedCharacter : CreatedBattleCharacters)
+	{
+		if (CreatedCharacter)
+		{
+			CreatedCharacter->Destroy();
+		}
+	}
+
+	CreatedBattleCharacters.Empty();
+
+	GetWorldTimerManager().ClearTimer(BattleEndTimerHandle);
+}
+
+void ABattleManager::GetBattleReward(battleStageKey InBattleStageKey, FBattleReward& OutBattleReward)
+{
+	OutBattleReward.GetCharacters.Empty();
+
+	const FBattleStageInfo* BattleStageInfo = CMS::GetBattleStageDataTable(InBattleStageKey);
+	if (!ensure(BattleStageInfo))
+	{
+		return;
+	}
+
+	const TMap<int32, float> DropCharacters = BattleStageInfo->DropCharacterInfos;
+	for (auto&& DropCharacter : DropCharacters)
+	{
+		const int32 RandomInt = FMath::RandRange(0, 10000);
+
+		float GetRate = DropCharacter.Value * 100;
+		if (GetRate >= RandomInt)
+		{
+			OutBattleReward.GetCharacters.Add(DropCharacter.Key);
+		}
+	}
+
+	OutBattleReward.ExperienceAmount = BattleStageInfo->DropExperience;
 }

@@ -152,6 +152,7 @@ void APokeCollectionHUD::BeginPlay()
 	if (ensure(BattleManager))
 	{
 		BattleManager->OnBattleStart.AddUniqueDynamic(this, &APokeCollectionHUD::OnStartBattle);
+		BattleManager->OnBattleShutdown.AddUniqueDynamic(this, &APokeCollectionHUD::OnShutdownBattle);
 	}
 }
 
@@ -330,6 +331,14 @@ void APokeCollectionHUD::OnStartBattle()
 	if (InGameTopStatusBar)
 	{
 		InGameTopStatusBar->RemoveFromViewport();
+	}
+}
+
+void APokeCollectionHUD::OnShutdownBattle()
+{
+	if (InGameTopStatusBar)
+	{
+		InGameTopStatusBar->AddToViewport(1);
 	}
 }
 

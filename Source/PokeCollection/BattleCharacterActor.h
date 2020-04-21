@@ -26,6 +26,9 @@ public:
 
 	bool IsDead() const;
 
+	UFUNCTION()
+	void OnBattleEnded();
+
 	void AddDebugString(const FString& InDebugString, bool bAddNewLine = true);
 
 	class UPaperFlipbookComponent* GetRenderComponent() const { return RenderComponent; }
@@ -34,6 +37,7 @@ public:
 	class UBattleCharacterHealthComponent* GetHealthComponent() const { return HealthPointComponent; }
 
 protected:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
 private:

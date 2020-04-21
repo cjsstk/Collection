@@ -13,7 +13,26 @@ UBattleCharacterCombatComponent::UBattleCharacterCombatComponent()
 
 void UBattleCharacterCombatComponent::AttackTarget()
 {
+	if (!TargetCharacter)
+	{
+		return;
+	}
 
+	ABattleCharacterActor* Character = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(Character))
+	{
+		return;
+	}
+
+	const FStatus& Status = Character->GetFinalStatus();
+	int32 AttackDamage = Status.Attack;
+	
+	if (AttackDamage <= 0)
+	{
+		AttackDamage = 1;
+	}
+
+	TargetCharacter->TakeDamage(AttackDamage);
 }
 
 void UBattleCharacterCombatComponent::BeginPlay()

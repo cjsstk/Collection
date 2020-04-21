@@ -10,6 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleStart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleEnd);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleShutdown);
 
 /**
  * 
@@ -23,6 +24,8 @@ public:
 	ABattleManager();
 
 	void BattleStart();
+	void BattleEnd();
+	void BattleShutdown();
 
 	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };
 
@@ -32,13 +35,17 @@ public:
 
 	FOnBattleStart OnBattleStart;
 	FOnBattleEnd OnBattleEnd;
+	FOnBattleShutdown OnBattleShutdown;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	void TickCheckBattleEnd();
 	void InitTypeEffect();
+	void ClearBattleManager();
+	void GetBattleReward(battleStageKey InBattleStageKey, FBattleReward& OutBattleReward);
 
 	UPROPERTY(Transient)
 	TArray<class APokeCharacter*> BattleMembers;
@@ -58,4 +65,10 @@ private:
 	battleStageKey CurrentBattleStageKey = INVALID_BATTLESTAGEKEY;
 
 	TArray<float> TypeCharts;
+
+	bool bIsBattlePlaying = false;
+
+	FTimerHandle BattleEndTimerHandle;
+
+	float BattleEndDelaySeconds = 2.0f;
 };

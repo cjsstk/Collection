@@ -32,6 +32,7 @@ public:
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
 	void AddNewCharacter(characterKey NewCharacterKey);
+	void GetReward(FBattleReward InBattleReward);
 
 	/** 
 	 * Player Info

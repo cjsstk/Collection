@@ -28,6 +28,14 @@ enum class EShopSlotType
 	Item,
 };
 
+struct FBattleReward
+{
+public:
+	int32 ExperienceAmount;
+
+	TArray<int32> GetCharacters;
+};
+
 static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));
 static FLinearColor SRareColor = FLinearColor::FromSRGBColor(FColor(204, 153, 255));
 static FLinearColor RareColor = FLinearColor::FromSRGBColor(FColor(153, 255, 255));

@@ -117,6 +117,27 @@ void APokeCollectionCharacter::AddNewCharacter(characterKey NewCharacterKey)
 	OnAddedNewCharacter.Broadcast();
 }
 
+void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
+{
+	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);
+
+	for (auto&& PartyMember : CurrentPartyCharacters)
+	{
+		APokeCharacter* PartyCharacter = PartyMember.Value;
+		if (!PartyCharacter)
+		{
+			continue;
+		}
+
+		// get exp
+	}
+
+	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
+	{
+		AddNewCharacter(NewCharacterKey);
+	}
+}
+
 void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 {
 	PlayerLevel = NewLevel;

@@ -149,7 +149,11 @@ public:
 	FText BattleStageName;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<int32> DropCharacterIDs;
+	int32 DropExperience = 0;
+
+	/** Key: characterKey, Value: Rate */
+	UPROPERTY(EditDefaultsOnly)
+	TMap<int32, float> DropCharacterInfos;
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FEnemyInfo> FirstEnemyKeys;

@@ -15,6 +15,7 @@ class POKECOLLECTION_API UBattleCharacterHealthComponent : public UActorComponen
 public:	
 	UBattleCharacterHealthComponent();
 
+	void InitHP(int32 InHealthPoint);
 	void TakeDamage(int32 InDamage);
 
 	bool IsDead() const { return bIsDead; }
@@ -25,6 +26,7 @@ protected:
 
 private:
 	void SetHealthPoint(int32 InHealthPoint);
+	void SetMaxHealthPoint(int32 InMaxHealthPoint);
 
 	int32 CurrentHealthPoint = 0;
 	int32 MaxHealthPoint = 0;

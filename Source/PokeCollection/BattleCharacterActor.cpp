@@ -11,7 +11,9 @@
 #include "BattleCharacterMovementComponent.h"
 #include "BattleCharacterCombatComponent.h"
 #include "BattleCharacterHealthComponent.h"
+#include "BattleManager.h"
 #include "CMS.h"
+#include "PokeCore.h"
 
 
 ABattleCharacterActor::ABattleCharacterActor()
@@ -70,6 +72,11 @@ bool ABattleCharacterActor::IsDead() const
 	return HealthPointComponent && HealthPointComponent->IsDead();
 }
 
+void ABattleCharacterActor::OnBattleEnded()
+{
+	MovementComponent->SetComponentTickEnabled(false);
+}
+
 void ABattleCharacterActor::AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/)
 {
 	DebugString += InDebugString;
@@ -77,6 +84,17 @@ void ABattleCharacterActor::AddDebugString(const FString& InDebugString, bool bA
 	if (bAddNewLine)
 	{
 		DebugString += TEXT("\n");
+	}
+}
+
+void ABattleCharacterActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (ensure(BattleManager))
+	{
+		BattleManager->OnBattleEnd.AddUniqueDynamic(this, &ABattleCharacterActor::OnBattleEnded);
 	}
 }
 
@@ -110,7 +128,7 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 
 	if (!DebugString.IsEmpty())
 	{
-		DrawDebugString(GetWorld(), FVector(0, 0, 100), DebugString, this, FColor::White, 0.1f);
+		DrawDebugString(GetWorld(), FVector(0, -200, 150), DebugString, this, FColor::White, 0.01f);
 
 		DebugString.Empty();
 	}
@@ -125,4 +143,9 @@ void ABattleCharacterActor::SetFinalStatus(FStatus& InFinalStatus)
 	CurrentFinalStatus.SpecialAttack = InFinalStatus.SpecialAttack;
 	CurrentFinalStatus.SpecialDefense = InFinalStatus.SpecialDefense;
 	CurrentFinalStatus.Speed = InFinalStatus.Speed;
+
+	if (ensure(HealthPointComponent))
+	{
+		HealthPointComponent->InitHP(CurrentFinalStatus.HealthPoint);
+	}
 }
