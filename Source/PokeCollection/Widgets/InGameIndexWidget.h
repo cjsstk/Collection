@@ -15,7 +15,7 @@ class POKECOLLECTION_API UCharacterIndexSlot : public UCharacterSlot
 
 public:
 	virtual void NativeConstruct() override;
-	//virtual void OnSelectButtonClicked() override;
+	virtual void OnSelectButtonClicked() override;
 
 	void Init(int32 InCharacterKey);
 	void RefreshSlot();

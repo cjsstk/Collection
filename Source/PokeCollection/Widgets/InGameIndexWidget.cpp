@@ -103,6 +103,10 @@ void UCharacterIndexSlot::NativeConstruct()
 	}*/
 }
 
+void UCharacterIndexSlot::OnSelectButtonClicked()
+{
+}
+
 void UCharacterIndexSlot::Init(int32 InCharacterKey)
 {
 	/*const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);

@@ -19,6 +19,7 @@ public:
 	void SetIsEmptySlot(bool bInIsEmptySlot) { bIsEmptySlot = bInIsEmptySlot; }
 
 	virtual void NotifyActorOnReleased(FKey PressedButton = EKeys::LeftMouseButton) override;
+	virtual void NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex = ETouchIndex::Type::Touch1) override;
 	virtual void NotifyActorOnInputTouchEnd(const ETouchIndex::Type FingerIndex = ETouchIndex::Type::Touch1) override;
 
 protected:

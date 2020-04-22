@@ -37,7 +37,7 @@ void AMakePartyCharacterPanel::NotifyActorOnReleased(FKey PressedButton)
 	UE_LOG(LogTemp, Log, TEXT("NotifyActorOnReleased"));
 }
 
-void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Type FingerIndex)
+void AMakePartyCharacterPanel::NotifyActorOnInputTouchBegin(const ETouchIndex::Type FingerIndex)
 {
 	UE_LOG(LogTemp, Log, TEXT("NotifyActorOnInputTouchEnd"));
 
@@ -60,6 +60,31 @@ void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Typ
 			}
 		}
 	}
+}
+
+void AMakePartyCharacterPanel::NotifyActorOnInputTouchEnd(const ETouchIndex::Type FingerIndex)
+{
+	UE_LOG(LogTemp, Log, TEXT("NotifyActorOnInputTouchEnd"));
+
+	/*APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
+		if (PokeHud)
+		{
+			if (PokeHud->GetInGameCharacterBoxWidget()->IsInViewport())
+			{
+				return;
+			}
+
+			PokeHud->OpenInGameCharacterBoxWidget(bIsEmptySlot);
+			UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
+			if (CharacterBoxWidget)
+			{
+				CharacterBoxWidget->SetSelectedPartySlotNum(SlotNum);
+			}
+		}
+	}*/
 }
 
 void AMakePartyCharacterPanel::BeginPlay()

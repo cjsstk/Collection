@@ -128,7 +128,7 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 
 	if (!DebugString.IsEmpty())
 	{
-		DrawDebugString(GetWorld(), FVector(0, 0, 200), DebugString, this, FColor::White, 0.01f);
+		DrawDebugString(GetWorld(), FVector(0, 0, 300), DebugString, this, FColor::White, 0.01f);
 
 		DebugString.Empty();
 	}
