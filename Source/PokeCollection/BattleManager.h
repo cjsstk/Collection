@@ -26,6 +26,7 @@ public:
 	void BattleStart();
 	void BattleEnd();
 	void BattleShutdown();
+	void TakeReward();
 
 	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };
 

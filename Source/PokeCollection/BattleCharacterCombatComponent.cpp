@@ -32,7 +32,7 @@ void UBattleCharacterCombatComponent::AttackTarget()
 		AttackDamage = 1;
 	}
 
-	TargetCharacter->TakeDamage(AttackDamage);
+	TargetCharacter->TakeBattleDamage(AttackDamage);
 }
 
 void UBattleCharacterCombatComponent::BeginPlay()

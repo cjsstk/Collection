@@ -59,7 +59,7 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 	AttackRangeSphereComponent->SetSphereRadius(AttackRange);
 }
 
-void ABattleCharacterActor::TakeDamage(int32 InDamage)
+void ABattleCharacterActor::TakeBattleDamage(int32 InDamage)
 {
 	if (HealthPointComponent)
 	{
@@ -128,7 +128,7 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 
 	if (!DebugString.IsEmpty())
 	{
-		DrawDebugString(GetWorld(), FVector(0, -200, 150), DebugString, this, FColor::White, 0.01f);
+		DrawDebugString(GetWorld(), FVector(0, 0, 200), DebugString, this, FColor::White, 0.01f);
 
 		DebugString.Empty();
 	}

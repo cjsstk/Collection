@@ -6,6 +6,7 @@
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/InGameBoxWidget.h"
 #include "Widgets/BattleStageInfoPopUp.h"
+#include "Widgets/BattleResultPopUp.h"
 #include "Widgets/EggHatchingWidget.h"
 #include "Widgets/EquipmentInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
@@ -146,6 +147,11 @@ void APokeCollectionHUD::BeginPlay()
 	if (BattleStageInfoPopUpClass.Get())
 	{
 		BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
+	}
+
+	if (BattleResultPopUpClass.Get())
+	{
+		BattleResultPopUp = CreateWidget<UBattleResultPopUp>(GetWorld(), BattleResultPopUpClass, FName("BattleResultPopUp"));
 	}
 
 	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
@@ -312,6 +318,15 @@ void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKe
 	}
 }
 
+void APokeCollectionHUD::OpenBattleResultPopUp(FBattleReward& InBattleReward)
+{
+	if (ensure(BattleResultPopUp))
+	{
+		BattleResultPopUp->AddToViewport(1);
+		BattleResultPopUp->InitResultInfo(InBattleReward);
+	}
+}
+
 void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 {
 	if (ensure(EquipmentInfoPopUp))
@@ -336,10 +351,10 @@ void APokeCollectionHUD::OnStartBattle()
 
 void APokeCollectionHUD::OnShutdownBattle()
 {
-	if (InGameTopStatusBar)
+	/*if (InGameTopStatusBar)
 	{
 		InGameTopStatusBar->AddToViewport(1);
-	}
+	}*/
 }
 
 void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)

@@ -18,7 +18,7 @@ public:
 
 	void InitBattleCharacter(class APokeCharacter& InPokeCharacter);
 
-	void TakeDamage(int32 InDamage);
+	void TakeBattleDamage(int32 InDamage);
 
 	const TArray<AActor*>& GetAttackOverlapActors() const { return AttackOverlapActors; };
 	const FStatus& GetFinalStatus() const { return CurrentFinalStatus; }

@@ -98,7 +98,7 @@ void ABattleManager::BattleStart()
 
 void ABattleManager::BattleEnd()
 {
-	GetWorldTimerManager().SetTimer(BattleEndTimerHandle, this, &ABattleManager::BattleShutdown, BattleEndDelaySeconds, false);
+	GetWorldTimerManager().SetTimer(BattleEndTimerHandle, this, &ABattleManager::TakeReward, BattleEndDelaySeconds, false);
 
 	bIsBattlePlaying = false;
 	OnBattleEnd.Broadcast();
@@ -106,27 +106,30 @@ void ABattleManager::BattleEnd()
 
 void ABattleManager::BattleShutdown()
 {
+	ClearBattleManager();
+
+	OnBattleShutdown.Broadcast();
+}
+
+void ABattleManager::TakeReward()
+{
+	FBattleReward Reward;
+	GetBattleReward(CurrentBattleStageKey, Reward);
+
+	if (ensure(PlayerCharacter))
+	{
+		PlayerCharacter->GetReward(Reward);
+	}
+
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
 	if (PC)
 	{
 		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
 		if (PokeHud)
 		{
-			PokeHud->OpenInGameMakePartyWidget(true);
+			PokeHud->OpenBattleResultPopUp(Reward);
 		}
 	}
-
-	FBattleReward Reward;
-	GetBattleReward(CurrentBattleStageKey, Reward);
-
-	if (PlayerCharacter)
-	{
-		PlayerCharacter->GetReward(Reward);
-	}
-
-	ClearBattleManager();
-
-	OnBattleShutdown.Broadcast();
 }
 
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)
