@@ -31,6 +31,8 @@ public:
 	void OpenBattleResultPopUp(FBattleReward& InBattleReward);
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 
+	void OpenDialogWidget(int32 InDialogKey);
+
 	UFUNCTION()
 	void OnStartBattle();
 
@@ -100,6 +102,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UEquipmentInfoPopUp> EquipmentInfoPopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameDialogWidget> InGameDialogWidgetClass;
 
 	//
 	UPROPERTY(Transient)

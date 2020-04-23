@@ -49,6 +49,12 @@ void CMS::LoadCMS()
 	{
 		PlayerExperienceDataTable = PlayerExperienceDT.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DialogDT(TEXT("/Game/CMS/DialogInfo"));
+	if (ensure(DialogDT.Succeeded()))
+	{
+		DialogDataTable = DialogDT.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -146,6 +152,18 @@ const FPlayerExperienceTable* CMS::GetPlayerExperienceTable(int32 InCurrentLevel
 	}
 
 	return nullptr;
+}
+
+const FDialogInfoTable* CMS::GetDialogDataTable(int32 InDialogKey)
+{
+	if (InDialogKey <= 0)
+	{
+		return nullptr;
+	}
+
+	FDialogInfoTable* DialogInfo = DialogDataTable->FindRow<FDialogInfoTable>(FName(*(FString::FormatAsNumber(InDialogKey))), FString(""));
+
+	return DialogInfo;
 }
 
 const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()

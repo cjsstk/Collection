@@ -66,6 +66,11 @@ void APokeCollectionCharacter::InitPlayerInfo()
 	SetPlayerLevel(1);
 }
 
+void APokeCollectionCharacter::SetPlayerMaxExp(int32 InMaxExp)
+{
+	PlayerMaxExp = InMaxExp;
+}
+
 void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 {
 	APokePlayerController* PC = Cast<APokePlayerController>(GetController());
@@ -141,6 +146,17 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 {
 	PlayerLevel = NewLevel;
+
+	const FPlayerExperienceTable* ExpTable = CMS::GetPlayerExperienceTable(NewLevel);
+	if (ExpTable)
+	{
+		SetPlayerMaxExp(ExpTable->NeedExperienceForNextLevel);
+	}
+	else
+	{
+		SetPlayerMaxExp(99999);
+	}
+
 }
 
 void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey)

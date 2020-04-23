@@ -88,6 +88,8 @@ private:
 	void InitHaveEquipments();
 	void InitPlayerInfo();
 
+	void SetPlayerMaxExp(int32 InMaxExp);
+
 	void TickResourceCharge(float DeltaSeconds);
 	void AddCharacterToIndex(characterKey InCharacterKey);
 

@@ -11,6 +11,7 @@
 #include "Widgets/EquipmentInfoPopUp.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
+#include "Widgets/InGameDialogWidget.h"
 #include "Widgets/InGameShopWidget.h"
 #include "Widgets/BuyConfirmPopUp.h"
 #include "Widgets/InGameIndexWidget.h"
@@ -333,6 +334,24 @@ void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 	{
 		EquipmentInfoPopUp->AddToViewport(2);
 		EquipmentInfoPopUp->InitInfo(InEquipmentID);
+	}
+}
+
+void APokeCollectionHUD::OpenDialogWidget(int32 InDialogKey)
+{
+	if (InGameDialogWidgetClass.Get())
+	{
+		UInGameDialogWidget* DialogWidget = CreateWidget<UInGameDialogWidget>(GetWorld(), InGameDialogWidgetClass, FName("DialogWidget"));
+		if (DialogWidget)
+		{
+			DialogWidget->AddToViewport(1);
+			DialogWidget->InitDialog(InDialogKey);
+		}
+	}
+
+	if (InGameTopStatusBar)
+	{
+		InGameTopStatusBar->RemoveFromViewport();
 	}
 }
 

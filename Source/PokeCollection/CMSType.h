@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CMSType.generated.h"
 
 using characterKey = int32;
 const static characterKey INVALID_CHARACTERKEY = 0;
@@ -34,6 +35,19 @@ public:
 	int32 ExperienceAmount;
 
 	TArray<int32> GetCharacters;
+};
+
+USTRUCT()
+struct FDialogTalk
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	FText TalkPersonName;
+
+	UPROPERTY(EditAnywhere)
+	FString TalkContext;
 };
 
 static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));

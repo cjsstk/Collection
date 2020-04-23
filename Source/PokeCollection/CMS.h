@@ -191,6 +191,17 @@ public:
 	int32 NeedExperienceForNextLevel;
 };
 
+USTRUCT(BlueprintType)
+struct FDialogInfoTable : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FDialogTalk> DialogTalk;
+
+};
+
 namespace CMS
 {
 	void LoadCMS();
@@ -203,6 +214,7 @@ namespace CMS
 	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
 	const FTypeInfo* GetTypeDataTable(EType InType);
 	const FPlayerExperienceTable* GetPlayerExperienceTable(int32 InCurrentLevel);
+	const FDialogInfoTable* GetDialogDataTable(int32 InDialogKey);
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
@@ -210,13 +222,14 @@ namespace CMS
 	void GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray);
 	void GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray);
 
-	static UDataTable* CharacterDataTable;
-	static UDataTable* EquipmentDataTable;
-	static UDataTable* CharacterShopDataTable;
-	static UDataTable* StageDataTable;
-	static UDataTable* BattleStageDataTable;
-	static UDataTable* TypeDataTable;
-	static UDataTable* PlayerExperienceDataTable;
+	static UDataTable* CharacterDataTable = nullptr;
+	static UDataTable* EquipmentDataTable = nullptr;
+	static UDataTable* CharacterShopDataTable = nullptr;
+	static UDataTable* StageDataTable = nullptr;
+	static UDataTable* BattleStageDataTable = nullptr;
+	static UDataTable* TypeDataTable = nullptr;
+	static UDataTable* PlayerExperienceDataTable = nullptr;
+	static UDataTable* DialogDataTable = nullptr;
 };
 
 /**
