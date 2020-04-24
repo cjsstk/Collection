@@ -143,6 +143,11 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 	}
 }
 
+void APokeCollectionCharacter::AddClearBattleStage(battleStageKey InBattleStageKey)
+{
+	SavedClearBattleStageKeys.Add(InBattleStageKey);
+}
+
 void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 {
 	PlayerLevel = NewLevel;
@@ -172,6 +177,11 @@ void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey I
 bool APokeCollectionCharacter::IsCompleteIndexCharacter(characterKey InCharacterKey)
 {
 	return (CharacterIndex.Contains(InCharacterKey) && *CharacterIndex.Find(InCharacterKey)); 
+}
+
+bool APokeCollectionCharacter::IsClearBattleStage(int32 InBattleStageKey)
+{
+	return SavedClearBattleStageKeys.Contains(InBattleStageKey);
 }
 
 const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const

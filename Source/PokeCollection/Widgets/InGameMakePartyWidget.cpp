@@ -126,7 +126,21 @@ void UInGameMakePartyWidget::OnDecisionButtonClicked()
 		ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
 		if (BattleManager)
 		{
-			BattleManager->BattleStart();
+			int32 CurrentBattleStageKey = BattleManager->GetBattleStageKey();
+			bool bIsClearBattleStage = GetPlayer() ? GetPlayer()->IsClearBattleStage(CurrentBattleStageKey) : false;
+
+			if (bIsClearBattleStage)
+			{
+				BattleManager->BattleStart();
+			}
+			else
+			{
+				APokeCollectionHUD* PokeHud = GetPokeHud();
+				if (PokeHud)
+				{
+					PokeHud->OpenDialogWidget(CurrentBattleStageKey);
+				}
+			}
 		}
 	}
 	else

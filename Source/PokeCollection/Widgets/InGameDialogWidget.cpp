@@ -6,7 +6,9 @@
 #include "Button.h"
 #include "TextBlock.h"
 
+#include "BattleManager.h"
 #include "CMS.h"
+#include "PokeCore.h"
 
 void UInGameDialogWidget::NativeConstruct()
 {
@@ -64,6 +66,17 @@ void UInGameDialogWidget::InitDialog(int32 InDialogKey)
 	}
 }
 
+void UInGameDialogWidget::CloseDialog()
+{
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (BattleManager)
+	{
+		BattleManager->BattleStart();
+	}
+
+	RemoveFromViewport();
+}
+
 void UInGameDialogWidget::OnBackgroundButtonClicked()
 {
 	if ((CurrentTextLen - CurrentTextChopNum) <= 0)
@@ -74,7 +87,7 @@ void UInGameDialogWidget::OnBackgroundButtonClicked()
 
 		if (!DialogTalk.IsValidIndex(CurrentDialogIndex))
 		{
-			RemoveFromViewport();
+			CloseDialog();
 		}
 	}
 	else

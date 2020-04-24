@@ -34,17 +34,6 @@ void ABattleManager::BattleStart()
 		return;
 	}
 
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
-	{
-		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
-		if (PokeHud)
-		{
-			PokeHud->OpenDialogWidget(CurrentBattleStageKey);
-		}
-	}
-	return;
-
 	PlayerCharacter->SetPlayerMode(EPlayerMode::BattleMode);
 
 	/** Set my characters */
@@ -130,6 +119,7 @@ void ABattleManager::TakeReward()
 	if (ensure(PlayerCharacter))
 	{
 		PlayerCharacter->GetReward(Reward);
+		PlayerCharacter->AddClearBattleStage(CurrentBattleStageKey);
 	}
 
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();

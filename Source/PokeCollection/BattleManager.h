@@ -28,6 +28,7 @@ public:
 	void BattleShutdown();
 	void TakeReward();
 
+	int32 GetBattleStageKey() const { return CurrentBattleStageKey; }
 	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };
 
 	class AInBattleCharacterPanel* GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel);

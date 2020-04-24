@@ -22,6 +22,7 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void InitDialog(int32 InDialogKey);
+	void CloseDialog();
 
 	UFUNCTION()
 	void OnBackgroundButtonClicked();

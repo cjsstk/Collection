@@ -33,6 +33,7 @@ public:
 
 	void AddNewCharacter(characterKey NewCharacterKey);
 	void GetReward(FBattleReward InBattleReward);
+	void AddClearBattleStage(battleStageKey InBattleStageKey);
 
 	/** 
 	 * Player Info
@@ -57,6 +58,7 @@ public:
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
 
 	bool IsCompleteIndexCharacter(characterKey InCharacterKey);;
+	bool IsClearBattleStage(int32 InBattleStageKey);
 
 	const TArray<class APokeCharacter*>& GetHaveCharacters() const;
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
@@ -146,6 +148,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> SavedEquipmentKeys;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<int32> SavedClearBattleStageKeys;
 
 	/** 
 	 * Resource
