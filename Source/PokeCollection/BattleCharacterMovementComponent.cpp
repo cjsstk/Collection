@@ -27,6 +27,11 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 		return;
 	}
 
+	if (BattleCharacter->IsAttacking())
+	{
+		return;
+	}
+
 	const TArray<AActor*>& AttackOverlapCharacters = BattleCharacter->GetAttackOverlapActors();
 	if (AttackOverlapCharacters.Num() > 0)
 	{

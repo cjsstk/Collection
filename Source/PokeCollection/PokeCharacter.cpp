@@ -116,7 +116,7 @@ UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const
 		return nullptr;
 	}
 
-	return CharacterInfo->CharacterSprite;
+	return CharacterInfo->CharacterSprite_Idle;
 }
 
 ERank APokeCharacter::GetCharacterRank() const

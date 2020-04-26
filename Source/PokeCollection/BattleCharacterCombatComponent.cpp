@@ -24,6 +24,8 @@ void UBattleCharacterCombatComponent::AttackTarget()
 		return;
 	}
 
+	Character->ChangeSprite(ESpriteType::Attack);
+
 	const FStatus& Status = Character->GetFinalStatus();
 	int32 AttackDamage = Status.Attack;
 	

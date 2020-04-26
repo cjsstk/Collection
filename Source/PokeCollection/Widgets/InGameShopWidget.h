@@ -13,12 +13,20 @@ class POKECOLLECTION_API UShopCategoryButtonWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativeConstruct() override;
+
 	void SetSwitcherIndex(int32 InIndex) { SwitcherIndex = InIndex; }
 	void SetCategoryName(const FText& InCategoryName);
+
+	UFUNCTION()
+	void OnCategoryButtonClicked();
 
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CategoryNameText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* CategoryButton = nullptr;
 
 	int32 SwitcherIndex = 0;
 
@@ -77,9 +85,6 @@ public:
 	virtual void OnOpen() {};
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	class UScrollBox* ShopScrollBox = nullptr;
-
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UShopSlot> ShopSlotClass;
 
@@ -107,6 +112,8 @@ class POKECOLLECTION_API UInGameShopWidget : public UInGameWidget
 	
 public:
 	virtual void NativeConstruct() override;
+
+	void SetShopContent(int32 InContentIndex);
 
 private:
 	UPROPERTY(meta = (BindWidget))

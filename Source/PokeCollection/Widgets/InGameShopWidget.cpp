@@ -66,6 +66,16 @@ void UInGameShopWidget::NativeConstruct()
 	ShopContentsBox->SetActiveWidgetIndex(0);
 }
 
+void UShopCategoryButtonWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (CategoryButton)
+	{
+		CategoryButton->OnClicked.AddUniqueDynamic(this, &UShopCategoryButtonWidget::OnCategoryButtonClicked);
+	}
+}
+
 void UShopCategoryButtonWidget::SetCategoryName(const FText& InCategoryName)
 {
 	if (!ensure(CategoryNameText))
@@ -74,6 +84,19 @@ void UShopCategoryButtonWidget::SetCategoryName(const FText& InCategoryName)
 	}
 
 	CategoryNameText->SetText(InCategoryName);
+}
+
+void UShopCategoryButtonWidget::OnCategoryButtonClicked()
+{
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (PokeHud)
+	{
+		UInGameShopWidget* ShopWidget = PokeHud->GetInGameShopWidget();
+		if (ensure(ShopWidget))
+		{
+			ShopWidget->SetShopContent(SwitcherIndex);
+		}
+	}
 }
 
 void UShopContentWidget::NativeConstruct()
@@ -270,4 +293,9 @@ bool UShopSlot::PayEggPrice(int32 InEggMoney)
 	Player->SetMoneyAmount(Player->GetMoneyAmount() - InEggMoney);
 
 	return true;
+}
+
+void UInGameShopWidget::SetShopContent(int32 InContentIndex)
+{
+	ShopContentsBox->SetActiveWidgetIndex(InContentIndex);
 }

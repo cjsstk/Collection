@@ -47,7 +47,10 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	if (ensure(RenderComponent))
 	{
-		RenderComponent->SetFlipbook(CharacterInfo->CharacterSprite);
+		RenderComponent->SetFlipbook(CharacterInfo->CharacterSprite_Idle);
+
+		CharacterSprite_Idle = CharacterInfo->CharacterSprite_Idle;
+		CharacterSprite_Attack = CharacterInfo->CharacterSprite_Attack;
 	}
 
 	FStatus FinalStatus = InPokeCharacter.GetFinalStatus();
@@ -67,14 +70,53 @@ void ABattleCharacterActor::TakeBattleDamage(int32 InDamage)
 	}
 }
 
+void ABattleCharacterActor::ChangeSprite(ESpriteType InSpriteType)
+{
+	if (!ensure(RenderComponent))
+	{
+		return;
+	}
+
+	switch (InSpriteType)
+	{
+	case ESpriteType::Idle:
+		RenderComponent->SetFlipbook(CharacterSprite_Idle);
+		RenderComponent->SetLooping(true);
+		break;
+	case ESpriteType::Attack:
+		RenderComponent->SetFlipbook(CharacterSprite_Attack);
+		RenderComponent->SetLooping(false);
+		break;
+	default:
+		break;
+	}
+}
+
 bool ABattleCharacterActor::IsDead() const
 {
 	return HealthPointComponent && HealthPointComponent->IsDead();
 }
 
+bool ABattleCharacterActor::IsAttacking() const
+{
+	return RenderComponent && (RenderComponent->GetFlipbook() == CharacterSprite_Attack);
+}
+
 void ABattleCharacterActor::OnBattleEnded()
 {
 	MovementComponent->SetComponentTickEnabled(false);
+}
+
+void ABattleCharacterActor::OnFlipbookPlayingEnd()
+{
+	if (!ensure(RenderComponent))
+	{
+		return;
+	}
+
+	RenderComponent->SetFlipbook(CharacterSprite_Idle);
+	RenderComponent->SetLooping(true);
+	RenderComponent->Play();
 }
 
 void ABattleCharacterActor::AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/)
@@ -95,6 +137,11 @@ void ABattleCharacterActor::BeginPlay()
 	if (ensure(BattleManager))
 	{
 		BattleManager->OnBattleEnd.AddUniqueDynamic(this, &ABattleCharacterActor::OnBattleEnded);
+	}
+
+	if (RenderComponent)
+	{
+		RenderComponent->OnFinishedPlaying.AddUniqueDynamic(this, &ABattleCharacterActor::OnFlipbookPlayingEnd);
 	}
 }
 

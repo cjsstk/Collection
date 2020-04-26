@@ -7,6 +7,11 @@
 #include "PokeCharacter.h"
 #include "BattleCharacterActor.generated.h"
 
+enum class ESpriteType
+{
+	Idle,
+	Attack,
+};
 
 UCLASS()
 class POKECOLLECTION_API ABattleCharacterActor : public AActor
@@ -19,15 +24,20 @@ public:
 	void InitBattleCharacter(class APokeCharacter& InPokeCharacter);
 
 	void TakeBattleDamage(int32 InDamage);
+	void ChangeSprite(ESpriteType InSpriteType);
+
 
 	const TArray<AActor*>& GetAttackOverlapActors() const { return AttackOverlapActors; };
 	const FStatus& GetFinalStatus() const { return CurrentFinalStatus; }
 	bool IsEnemy() const { return bIsEnemy; }
-
 	bool IsDead() const;
+	bool IsAttacking() const;
 
 	UFUNCTION()
 	void OnBattleEnded();
+
+	UFUNCTION()
+	void OnFlipbookPlayingEnd();
 
 	void AddDebugString(const FString& InDebugString, bool bAddNewLine = true);
 
@@ -63,6 +73,12 @@ private:
 
 	UPROPERTY(Transient)
 	TArray<AActor*> AttackOverlapActors;
+
+	UPROPERTY(Transient)
+	UPaperFlipbook* CharacterSprite_Idle;
+
+	UPROPERTY(Transient)
+	UPaperFlipbook* CharacterSprite_Attack;
 
 	FStatus CurrentFinalStatus;
 

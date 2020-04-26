@@ -16,6 +16,10 @@ class POKECOLLECTION_API UCharacterShopWidget : public UShopContentWidget
 public:
 	virtual void OnOpen() override;
 
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UScrollBox* ShopScrollBox = nullptr;
+
 };
 
 
@@ -26,5 +30,9 @@ class POKECOLLECTION_API UEquipmentShopWidget : public UShopContentWidget
 
 public:
 	virtual void OnOpen() override;
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UUniformGridPanel* ShopGridPanel = nullptr;
 
 };

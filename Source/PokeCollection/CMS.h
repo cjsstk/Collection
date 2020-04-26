@@ -42,7 +42,10 @@ public:
 	FName CharacterName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPaperFlipbook* CharacterSprite;
+	UPaperFlipbook* CharacterSprite_Idle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPaperFlipbook* CharacterSprite_Attack;
 
 	/** Slot Image */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -51,6 +54,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture* CharacterIndexProfile;
 
+	/** full screen image */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* CharacterImage;
 
