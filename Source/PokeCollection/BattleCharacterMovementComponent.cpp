@@ -39,7 +39,8 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 		return;
 	}
 
-	float MoveSpeed = DeltaTime * BattleCharacter->GetFinalStatus().Speed * 50;
+	float CharacterSpeedStat = (float)BattleCharacter->GetFinalStatus().Speed;
+	float MoveSpeed = DeltaTime * CharacterSpeedStat;
 	MoveSpeed = BattleCharacter->IsEnemy() ? MoveSpeed * -1 : MoveSpeed;
 	FVector NewLocation = BattleCharacter->GetActorLocation() + FVector(0, MoveSpeed, 0);
 

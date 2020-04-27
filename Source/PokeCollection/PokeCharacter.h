@@ -97,7 +97,7 @@ protected:
 
 private:
 	void InitBaseStatus();
-	int32 CalcFinalStatus(int32 InBaseStat, int32 InEvStat, bool bIsHP = false);
+	FStatus CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat);
 
 	int32 CharacterID = 0;
 	int32 CharacterKey = 1;

@@ -157,12 +157,7 @@ const FStatus APokeCharacter::GetFinalStatus()
 {
 	FStatus FinalStatus;
 
-	FinalStatus.HealthPoint = CalcFinalStatus(BaseStats.HealthPoint, EvStats.HealthPoint, true);
-	FinalStatus.Attack = CalcFinalStatus(BaseStats.Attack, EvStats.Attack);
-	FinalStatus.Defense = CalcFinalStatus(BaseStats.Defense, EvStats.Defense);
-	FinalStatus.SpecialAttack = CalcFinalStatus(BaseStats.SpecialAttack, EvStats.SpecialAttack);
-	FinalStatus.SpecialDefense = CalcFinalStatus(BaseStats.SpecialDefense, EvStats.SpecialDefense);
-	FinalStatus.Speed = CalcFinalStatus(BaseStats.Speed, EvStats.Speed);
+	FinalStatus = CalcFinalStatus(BaseStats, EvStats);
 
 	return FinalStatus;
 }
@@ -230,22 +225,16 @@ void APokeCharacter::InitBaseStatus()
 	}
 }
 
-int32 APokeCharacter::CalcFinalStatus(int32 InBaseStat, int32 InEvStat, bool bIsHP)
+FStatus APokeCharacter::CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat)
 {
-	int32 FinalStat = 0;
+	FStatus FinalStat;
 
-	if (!bIsHP)
-	{
-		FinalStat = (InBaseStat * 2 * ((float)Level * 0.01f)) + ((float)InEvStat * 0.5f);
-	}
-	else
-	{
-		FinalStat = (InBaseStat * 2 * ((float)Level * 0.01f)) + ((float)InEvStat * 0.5f) + Level;
-		if (FinalStat <= 0)
-		{
-			ensure(0);
-		}
-	}
+	FinalStat.HealthPoint = InBaseStat.HealthPoint * Level + InEvStat.HealthPoint + 1;
+	FinalStat.Attack = InBaseStat.Attack * Level + InEvStat.Attack;
+	FinalStat.Defense = InBaseStat.Defense * Level + InEvStat.Defense;
+	FinalStat.SpecialAttack = InBaseStat.SpecialAttack * Level + InEvStat.SpecialAttack;
+	FinalStat.SpecialDefense = InBaseStat.SpecialDefense * Level + InEvStat.SpecialDefense;
+	FinalStat.Speed = InBaseStat.Speed + InEvStat.Speed;
 
 	return FinalStat;
 }

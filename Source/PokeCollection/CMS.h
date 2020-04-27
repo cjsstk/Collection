@@ -72,10 +72,10 @@ public:
 
 	/** Base Stats */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BaseStat_HP = 0;
+	int32 BaseStat_HP = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 BaseStat_Attack= 0;
+	int32 BaseStat_Attack = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BaseStat_Defence = 0;
