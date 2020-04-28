@@ -56,9 +56,6 @@ void ASkillProjectileActor::TickCheckHitTarget()
 		return;
 	}
 
-	FVector My = GetActorLocation();
-	FVector Tar = TargetCharacter->GetActorLocation();
-
 	if (FMath::IsNearlyEqual(GetActorLocation().Y, TargetCharacter->GetActorLocation().Y, 10.0f))
 	{
 		OnHitTarget();
