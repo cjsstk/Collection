@@ -90,7 +90,9 @@ public:
 	int32 BaseStat_Speed = 0;
 	//
 
-
+	/** Skill keys. Just until element 3. Last skill is active */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> SkillKeys;
 };
 
 USTRUCT(BlueprintType)
@@ -206,6 +208,30 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FSkillInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* SkillIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 SkillDamage = 0;
+
+	/** Attack count for using skill */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 AttackCount = 5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class ASkillProjectileActor> SpawnProjectileActor;
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UPokeSkill> SkillClass;*/
+
+};
+
 namespace CMS
 {
 	void LoadCMS();
@@ -219,6 +245,7 @@ namespace CMS
 	const FTypeInfo* GetTypeDataTable(EType InType);
 	const FPlayerExperienceTable* GetPlayerExperienceTable(int32 InCurrentLevel);
 	const FDialogInfoTable* GetDialogDataTable(int32 InDialogKey);
+	const FSkillInfo* GetSkillDataTable(int32 InSkillKey);
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
@@ -234,6 +261,7 @@ namespace CMS
 	static UDataTable* TypeDataTable = nullptr;
 	static UDataTable* PlayerExperienceDataTable = nullptr;
 	static UDataTable* DialogDataTable = nullptr;
+	static UDataTable* SkillDataTable = nullptr;
 };
 
 /**

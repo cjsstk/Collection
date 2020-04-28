@@ -14,6 +14,7 @@
 #include "BattleManager.h"
 #include "CMS.h"
 #include "PokeCore.h"
+#include "PokeSkill.h"
 
 
 ABattleCharacterActor::ABattleCharacterActor()
@@ -60,6 +61,36 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	float AttackRange = InPokeCharacter.GetAttackRange();
 	AttackRangeSphereComponent->SetSphereRadius(AttackRange);
+
+	const TArray<int32> SkillKeys = CharacterInfo->SkillKeys;
+	for (int32 SkillIndex = 0; SkillIndex < 4; ++SkillIndex)
+	{
+		if (!SkillKeys.IsValidIndex(SkillIndex))
+		{
+			continue;
+		}
+
+		int32 SkillKey = SkillKeys[SkillIndex];
+
+		const FSkillInfo* SkillInfo = CMS::GetSkillDataTable(SkillKey);
+		if (!ensure(SkillInfo))
+		{
+			continue;
+		}
+
+		/*if (!SkillInfo->SkillClass.Get())
+		{
+			continue;
+		}*/
+
+		UPokeSkill* Skill = NewObject<UPokeSkill>(UPokeSkill::StaticClass());
+		if (ensure(Skill))
+		{
+			Skill->InitSkill(SkillKey);
+			Skill->SetSourceCharacter(this);
+			Skills.Add(Skill);
+		}
+	}
 }
 
 void ABattleCharacterActor::TakeBattleDamage(int32 InDamage)
@@ -149,6 +180,19 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	TickUpdateAttackOverlapActors();
+
+	if (!DebugString.IsEmpty())
+	{
+		DrawDebugString(GetWorld(), FVector(0, 0, 300), DebugString, this, FColor::White, 0.01f);
+
+		DebugString.Empty();
+	}
+
+}
+
+void ABattleCharacterActor::TickUpdateAttackOverlapActors()
+{
 	if (AttackRangeSphereComponent)
 	{
 		AttackOverlapActors.Empty();
@@ -172,14 +216,6 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 			AttackOverlapActors.AddUnique(OverlapActor);
 		}
 	}
-
-	if (!DebugString.IsEmpty())
-	{
-		DrawDebugString(GetWorld(), FVector(0, 0, 300), DebugString, this, FColor::White, 0.01f);
-
-		DebugString.Empty();
-	}
-
 }
 
 void ABattleCharacterActor::SetFinalStatus(FStatus& InFinalStatus)

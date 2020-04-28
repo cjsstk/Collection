@@ -55,6 +55,12 @@ void CMS::LoadCMS()
 	{
 		DialogDataTable = DialogDT.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> SkillDT(TEXT("/Game/CMS/SkillInfo"));
+	if (ensure(SkillDT.Succeeded()))
+	{
+		SkillDataTable = SkillDT.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -164,6 +170,18 @@ const FDialogInfoTable* CMS::GetDialogDataTable(int32 InDialogKey)
 	FDialogInfoTable* DialogInfo = DialogDataTable->FindRow<FDialogInfoTable>(FName(*(FString::FormatAsNumber(InDialogKey))), FString(""));
 
 	return DialogInfo;
+}
+
+const FSkillInfo* CMS::GetSkillDataTable(int32 InSkillKey)
+{
+	if (InSkillKey <= 0)
+	{
+		return nullptr;
+	}
+
+	FSkillInfo* SkillInfo = SkillDataTable->FindRow<FSkillInfo>(FName(*(FString::FormatAsNumber(InSkillKey))), FString(""));
+
+	return SkillInfo;
 }
 
 const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()

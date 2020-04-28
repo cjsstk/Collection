@@ -28,6 +28,7 @@ public:
 
 
 	const TArray<AActor*>& GetAttackOverlapActors() const { return AttackOverlapActors; };
+	const TArray<class UPokeSkill*>& GetSkills() const { return Skills; }
 	const FStatus& GetFinalStatus() const { return CurrentFinalStatus; }
 	bool IsEnemy() const { return bIsEnemy; }
 	bool IsDead() const;
@@ -51,6 +52,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
+	void TickUpdateAttackOverlapActors();
 	void SetFinalStatus(FStatus& InFinalStatus);
 
 	UPROPERTY(VisibleAnywhere)
@@ -73,6 +75,9 @@ private:
 
 	UPROPERTY(Transient)
 	TArray<AActor*> AttackOverlapActors;
+
+	UPROPERTY(Transient)
+	TArray<class UPokeSkill*> Skills;
 
 	UPROPERTY(Transient)
 	UPaperFlipbook* CharacterSprite_Idle;

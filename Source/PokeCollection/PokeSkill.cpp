@@ -6,30 +6,92 @@
 #include "Engine/World.h"
 
 #include "BattleCharacterActor.h"
+#include "BattleCharacterCombatComponent.h"
+#include "CMS.h"
+#include "SkillProjectileActor.h"
+
+void UPokeSkill::InitSkill(int32 InSkillKey)
+{
+	const FSkillInfo* SkillInfo = CMS::GetSkillDataTable(InSkillKey);
+	if (!ensure(SkillInfo))
+	{
+		return;
+	}
+
+	SkillDamage = SkillInfo->SkillDamage;
+	AttackCount = SkillInfo->AttackCount;
+	SpawnProjectileActor = SkillInfo->SpawnProjectileActor;
+}
+
+void UPokeSkill::SetSourceCharacter(ABattleCharacterActor* InSourceCharacter) 
+{
+	if (!InSourceCharacter)
+	{
+		return;
+	}
+
+	SourceCharacter = InSourceCharacter;
+
+	UBattleCharacterCombatComponent* CombatComp = SourceCharacter->GetCombatComponent();
+	if (CombatComp)
+	{
+		CombatComp->OnCharacterAttack.AddUniqueDynamic(this, &UPokeSkill::OnCharacterAttack);
+	}
+
+}
 
 void UPokeSkill::UseSkill(const FPokeUseSkillParams& Params)
 {
 	OnUseSkill(Params);
 }
 
+bool UPokeSkill::CanUseSkill()
+{
+	return (CurrentAttackCount >= AttackCount);
+}
+
+void UPokeSkill::OnCharacterAttack()
+{
+	CurrentAttackCount += 1;
+}
+
 void UPokeSkill::OnUseSkill(const FPokeUseSkillParams& Params)
 {
-	if (!ensure(Params.SourceCharacter))
+	if (!ensure(SourceCharacter))
 	{
 		return;
 	}
 
-	if (Params.SpawnActor.Get())
+	if (!Params.TargetCharacter)
+	{
+		return;
+	}
+
+	int32 TotalSkillDamage = SkillDamage * Params.CharacterStat;
+
+	if (SpawnProjectileActor.Get())
 	{
 		FActorSpawnParameters SpawnParams;
-		SpawnParams.Instigator = Cast<APawn>(Params.SourceCharacter);
-		GetWorld()->SpawnActor<AActor>(Params.SpawnActor.Get(), Params.SourceCharacter->GetActorLocation(), FRotator::ZeroRotator, SpawnParams);
+		SpawnParams.Instigator = Cast<APawn>(SourceCharacter);
+
+		UWorld* World = SourceCharacter->GetWorld();
+		if (!ensure(World))
+		{
+			return;
+		}
+
+		FVector SpawnLocation = SourceCharacter->GetActorLocation() + FVector(-30, 0, 50);
+		ASkillProjectileActor* Projectile = World->SpawnActor<ASkillProjectileActor>(SpawnProjectileActor.Get(), SpawnLocation, FRotator::ZeroRotator, SpawnParams);
+		if (ensure(Projectile))
+		{
+			Projectile->SetProjectileDamage(TotalSkillDamage);
+			Projectile->SetTargetCharacter(*Params.TargetCharacter);
+		}
 	}
-}
+	else
+	{
+		Params.TargetCharacter->TakeBattleDamage(TotalSkillDamage);
+	}
 
-void UPokeSkill_Ember::OnUseSkill(const FPokeUseSkillParams& Params)
-{
-	Super::OnUseSkill(Params);
-
-
+	CurrentAttackCount = 0;
 }

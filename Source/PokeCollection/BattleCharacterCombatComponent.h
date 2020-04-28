@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "BattleCharacterCombatComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterAttack);
+
 
 UCLASS()
 class POKECOLLECTION_API UBattleCharacterCombatComponent : public UActorComponent
@@ -16,6 +18,8 @@ public:
 	UBattleCharacterCombatComponent();
 
 	void AttackTarget();
+
+	FOnCharacterAttack OnCharacterAttack;
 
 protected:
 	virtual void BeginPlay() override;

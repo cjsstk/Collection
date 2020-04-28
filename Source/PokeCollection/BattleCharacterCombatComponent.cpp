@@ -4,6 +4,7 @@
 #include "BattleCharacterCombatComponent.h"
 
 #include "BattleCharacterActor.h"
+#include "PokeSkill.h"
 
 UBattleCharacterCombatComponent::UBattleCharacterCombatComponent()
 {
@@ -27,14 +28,42 @@ void UBattleCharacterCombatComponent::AttackTarget()
 	Character->ChangeSprite(ESpriteType::Attack);
 
 	const FStatus& Status = Character->GetFinalStatus();
-	int32 AttackDamage = Status.Attack;
-	
-	if (AttackDamage <= 0)
+	bool bUseSkill = false;
+
+	const TArray<UPokeSkill*> Skills = Character->GetSkills();
+	for (int32 Index = 0; Index < 3; ++Index)
 	{
-		AttackDamage = 1;
+		if (Skills.IsValidIndex(Index))
+		{
+			UPokeSkill* Skill = Skills[Index];
+			if (Skill && Skill->CanUseSkill())
+			{
+				bUseSkill = true;
+
+				FPokeUseSkillParams Params;
+				Params.TargetCharacter = TargetCharacter;
+				Params.CharacterStat = Status.SpecialAttack;
+				Skill->UseSkill(Params);
+
+				break;
+			}
+		}
 	}
 
-	TargetCharacter->TakeBattleDamage(AttackDamage);
+	// Normal Attack
+	if (!bUseSkill)
+	{
+		int32 AttackDamage = Status.Attack;
+
+		if (AttackDamage <= 0)
+		{
+			AttackDamage = 1;
+		}
+
+		TargetCharacter->TakeBattleDamage(AttackDamage / 3);
+
+		OnCharacterAttack.Broadcast();
+	}
 }
 
 void UBattleCharacterCombatComponent::BeginPlay()
