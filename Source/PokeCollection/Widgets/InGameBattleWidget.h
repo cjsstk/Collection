@@ -14,7 +14,11 @@ class POKECOLLECTION_API UBattleCharacterSkillSlot : public UUserWidget
 public:
 	void SetOwnerBattleCharacter(class ABattleCharacterActor& InBattleCharacter);
 
+	UFUNCTION()
+	void OnUseSkillButtonClicked();
+
 protected:
+	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
@@ -28,6 +32,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* SkillGaugeBar = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* SkillReady = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* UseSkillButton = nullptr;
 
 	UPROPERTY(Transient)
 	class ABattleCharacterActor* OwnerBattleCharacter;

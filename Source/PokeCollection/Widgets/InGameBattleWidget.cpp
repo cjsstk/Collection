@@ -3,6 +3,7 @@
 
 #include "InGameBattleWidget.h"
 
+#include "Button.h"
 #include "HorizontalBox.h"
 #include "HorizontalBoxSlot.h"
 #include "Image.h"
@@ -11,6 +12,8 @@
 #include "BattleCharacterActor.h"
 #include "BattleCharacterCombatComponent.h"
 #include "BattleCharacterHealthComponent.h"
+#include "BattleManager.h"
+#include "PokeCore.h"
 #include "PokeSkill.h"
 
 void UInGameBattleWidget::NativeConstruct()
@@ -29,8 +32,8 @@ void UInGameBattleWidget::NativeConstruct()
 		UBattleCharacterSkillSlot* SkillSlot = CreateWidget<UBattleCharacterSkillSlot>(GetWorld(), CharacterSkillSlotClass.Get());
 		SkillSlot->SetVisibility(ESlateVisibility::Collapsed);
 
-		/*UHorizontalBoxSlot* BoxSlot = SkillSlotBox->AddChildToHorizontalBox(SkillSlot);
-		if (ensure(BoxSlot))
+		UHorizontalBoxSlot* BoxSlot = SkillSlotBox->AddChildToHorizontalBox(SkillSlot);
+		/*if (ensure(BoxSlot))
 		{
 			BoxSlot->SetSize(FSlateChildSize());
 			BoxSlot->SetHorizontalAlignment(HAlign_Center);
@@ -69,6 +72,61 @@ void UBattleCharacterSkillSlot::SetOwnerBattleCharacter(class ABattleCharacterAc
 	InitSlotInfo();
 }
 
+void UBattleCharacterSkillSlot::OnUseSkillButtonClicked()
+{
+	if (!ActiveSkill)
+	{
+		return;
+	}
+
+	if (!OwnerBattleCharacter || OwnerBattleCharacter->IsDead())
+	{
+		return;
+	}
+
+	if (ActiveSkill->CanUseSkill())
+	{
+		FPokeUseSkillParams Params;
+
+		UBattleCharacterCombatComponent* CombatComp = OwnerBattleCharacter->GetCombatComponent();
+		if (CombatComp)
+		{
+			Params.TargetCharacter = CombatComp->GetCurrentTargetCharacter();
+		}
+
+		if (!Params.TargetCharacter)
+		{
+			ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+			if (BattleManager)
+			{
+				const TArray<class ABattleCharacterActor*> Enemies = BattleManager->GetEnemyBattleCharacters();
+				for (auto&& Enemy : Enemies)
+				{
+					if (!Enemy || Enemy->IsDead())
+					{
+						continue;
+					}
+
+					Params.TargetCharacter = Enemy;
+					break;
+				}
+			}
+		}
+
+		ActiveSkill->UseSkill(Params);
+	}
+}
+
+void UBattleCharacterSkillSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (UseSkillButton)
+	{
+		UseSkillButton->OnClicked.AddUniqueDynamic(this, &UBattleCharacterSkillSlot::OnUseSkillButtonClicked);
+	}
+}
+
 void UBattleCharacterSkillSlot::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -102,6 +160,17 @@ void UBattleCharacterSkillSlot::NativeTick(const FGeometry& MyGeometry, float In
 
 		SkillGaugeBar->SetPercent(AttackCount / MaxAttackCount);
 	}
+
+	if (SkillReady)
+	{
+		if (!ActiveSkill)
+		{
+			SkillReady->SetVisibility(ESlateVisibility::Hidden);
+			return;
+		}
+
+		SkillReady->SetVisibility(ActiveSkill->CanUseSkill() ? ESlateVisibility::SelfHitTestInvisible : ESlateVisibility::Hidden);
+	}
 }
 
 void UBattleCharacterSkillSlot::InitSlotInfo()
@@ -118,9 +187,9 @@ void UBattleCharacterSkillSlot::InitSlotInfo()
 
 	const TArray<class UPokeSkill*>& Skills = OwnerBattleCharacter->GetSkills();
 
-	if (Skills.IsValidIndex(3))
+	if (!Skills.IsValidIndex(3))
 	{
-		ensure(0);
+		//ensure(0);
 		return;
 	}
 

@@ -164,6 +164,26 @@ const TArray<class ABattleCharacterActor*> ABattleManager::GetPlayerBattleCharac
 	return PlayerBattleCharacters;
 }
 
+const TArray<class ABattleCharacterActor*> ABattleManager::GetEnemyBattleCharacters()
+{
+	TArray<class ABattleCharacterActor*> EnemyBattleCharacters;
+
+	for (ABattleCharacterActor* BattleCharacters : CreatedBattleCharacters)
+	{
+		if (!ensure(BattleCharacters))
+		{
+			return EnemyBattleCharacters;
+		}
+
+		if (BattleCharacters->IsEnemy())
+		{
+			EnemyBattleCharacters.Add(BattleCharacters);
+		}
+	}
+
+	return EnemyBattleCharacters;
+}
+
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)
 {
 	for (auto&& Panel : BattleCharacterPanels)

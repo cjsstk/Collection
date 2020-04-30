@@ -218,6 +218,9 @@ struct FSkillInfo : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText SkillName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* SkillIcon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

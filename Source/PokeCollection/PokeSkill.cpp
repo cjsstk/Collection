@@ -64,6 +64,7 @@ void UPokeSkill::OnUseSkill(const FPokeUseSkillParams& Params)
 
 	if (!Params.TargetCharacter)
 	{
+		ensure(0);
 		return;
 	}
 

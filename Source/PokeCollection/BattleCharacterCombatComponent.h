@@ -19,6 +19,8 @@ public:
 
 	void AttackTarget();
 
+	class ABattleCharacterActor* GetCurrentTargetCharacter() const { return TargetCharacter; };
+
 	FOnCharacterAttack OnCharacterAttack;
 
 protected:

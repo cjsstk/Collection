@@ -29,6 +29,7 @@ public:
 	void TakeReward();
 
 	const TArray<class ABattleCharacterActor*> GetPlayerBattleCharacters();
+	const TArray<class ABattleCharacterActor*> GetEnemyBattleCharacters();
 
 	int32 GetBattleStageKey() const { return CurrentBattleStageKey; }
 	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };

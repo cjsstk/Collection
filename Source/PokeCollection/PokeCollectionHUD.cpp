@@ -385,10 +385,10 @@ void APokeCollectionHUD::OnStartBattle()
 
 void APokeCollectionHUD::OnShutdownBattle()
 {
-	/*if (InGameTopStatusBar)
+	if (InGameBattleWidget)
 	{
-		InGameTopStatusBar->AddToViewport(1);
-	}*/
+		InGameBattleWidget->RemoveFromViewport();
+	}
 }
 
 void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)
