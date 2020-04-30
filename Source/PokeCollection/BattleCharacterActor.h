@@ -27,6 +27,7 @@ public:
 	void ChangeSprite(ESpriteType InSpriteType);
 
 
+	UTexture2D* GetBattleProfile() const { return CharacterBattleProfile; }
 	const TArray<AActor*>& GetAttackOverlapActors() const { return AttackOverlapActors; };
 	const TArray<class UPokeSkill*>& GetSkills() const { return Skills; }
 	const FStatus& GetFinalStatus() const { return CurrentFinalStatus; }
@@ -72,6 +73,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UBattleCharacterHealthComponent* HealthPointComponent = nullptr;
+
+	UPROPERTY(Transient)
+	UTexture2D* CharacterBattleProfile;
 
 	UPROPERTY(Transient)
 	TArray<AActor*> AttackOverlapActors;

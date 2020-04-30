@@ -54,6 +54,8 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 		CharacterSprite_Attack = CharacterInfo->CharacterSprite_Attack;
 	}
 
+	CharacterBattleProfile = CharacterInfo->CharacterBattleProfile;
+
 	FStatus FinalStatus = InPokeCharacter.GetFinalStatus();
 	SetFinalStatus(FinalStatus);
 

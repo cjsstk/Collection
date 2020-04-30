@@ -28,6 +28,8 @@ public:
 	void BattleShutdown();
 	void TakeReward();
 
+	const TArray<class ABattleCharacterActor*> GetPlayerBattleCharacters();
+
 	int32 GetBattleStageKey() const { return CurrentBattleStageKey; }
 	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };
 

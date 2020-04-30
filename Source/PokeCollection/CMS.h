@@ -52,6 +52,9 @@ public:
 	UTexture2D* CharacterProfile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* CharacterBattleProfile;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture* CharacterIndexProfile;
 
 	/** full screen image */

@@ -3,23 +3,24 @@
 
 #include "PokeCollectionHUD.h"
 
-#include "Widgets/InGameAdventureWidget.h"
-#include "Widgets/InGameBoxWidget.h"
-#include "Widgets/BattleStageInfoPopUp.h"
+#include "BattleManager.h"
+#include "PokeCollectionCharacter.h"
+#include "PokeCore.h"
 #include "Widgets/BattleResultPopUp.h"
+#include "Widgets/BattleStageInfoPopUp.h"
+#include "Widgets/BuyConfirmPopUp.h"
 #include "Widgets/EggHatchingWidget.h"
 #include "Widgets/EquipmentInfoPopUp.h"
+#include "Widgets/InGameAdventureWidget.h"
+#include "Widgets/InGameBattleWidget.h"
+#include "Widgets/InGameBoxWidget.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
 #include "Widgets/InGameDialogWidget.h"
-#include "Widgets/InGameShopWidget.h"
-#include "Widgets/BuyConfirmPopUp.h"
 #include "Widgets/InGameIndexWidget.h"
-#include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
-#include "PokeCollectionCharacter.h"
-#include "PokeCore.h"
-#include "BattleManager.h"
+#include "Widgets/InGameProfileWidget.h"
+#include "Widgets/InGameShopWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -148,6 +149,11 @@ void APokeCollectionHUD::BeginPlay()
 	if (BattleStageInfoPopUpClass.Get())
 	{
 		BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
+	}
+
+	if (InGameBattleWidgetClass.Get())
+	{
+		InGameBattleWidget = CreateWidget<UInGameBattleWidget>(GetWorld(), InGameBattleWidgetClass, FName("InGameBattleWidget"));
 	}
 
 	if (BattleResultPopUpClass.Get())
@@ -316,6 +322,15 @@ void APokeCollectionHUD::OpenBattleStageInfoPopUp(battleStageKey InBattleStageKe
 	{
 		BattleStageInfoPopUp->AddToViewport(2);
 		BattleStageInfoPopUp->InitInfo(InBattleStageKey);
+	}
+}
+
+void APokeCollectionHUD::OpenInGameBattleWidget(const TArray<class ABattleCharacterActor*>& InPlayerBattleCharacter)
+{
+	if (ensure(InGameBattleWidget))
+	{
+		InGameBattleWidget->AddToViewport();
+		InGameBattleWidget->InitBattleCharacters(InPlayerBattleCharacter);
 	}
 }
 

@@ -35,6 +35,8 @@ public:
 	void UseSkill(const FPokeUseSkillParams& Params);
 
 	bool CanUseSkill();
+	int32 GetMaxAttackCount() const { return AttackCount; }
+	int32 GetCurrentAttackCount() const { return CurrentAttackCount; }
 
 	UFUNCTION()
 	void OnCharacterAttack();

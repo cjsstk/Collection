@@ -18,6 +18,8 @@ public:
 	void InitHP(int32 InHealthPoint);
 	void TakeDamage(int32 InDamage);
 
+	int32 GetHealthPoint() const { return CurrentHealthPoint; }
+	int32 GetMaxHealthPoint() const { return MaxHealthPoint; }
 	bool IsDead() const { return bIsDead; }
 
 protected:

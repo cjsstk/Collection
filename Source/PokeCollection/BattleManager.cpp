@@ -92,6 +92,17 @@ void ABattleManager::BattleStart()
 		}
 	}
 
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
+		if (PokeHud)
+		{
+
+			PokeHud->OpenInGameBattleWidget(GetPlayerBattleCharacters());
+		}
+	}
+
 	bIsBattlePlaying = true;
 	OnBattleStart.Broadcast();
 }
@@ -131,6 +142,26 @@ void ABattleManager::TakeReward()
 			PokeHud->OpenBattleResultPopUp(Reward);
 		}
 	}
+}
+
+const TArray<class ABattleCharacterActor*> ABattleManager::GetPlayerBattleCharacters()
+{
+	TArray<class ABattleCharacterActor*> PlayerBattleCharacters;
+
+	for (ABattleCharacterActor* BattleCharacters : CreatedBattleCharacters)
+	{
+		if (!ensure(BattleCharacters))
+		{
+			return PlayerBattleCharacters;
+		}
+
+		if (!BattleCharacters->IsEnemy())
+		{
+			PlayerBattleCharacters.Add(BattleCharacters);
+		}
+	}
+
+	return PlayerBattleCharacters;
 }
 
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)
