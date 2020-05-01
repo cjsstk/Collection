@@ -8,9 +8,8 @@
 #include "CMS.h"
 #include "PokeCollectionHUD.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWidgetLoaded);
+
 UCLASS()
 class POKECOLLECTION_API APokeCollectionHUD : public AHUD
 {
@@ -42,23 +41,29 @@ public:
 
 	void OnBackButtonClicked(class UInGameWidget* CurrentWidget);
 
+	class ULoginWidget* GetLoginWidget() const { return LoginWidget; }
 	class UInGameMainWidget* GetInGameMainWidget() const { return InGameMainWidget; }
+	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameProfileWidget* GetInGameProfileWidget() const { return InGameProfileWidget; }
 	class UInGameBoxWidget* GetInGameBoxWidget() const { return InGameBoxWidget; }
 	class UInGameShopWidget* GetInGameShopWidget() const { return InGameShopWidget; }
 	class UBuyConfirmPopUp* GetBuyConfirmPopUp() const { return BuyConfirmPopUp; }
 	class UEggHatchingWidget* GetEggHatchingWidget() const { return EggHatchingWidget; }
 	class UInGameAdventureWidget* GetInGameAdventureWidget() const { return InGameAdventureWidget; }
-	class UInGameTopStatusBar* GetInGameTopStatusBar() const { return InGameTopStatusBar; }
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
 	class UInGameCharacterInfoWidget* GetInGameCharacterInfoWidget() const { return InGameCharacterInfoWidget; }
+
+	FOnWidgetLoaded OnWidgetLoaded;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ULoginWidget> LoginWidgetClass;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameMainWidget> InGameMainWidgetClass;
 
@@ -111,6 +116,9 @@ private:
 	TSubclassOf<class UInGameDialogWidget> InGameDialogWidgetClass;
 
 	//
+	UPROPERTY(Transient)
+	class ULoginWidget* LoginWidget = nullptr;
+
 	UPROPERTY(Transient)
 	class UInGameMainWidget* InGameMainWidget = nullptr;
 

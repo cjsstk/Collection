@@ -6,12 +6,14 @@
 #include "UObject/NoExportTypes.h"
 
 class ABattleManager;
+class AHttpActor;
 
 enum class EType;
 
 namespace PokeCore
 {
     class ABattleManager* GetBattleManager(const UWorld* WorldContext);
+	class AHttpActor* GetHttpActor(const UWorld* WorldContext);
 
 	/*static TArray<float> TypeCharts = {
 		1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, 0.5f,    0,    1,    1, 0.5f,    1,

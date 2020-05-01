@@ -8,6 +8,10 @@ public class PokeCollection : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "Paper2D", "UMG", "Slate", "SlateCore" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", 
+			"HeadMountedDisplay", "Paper2D", "UMG", "Slate", "SlateCore",
+			"Http",
+			"Json",
+			"JsonUtilities" });
 	}
 }

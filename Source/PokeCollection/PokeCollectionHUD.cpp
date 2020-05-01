@@ -21,9 +21,11 @@
 #include "Widgets/InGameMakePartyWidget.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameShopWidget.h"
+#include "Widgets/LoginWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 static TAutoConsoleVariable<int32> CVarShowInViewportWidgetsDebug
 (
@@ -36,137 +38,139 @@ void APokeCollectionHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (InGameTopStatusBarClass.Get())
+	const FString LevelName = UGameplayStatics::GetCurrentLevelName(GetWorld());
+
+	if (LevelName == FString("LoginLevel"))
 	{
-		InGameTopStatusBar = CreateWidget<UInGameTopStatusBar>(GetWorld(), InGameTopStatusBarClass, FName("InGameTopStatusBar"));
-		if (ensure(InGameTopStatusBar))
+		if (LoginWidgetClass.Get())
 		{
-			InGameTopStatusBar->AddToViewport(1);
+			LoginWidget = CreateWidget<ULoginWidget>(GetWorld(), LoginWidgetClass, FName("LoginWidget"));
+			ensure(LoginWidget);
+		}
+	}
+	else if (LevelName == FString("InGameLevel"))
+	{
+		if (InGameTopStatusBarClass.Get())
+		{
+			InGameTopStatusBar = CreateWidget<UInGameTopStatusBar>(GetWorld(), InGameTopStatusBarClass, FName("InGameTopStatusBar"));
+			ensure(InGameTopStatusBar);
+		}
+
+		if (InGameMainWidgetClass.Get())
+		{
+			InGameMainWidget = CreateWidget<UInGameMainWidget>(GetWorld(), InGameMainWidgetClass, FName("InGameMainWidget"));
+			ensure(InGameMainWidget);
+		}
+
+		if (InGameProfileWidgetClass.Get())
+		{
+			InGameProfileWidget = CreateWidget<UInGameProfileWidget>(GetWorld(), InGameProfileWidgetClass, FName("InGameProfileWidget"));
+			if (ensure(InGameProfileWidget) && InGameMainWidget)
+			{
+				InGameProfileWidget->SetPrevWidget(InGameMainWidget);
+				InGameMainWidget->SetPrevWidget(InGameProfileWidget);
+			}
+		}
+
+		if (InGameBoxWidgetClass.Get())
+		{
+			InGameBoxWidget = CreateWidget<UInGameBoxWidget>(GetWorld(), InGameBoxWidgetClass, FName("InGameBoxWidget"));
+			if (ensure(InGameBoxWidget))
+			{
+				InGameBoxWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
+
+		if (InGameCharacterBoxWidgetClass.Get())
+		{
+			InGameCharacterBoxWidget = CreateWidget<UInGameCharacterBoxWidget>(GetWorld(), InGameCharacterBoxWidgetClass, FName("InGameCharacterBoxWidget"));
+			if (ensure(InGameCharacterBoxWidget))
+			{
+				InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
+
+		if (InGameCharacterInfoWidgetClass.Get())
+		{
+			InGameCharacterInfoWidget = CreateWidget<UInGameCharacterInfoWidget>(GetWorld(), InGameCharacterInfoWidgetClass, FName("InGameCharacterInfoWidget"));
+			if (ensure(InGameCharacterInfoWidget))
+			{
+				InGameCharacterInfoWidget->SetPrevWidget(InGameBoxWidget);
+			}
+		}
+
+		if (InGameShopWidgetClass.Get())
+		{
+			InGameShopWidget = CreateWidget<UInGameShopWidget>(GetWorld(), InGameShopWidgetClass, FName("InGameShopWidget"));
+			if (ensure(InGameShopWidget))
+			{
+				InGameShopWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
+
+		if (BuyConfirmPopUpClass.Get())
+		{
+			BuyConfirmPopUp = CreateWidget<UBuyConfirmPopUp>(GetWorld(), BuyConfirmPopUpClass, FName("BuyConfirmPopUp"));
+		}
+
+		if (EggHatchingWidgetClass.Get())
+		{
+			EggHatchingWidget = CreateWidget<UEggHatchingWidget>(GetWorld(), EggHatchingWidgetClass, FName("EggHatchingWidget"));
+			if (EggHatchingWidget)
+			{
+				EggHatchingWidget->SetPrevWidget(InGameShopWidget);
+			}
+		}
+
+		if (EquipmentInfoPopUpClass.Get())
+		{
+			EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
+		}
+
+		if (InGameIndexWidgetClass.Get())
+		{
+			InGameIndexWidget = CreateWidget<UInGameIndexWidget>(GetWorld(), InGameIndexWidgetClass, FName("InGameIndexWidget"));
+			if (ensure(InGameIndexWidget))
+			{
+				InGameIndexWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
+
+		if (InGameAdventureWidgetClass.Get())
+		{
+			InGameAdventureWidget = CreateWidget<UInGameAdventureWidget>(GetWorld(), InGameAdventureWidgetClass, FName("InGameAdventureWidget"));
+			if (ensure(InGameAdventureWidget))
+			{
+				InGameAdventureWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
+
+		if (InGameMakePartyWidgetClass.Get())
+		{
+			InGameMakePartyWidget = CreateWidget<UInGameMakePartyWidget>(GetWorld(), InGameMakePartyWidgetClass, FName("InGameMakePartyWidget"));
+			if (ensure(InGameMakePartyWidget))
+			{
+				InGameMakePartyWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
+
+		if (BattleStageInfoPopUpClass.Get())
+		{
+			BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
+		}
+
+		if (InGameBattleWidgetClass.Get())
+		{
+			InGameBattleWidget = CreateWidget<UInGameBattleWidget>(GetWorld(), InGameBattleWidgetClass, FName("InGameBattleWidget"));
+		}
+
+		if (BattleResultPopUpClass.Get())
+		{
+			BattleResultPopUp = CreateWidget<UBattleResultPopUp>(GetWorld(), BattleResultPopUpClass, FName("BattleResultPopUp"));
 		}
 	}
 
-	if (InGameMainWidgetClass.Get())
-	{
-		InGameMainWidget = CreateWidget<UInGameMainWidget>(GetWorld(), InGameMainWidgetClass, FName("InGameMainWidget"));
-		if (ensure(InGameMainWidget))
-		{
-			InGameMainWidget->AddToViewport();
-		}
-	}
-
-	if (InGameProfileWidgetClass.Get())
-	{
-		InGameProfileWidget = CreateWidget<UInGameProfileWidget>(GetWorld(), InGameProfileWidgetClass, FName("InGameProfileWidget"));
-		if (ensure(InGameProfileWidget) && InGameMainWidget)
-		{
-			InGameProfileWidget->SetPrevWidget(InGameMainWidget);
-			InGameMainWidget->SetPrevWidget(InGameProfileWidget);
-		}
-	}
-
-	if (InGameBoxWidgetClass.Get())
-	{
-		InGameBoxWidget = CreateWidget<UInGameBoxWidget>(GetWorld(), InGameBoxWidgetClass, FName("InGameBoxWidget"));
-		if (ensure(InGameBoxWidget))
-		{
-			InGameBoxWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}
-
-	if (InGameCharacterBoxWidgetClass.Get())
-	{
-		InGameCharacterBoxWidget = CreateWidget<UInGameCharacterBoxWidget>(GetWorld(), InGameCharacterBoxWidgetClass, FName("InGameCharacterBoxWidget"));
-		if (ensure(InGameCharacterBoxWidget))
-		{
-			InGameCharacterBoxWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}
-
-	if (InGameCharacterInfoWidgetClass.Get())
-	{
-		InGameCharacterInfoWidget = CreateWidget<UInGameCharacterInfoWidget>(GetWorld(), InGameCharacterInfoWidgetClass, FName("InGameCharacterInfoWidget"));
-		if (ensure(InGameCharacterInfoWidget))
-		{
-			InGameCharacterInfoWidget->SetPrevWidget(InGameBoxWidget);
-		}
-	}
-
-	if (InGameShopWidgetClass.Get())
-	{
-		InGameShopWidget = CreateWidget<UInGameShopWidget>(GetWorld(), InGameShopWidgetClass, FName("InGameShopWidget"));
-		if (ensure(InGameShopWidget))
-		{
-			InGameShopWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}
-
-	if (BuyConfirmPopUpClass.Get())
-	{
-		BuyConfirmPopUp = CreateWidget<UBuyConfirmPopUp>(GetWorld(), BuyConfirmPopUpClass, FName("BuyConfirmPopUp"));
-	}
-
-	if (EggHatchingWidgetClass.Get())
-	{
-		EggHatchingWidget = CreateWidget<UEggHatchingWidget>(GetWorld(), EggHatchingWidgetClass, FName("EggHatchingWidget"));
-		if (EggHatchingWidget)
-		{
-			EggHatchingWidget->SetPrevWidget(InGameShopWidget);
-		}
-	}
-
-	if (EquipmentInfoPopUpClass.Get())
-	{
-		EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
-	}
-
-	if (InGameIndexWidgetClass.Get())
-	{
-		InGameIndexWidget = CreateWidget<UInGameIndexWidget>(GetWorld(), InGameIndexWidgetClass, FName("InGameIndexWidget"));
-		if (ensure(InGameIndexWidget))
-		{
-			InGameIndexWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}
-
-	if (InGameAdventureWidgetClass.Get())
-	{
-		InGameAdventureWidget = CreateWidget<UInGameAdventureWidget>(GetWorld(), InGameAdventureWidgetClass, FName("InGameAdventureWidget"));
-		if (ensure(InGameAdventureWidget))
-		{
-			InGameAdventureWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}
-
-	if (InGameMakePartyWidgetClass.Get())
-	{
-		InGameMakePartyWidget = CreateWidget<UInGameMakePartyWidget>(GetWorld(), InGameMakePartyWidgetClass, FName("InGameMakePartyWidget"));
-		if (ensure(InGameMakePartyWidget))
-		{
-			InGameMakePartyWidget->SetPrevWidget(InGameMainWidget);
-		}
-	}
-
-	if (BattleStageInfoPopUpClass.Get())
-	{
-		BattleStageInfoPopUp = CreateWidget<UBattleStageInfoPopUp>(GetWorld(), BattleStageInfoPopUpClass, FName("BattleStageInfoPopUp"));
-	}
-
-	if (InGameBattleWidgetClass.Get())
-	{
-		InGameBattleWidget = CreateWidget<UInGameBattleWidget>(GetWorld(), InGameBattleWidgetClass, FName("InGameBattleWidget"));
-	}
-
-	if (BattleResultPopUpClass.Get())
-	{
-		BattleResultPopUp = CreateWidget<UBattleResultPopUp>(GetWorld(), BattleResultPopUpClass, FName("BattleResultPopUp"));
-	}
-
-	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
-	if (ensure(BattleManager))
-	{
-		BattleManager->OnBattleStart.AddUniqueDynamic(this, &APokeCollectionHUD::OnStartBattle);
-		BattleManager->OnBattleShutdown.AddUniqueDynamic(this, &APokeCollectionHUD::OnShutdownBattle);
-	}
+	OnWidgetLoaded.Broadcast();
 }
 
 void APokeCollectionHUD::Tick(float DeltaSeconds)

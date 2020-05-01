@@ -3,6 +3,7 @@
 #include "PokeCollectionGameMode.h"
 
 #include "BattleManager.h"
+#include "Net/HttpActor.h"
 #include "PokeCollectionCharacter.h"
 #include "CMS.h"
 
@@ -25,15 +26,27 @@ APokeCollectionGameMode::APokeCollectionGameMode()
 void APokeCollectionGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
+
+	HttpActor = Cast<AHttpActor>(UGameplayStatics::GetActorOfClass(this, AHttpActor::StaticClass()));
+	if (!HttpActor)
+	{
+		ensure(0);
+	}
 }
 
 void APokeCollectionGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BattleManager = Cast<ABattleManager>(UGameplayStatics::GetActorOfClass(this, ABattleManager::StaticClass()));
+	/*BattleManager = Cast<ABattleManager>(UGameplayStatics::GetActorOfClass(this, ABattleManager::StaticClass()));
 	if (!BattleManager)
 	{
 		ensure(0);
-	}
+	}*/
+
+	/*HttpActor = Cast<AHttpActor>(UGameplayStatics::GetActorOfClass(this, AHttpActor::StaticClass()));
+	if (!HttpActor)
+	{
+		ensure(0);
+	}*/
 }

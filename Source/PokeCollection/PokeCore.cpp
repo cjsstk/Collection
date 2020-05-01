@@ -4,12 +4,36 @@
 #include "PokeCore.h"
 
 #include "BattleManager.h"
+#include "Net/HttpActor.h"
 #include "PokeCollectionGameMode.h"
+#include "Level/InGameLevelScriptActor.h"
 #include "TypeChart.h"
 
 #include "Engine/World.h"
 
 ABattleManager* PokeCore::GetBattleManager(const UWorld* WorldContext)
+{
+	if (!WorldContext)
+	{
+		return nullptr;
+	}
+
+	AInGameLevelScriptActor* InGameLevel = Cast<AInGameLevelScriptActor>(WorldContext->GetLevelScriptActor());
+	if (!InGameLevel)
+	{
+		return nullptr;
+	}
+
+	/*APokeCollectionGameMode* PokeGameMode = Cast<APokeCollectionGameMode>(WorldContext->GetAuthGameMode());
+	if (!ensure(PokeGameMode))
+	{
+		return nullptr;
+	}*/
+
+	return InGameLevel->GetBattleManager();
+}
+
+AHttpActor* PokeCore::GetHttpActor(const UWorld* WorldContext)
 {
 	if (!WorldContext)
 	{
@@ -22,7 +46,7 @@ ABattleManager* PokeCore::GetBattleManager(const UWorld* WorldContext)
 		return nullptr;
 	}
 
-	return PokeGameMode->GetBattleManager();
+	return PokeGameMode->GetHttpActor();
 }
 
 //float PokeCore::GetTypeEffective(EType InAttackType, EType InDefenseType)
