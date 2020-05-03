@@ -42,6 +42,9 @@ public:
 
 	void SetSelectedCharacter(class APokeCharacter* InSelectedCharacter);
 
+protected:
+	class APokeCharacter* GetSelectedCharacter() const { return SelectedCharacter; }
+
 private:
 	UPROPERTY(Transient)
 	class APokeCharacter* SelectedCharacter = nullptr;
@@ -73,7 +76,8 @@ public:
 	virtual void NativeConstruct() override;
 
 	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
-	
+	void SwitchContentWidget(int32 InContentIndex);
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* CatergoryScrollBox = nullptr;

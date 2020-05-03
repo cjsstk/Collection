@@ -3,18 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
-#include "CharacterStatusWidget.generated.h"
+#include "CharacterDetailInfoWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class POKECOLLECTION_API UCharacterStatusWidget : public UCharacterInfoContentWidget
+class POKECOLLECTION_API UCharacterDetailInfoWidget : public UCharacterInfoContentWidget
 {
 	GENERATED_BODY()
-	
 public:
 	virtual void OnOpen() override;
 
@@ -22,43 +20,43 @@ private:
 	void SetTypeImages(CharacterType InCharacterType);
 
 	UPROPERTY(meta = (BindWidget))
-		class UImage* CharacterImage = nullptr;
+	class UImage* CharacterImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* CharacterName = nullptr;
+	class UTextBlock* CharacterName = nullptr;
 
 	/** Status */
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* HealthPoint = nullptr;
+	class UTextBlock* HealthPoint = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* MaxHealthPoint = nullptr;
+	class UTextBlock* MaxHealthPoint = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* Attack = nullptr;
+	class UTextBlock* Attack = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* Defence = nullptr;
+	class UTextBlock* Defence = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* SpecialAttack = nullptr;
+	class UTextBlock* SpecialAttack = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* SpecialDefence = nullptr;
+	class UTextBlock* SpecialDefence = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* Speed = nullptr;
+	class UTextBlock* Speed = nullptr;
 
 	/** */
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* AttackRange = nullptr;
+	class UTextBlock* AttackRange = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UImage* RankBackground = nullptr;
+	class UImage* RankBackground = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UImage* Type1 = nullptr;
+	class UImage* Type1 = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-		class UImage* Type2 = nullptr;
+	class UImage* Type2 = nullptr;
 };

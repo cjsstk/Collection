@@ -1,31 +1,75 @@
 // Copyright Me. All Rights Reserved.
 
 
-#include "CharacterStatusWidget.h"
+#include "CharacterDetailInfoWidget.h"
 
-void UCharacterStatusWidget::OnOpen()
+#include "Image.h"
+#include "TextBlock.h"
+
+#include "PokeCharacter.h"
+
+void UCharacterDetailInfoWidget::OnOpen()
 {
 	Super::OnOpen();
 
-	/*APokeCollectionCharacter* Player = GetPlayer();
-	if (ensure(Player))
+	APokeCharacter* SelectedCharacter = GetSelectedCharacter();
+	if (ensure(SelectedCharacter))
 	{
-		APokeCharacter* SelectedCharacter = Player->GetCharacterByID(SelectedCharacterID);
-		if (SelectedCharacter)
+		if (CharacterImage)
 		{
-			if (CharacterImage)
-			{
-				CharacterImage->SetBrushFromTexture(SelectedCharacter->GetCharacterImage());
-			}
-			if (CharacterName)
-			{
-				CharacterName->SetText(FText::FromName(SelectedCharacter->GetCharacterName()));
-			}
+			CharacterImage->SetBrushFromTexture(SelectedCharacter->GetCharacterImage());
 		}
-	}*/
+
+		if (CharacterName)
+		{
+			CharacterName->SetText(FText::FromName(SelectedCharacter->GetCharacterName()));
+		}
+
+		FStatus FinalStatus = SelectedCharacter->GetFinalStatus();
+
+		if (HealthPoint)
+		{
+			HealthPoint->SetText(FText::FromString(FString::FromInt(FinalStatus.HealthPoint)));
+		}
+
+		if (MaxHealthPoint)
+		{
+			MaxHealthPoint->SetText(FText::FromString(FString::FromInt(FinalStatus.HealthPoint)));
+		}
+
+		if (Attack)
+		{
+			Attack->SetText(FText::FromString(FString::FromInt(FinalStatus.Attack)));
+		}
+
+		if (Defence)
+		{
+			Defence->SetText(FText::FromString(FString::FromInt(FinalStatus.Defense)));
+		}
+
+		if (SpecialAttack)
+		{
+			SpecialAttack->SetText(FText::FromString(FString::FromInt(FinalStatus.SpecialAttack)));
+		}
+
+		if (SpecialDefence)
+		{
+			SpecialDefence->SetText(FText::FromString(FString::FromInt(FinalStatus.SpecialDefense)));
+		}
+
+		if (Speed)
+		{
+			Speed->SetText(FText::FromString(FString::FromInt(FinalStatus.Speed)));
+		}
+
+		if (AttackRange)
+		{
+			AttackRange->SetText(FText::FromString(FString::FromInt(SelectedCharacter->GetAttackRange())));
+		}
+	}
 }
 
-void UCharacterStatusWidget::SetTypeImages(CharacterType InCharacterType)
+void UCharacterDetailInfoWidget::SetTypeImages(CharacterType InCharacterType)
 {
 	/*if (!Type1MaterialInstance || !Type2MaterialInstance || !Type1Image || !Type2Image)
 	{

@@ -56,8 +56,6 @@ class POKECOLLECTION_API APokeCharacter : public AActor, public ISortObjectInter
 public:
 	void Init(characterKey InCharacterKey);
 
-	void Attack(/*int32 SkillIndex,*/ APokeCharacter* TargetCharacter);
-
 	void SetBattleCharacterActor(class ABattleCharacterActor* InBattleCharacterActor);
 
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
@@ -137,11 +135,7 @@ private:
 	 * In Battle
 	 */
 	class AInBattleCharacterPanel* CurrentBattlePanel = nullptr;
-	bool bAttacking = false;
 	bool bIsEnemy = false;
-
-	UPROPERTY(Transient)
-	APokeCharacter* CurrentTargetCharacter = nullptr;
 
 	UPROPERTY(Transient)
 	class ABattleCharacterActor* MyBattleCharacter = nullptr;

@@ -28,19 +28,6 @@ void APokeCharacter::Init(characterKey InCharacterKey)
 	}*/
 }
 
-void APokeCharacter::Attack(APokeCharacter* TargetCharacter)
-{
-	if (!TargetCharacter)
-	{
-		// Buff?
-		ensure(0);
-		return;
-	}
-
-	CurrentTargetCharacter = TargetCharacter;
-	bAttacking = true;
-}
-
 void APokeCharacter::SetBattleCharacterActor(ABattleCharacterActor* InBattleCharacterActor)
 {
 	if (!InBattleCharacterActor)
@@ -211,21 +198,6 @@ int32 APokeCharacter::GetObjectSortValue(ESortCategory InSortCategory) const
 void APokeCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
-	if (bAttacking)
-	{
-		const FVector TargetLocation = CurrentTargetCharacter->GetActorLocation();
-		const FVector NewLocation = FMath::Lerp(GetActorLocation(), TargetLocation, 1.0f);
-		SetActorLocation(NewLocation);
-	}
-	else
-	{
-		if (ensure(CurrentBattlePanel))
-		{
-			const FVector NewLocation = FMath::Lerp(GetActorLocation(), CurrentBattlePanel->GetActorLocation(), 1.0f);
-			SetActorLocation(NewLocation);
-		}
-	}
 
 }
 

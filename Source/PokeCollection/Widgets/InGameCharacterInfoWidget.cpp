@@ -111,10 +111,20 @@ void UInfoCategoryButtonWidget::OnCategoryButtonClicked()
 	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
 	if (PokeHud)
 	{
-		UInGameCharacterInfoWidget* ShopWidget = PokeHud->GetInGameCharacterInfoWidget();
-		if (ensure(ShopWidget))
+		UInGameCharacterInfoWidget* InfoWidget = PokeHud->GetInGameCharacterInfoWidget();
+		if (ensure(InfoWidget))
 		{
-			//ShopWidget->SetShopContent(SwitcherIndex);
+			InfoWidget->SwitchContentWidget(SwitcherIndex);
 		}
 	}
+}
+
+void UInGameCharacterInfoWidget::SwitchContentWidget(int32 InContentIndex)
+{
+	if (InfoContentsBox)
+	{
+		InfoContentsBox->SetActiveWidgetIndex(InContentIndex);
+	}
+
+	InfoContents[InContentIndex]->OnOpen();
 }
