@@ -33,7 +33,7 @@ public:
 
 	void AddNewCharacter(characterKey NewCharacterKey);
 	void GetReward(FBattleReward InBattleReward);
-	void AddClearBattleStage(battleStageKey InBattleStageKey);
+	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
 
 	/** 
 	 * Player Info
@@ -109,6 +109,7 @@ private:
 
 	battleStageKey CurrentSelectedBattleStageKey = 0;
 	int32 CurrentSelectedStageNum = 1;
+	int32 MaxClearBattleStageNum = 0;
 	int32 MaxOpenedStageNum = 2;
 
 	int32 CurrentSelectedParty = 1;
@@ -148,9 +149,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> SavedEquipmentKeys;
-
-	UPROPERTY(EditDefaultsOnly)
-	TArray<int32> SavedClearBattleStageKeys;
 
 	/** 
 	 * Resource

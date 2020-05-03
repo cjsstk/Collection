@@ -130,7 +130,7 @@ void ABattleManager::TakeReward()
 	if (ensure(PlayerCharacter))
 	{
 		PlayerCharacter->GetReward(Reward);
-		PlayerCharacter->AddClearBattleStage(CurrentBattleStageKey);
+		PlayerCharacter->SetMaxClearBattleStage(CurrentBattleStageKey);
 	}
 
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();

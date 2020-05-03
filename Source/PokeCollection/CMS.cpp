@@ -50,6 +50,12 @@ void CMS::LoadCMS()
 		PlayerExperienceDataTable = PlayerExperienceDT.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> CharacterExperienceDT(TEXT("/Game/CMS/CharacterExperienceTable"));
+	if (ensure(CharacterExperienceDT.Succeeded()))
+	{
+		CharacterExperienceDataTable = CharacterExperienceDT.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DialogDT(TEXT("/Game/CMS/DialogInfo"));
 	if (ensure(DialogDT.Succeeded()))
 	{
@@ -150,6 +156,22 @@ const FPlayerExperienceTable* CMS::GetPlayerExperienceTable(int32 InCurrentLevel
 	PlayerExperienceDataTable->GetAllRows(FString(""), AllTable);
 
 	for (FPlayerExperienceTable* ET : AllTable)
+	{
+		if (ET && ET->Level == InCurrentLevel)
+		{
+			return ET;
+		}
+	}
+
+	return nullptr;
+}
+
+const FCharacterExperienceTable* CMS::GetCharacterExperienceTable(int32 InCurrentLevel)
+{
+	TArray<FCharacterExperienceTable*> AllTable;
+	CharacterExperienceDataTable->GetAllRows(FString(""), AllTable);
+
+	for (FCharacterExperienceTable* ET : AllTable)
 	{
 		if (ET && ET->Level == InCurrentLevel)
 		{

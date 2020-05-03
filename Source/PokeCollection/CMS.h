@@ -201,6 +201,19 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FCharacterExperienceTable : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 NeedExperienceForNextLevel;
+};
+
+USTRUCT(BlueprintType)
 struct FDialogInfoTable : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -250,6 +263,7 @@ namespace CMS
 	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
 	const FTypeInfo* GetTypeDataTable(EType InType);
 	const FPlayerExperienceTable* GetPlayerExperienceTable(int32 InCurrentLevel);
+	const FCharacterExperienceTable* GetCharacterExperienceTable(int32 InCurrentLevel);
 	const FDialogInfoTable* GetDialogDataTable(int32 InDialogKey);
 	const FSkillInfo* GetSkillDataTable(int32 InSkillKey);
 
@@ -266,6 +280,7 @@ namespace CMS
 	static UDataTable* BattleStageDataTable = nullptr;
 	static UDataTable* TypeDataTable = nullptr;
 	static UDataTable* PlayerExperienceDataTable = nullptr;
+	static UDataTable* CharacterExperienceDataTable = nullptr;
 	static UDataTable* DialogDataTable = nullptr;
 	static UDataTable* SkillDataTable = nullptr;
 };

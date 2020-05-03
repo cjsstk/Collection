@@ -71,8 +71,10 @@ public:
 	void SetJoinedSlotNum(int32 InSlotNum) { if (InSlotNum > 6) { ensure(0); return; } JoinedSlotNum = InSlotNum; }
 	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
 
-	void SetLevel(int32 NewLevel) { Level = NewLevel; }
+	void SetLevel(int32 NewLevel);
 	int32 GetLevel() const { return Level; }
+
+	void TakeExperience(int32 InExp);
 
 	void SetEnemy(bool bInIsEnemy) { bIsEnemy = bInIsEnemy; }
 	bool IsEnemy() const { return bIsEnemy; }
@@ -102,6 +104,7 @@ private:
 	int32 CharacterID = 0;
 	int32 CharacterKey = 1;
 	
+
 	/** 
 	 * Base info
 	 */
@@ -126,6 +129,9 @@ private:
 	int32 Level = 1;
 
 	CharacterType MyType;
+
+	int32 CurrentExp = 0;
+	int32 MaxExp = 0;
 
 	/** 
 	 * In Battle

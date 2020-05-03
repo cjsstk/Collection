@@ -134,7 +134,7 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 			continue;
 		}
 
-		// get exp
+		PartyCharacter->TakeExperience(InBattleReward.ExperienceAmount);
 	}
 
 	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
@@ -143,9 +143,9 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 	}
 }
 
-void APokeCollectionCharacter::AddClearBattleStage(battleStageKey InBattleStageKey)
+void APokeCollectionCharacter::SetMaxClearBattleStage(battleStageKey InBattleStageKey)
 {
-	SavedClearBattleStageKeys.Add(InBattleStageKey);
+	MaxClearBattleStageNum = FMath::Max(MaxClearBattleStageNum, InBattleStageKey);
 }
 
 void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
@@ -181,7 +181,7 @@ bool APokeCollectionCharacter::IsCompleteIndexCharacter(characterKey InCharacter
 
 bool APokeCollectionCharacter::IsClearBattleStage(int32 InBattleStageKey)
 {
-	return SavedClearBattleStageKeys.Contains(InBattleStageKey);
+	return (MaxClearBattleStageNum >= InBattleStageKey);
 }
 
 const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const

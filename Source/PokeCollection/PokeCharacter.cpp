@@ -51,6 +51,27 @@ void APokeCharacter::SetBattleCharacterActor(ABattleCharacterActor* InBattleChar
 	MyBattleCharacter = InBattleCharacterActor;
 }
 
+void APokeCharacter::SetLevel(int32 NewLevel)
+{ 
+	Level = NewLevel;
+
+	const FCharacterExperienceTable* CharacterExpData = CMS::GetCharacterExperienceTable(Level);
+
+	MaxExp = CharacterExpData ? CharacterExpData->NeedExperienceForNextLevel : -1;
+}
+
+void APokeCharacter::TakeExperience(int32 InExp)
+{
+	CurrentExp += InExp;
+
+	while (CurrentExp >= MaxExp)
+	{
+		CurrentExp -= MaxExp;
+
+		SetLevel(Level + 1);
+	}
+}
+
 FName APokeCharacter::GetCharacterName() const
 { 
 	if (CharacterKey == INVALID_CHARACTERKEY)
