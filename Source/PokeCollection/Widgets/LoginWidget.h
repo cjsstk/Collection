@@ -32,4 +32,6 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* StartText = nullptr;
+
+	bool bShouldRegist = false;
 };

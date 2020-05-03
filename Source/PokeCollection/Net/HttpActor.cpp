@@ -61,11 +61,46 @@ void AHttpActor::RequestLogin(const FString& InLoginId)
 
 	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnResponseReceived);
 
-	FString RequestURL = CollectionURL + FString("member/") + InLoginId;
+	FString RequestURL = CollectionURL + FString("members/") + InLoginId;
 	Request->SetURL(RequestURL);
 	Request->SetVerb(HTTPVerb::GET);
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", TEXT("Bearer marei"));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestRegist(const FString& InRegistId)
+{
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	JsonObject->SetStringField(TEXT("id"), *FString::Printf(TEXT("%s"), *InRegistId));
+	JsonObject->SetStringField(TEXT("nickname"), *FString(TEXT("Temp")));
+	JsonObject->SetNumberField(TEXT("level"), 1);
+	JsonObject->SetNumberField(TEXT("exp"), 0);
+	JsonObject->SetNumberField(TEXT("money"), 0);
+	JsonObject->SetNumberField(TEXT("berry"), 0);
+	JsonObject->SetNumberField(TEXT("stardust"), 0);
+	JsonObject->SetNumberField(TEXT("maxClearStage"), 0);
+	
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InRegistId;
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::POST);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", TEXT("Bearer marei"));
 
 	Request->ProcessRequest();
 }

@@ -22,6 +22,7 @@ public:
 	void HttpCall();
 
 	void RequestLogin(const FString& InLoginId);
+	void RequestRegist(const FString& InRegistId);
 
 	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 

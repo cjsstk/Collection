@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericPlatform/GenericPlatformMisc.h"
 #include "UObject/NoExportTypes.h"
 
 class ABattleManager;
@@ -14,6 +15,8 @@ namespace PokeCore
 {
     class ABattleManager* GetBattleManager(const UWorld* WorldContext);
 	class AHttpActor* GetHttpActor(const UWorld* WorldContext);
+
+	const static FString DeviceId = FGenericPlatformMisc::GetDeviceId();
 
 	/*static TArray<float> TypeCharts = {
 		1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, 0.5f,    0,    1,    1, 0.5f,    1,
