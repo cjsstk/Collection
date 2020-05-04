@@ -64,6 +64,9 @@ private:
 	class UTextBlock* AttackRange = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ConsumeBerryAmount = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
 	class UImage* RankBackground = nullptr;
 
 	UPROPERTY(meta = (BindWidget))

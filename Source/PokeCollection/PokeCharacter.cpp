@@ -184,6 +184,26 @@ float APokeCharacter::GetAttackRange() const
 	return CharacterInfo->AttackRange;
 }
 
+int32 APokeCharacter::GetConsumeBerryAmount() const
+{
+	if (CharacterKey == INVALID_CHARACTERKEY)
+	{
+		ensure(0);
+		return INT32_MAX;
+	}
+
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
+	if (!ensure(CharacterInfo))
+	{
+		return INT32_MAX;
+	}
+
+	int32 CurrentLevel = GetLevel();
+	int32 AdditionalConsumeAmount = CurrentLevel / 10;
+
+	return CharacterInfo->ConsumeBerryAmount + AdditionalConsumeAmount;
+}
+
 const FStatus APokeCharacter::GetFinalStatus()
 {
 	FStatus FinalStatus;

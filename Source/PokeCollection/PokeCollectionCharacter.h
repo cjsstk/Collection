@@ -76,6 +76,7 @@ public:
 	int32 GetBerryChargingIntervalMinutes() const { return BerryChargingIntervalSeconds / 60; }
 	int32 GetMoneyChargingIntervalMinutes() const { return MoneyChargingIntervalSeconds / 60; }
 
+	void ConsumeBerry(int32 InConsumeBerryAmount);
 	void SetMoneyAmount(int32 NewMoneyAmount) { MoneyAmount = FMath::Clamp(NewMoneyAmount, 0, INT32_MAX); }
 
 	FOnAddedNewCharacter OnAddedNewCharacter;
@@ -91,9 +92,11 @@ private:
 	void InitPlayerInfo();
 
 	void SetPlayerMaxExp(int32 InMaxExp);
+	void SetBerryAmount(int32 NewBerryAmount) { BerryAmount = FMath::Clamp(NewBerryAmount, 0, INT32_MAX); }
 
 	void TickResourceCharge(float DeltaSeconds);
 	void AddCharacterToIndex(characterKey InCharacterKey);
+	
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;

@@ -22,6 +22,7 @@ public:
 
 	void SetContentLevel(int32 InLevel);
 	void SetTypeImages(CharacterType InCharacterType);
+	void SetJoinedPartyText(int32 InJoinedPartyNum);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -32,6 +33,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Type2Image = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* JoinedPartyText = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	UMaterialInterface* TypeMaterial = nullptr;

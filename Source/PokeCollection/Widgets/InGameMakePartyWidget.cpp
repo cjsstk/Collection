@@ -123,24 +123,31 @@ void UInGameMakePartyWidget::OnDecisionButtonClicked()
 {
 	if (bJustBeforeBattle)
 	{
-		ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
-		if (BattleManager)
+		if (CanStartBattle())
 		{
-			int32 CurrentBattleStageKey = BattleManager->GetBattleStageKey();
-			bool bIsClearBattleStage = GetPlayer() ? GetPlayer()->IsClearBattleStage(CurrentBattleStageKey) : false;
+			ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+			if (BattleManager)
+			{
+				int32 CurrentBattleStageKey = BattleManager->GetBattleStageKey();
+				bool bIsClearBattleStage = GetPlayer() ? GetPlayer()->IsClearBattleStage(CurrentBattleStageKey) : false;
 
-			if (bIsClearBattleStage)
-			{
-				BattleManager->BattleStart();
-			}
-			else
-			{
-				APokeCollectionHUD* PokeHud = GetPokeHud();
-				if (PokeHud)
+				if (bIsClearBattleStage)
 				{
-					PokeHud->OpenDialogWidget(CurrentBattleStageKey);
+					BattleManager->BattleStart();
+				}
+				else
+				{
+					APokeCollectionHUD* PokeHud = GetPokeHud();
+					if (PokeHud)
+					{
+						PokeHud->OpenDialogWidget(CurrentBattleStageKey);
+					}
 				}
 			}
+		}
+		else
+		{
+
 		}
 	}
 	else
@@ -204,4 +211,34 @@ void UInGameMakePartyWidget::OnParty4ButtonClicked()
 	Player->SetCurrentSelectedPartyNum(4);
 
 	RefreshSlots();
+}
+
+bool UInGameMakePartyWidget::CanStartBattle()
+{
+	APokeCollectionCharacter* Player = GetPlayer();
+	if (!ensure(Player))
+	{
+		return false;
+	}
+
+	int32 SumConsumeBerryAmount = 0;
+
+	int32 CurrentPartyNum = Player->GetCurrentSelectedPartyNum();
+	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = Player->GetPartyCharacters(CurrentPartyNum);
+
+	for (auto&& PartyCharacter : CurrentPartyCharacters)
+	{
+		if (PartyCharacter.Value)
+		{
+			int32 ConsumeBerryAmount = PartyCharacter.Value->GetConsumeBerryAmount();
+			SumConsumeBerryAmount += ConsumeBerryAmount;
+		}
+	}
+
+	if (Player->GetBerryAmount() < SumConsumeBerryAmount)
+	{
+		return false;
+	}
+	
+	return true;
 }

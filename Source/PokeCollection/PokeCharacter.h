@@ -87,6 +87,7 @@ public:
 	ERank GetCharacterRank() const;
 	float GetAttackRange() const;
 	CharacterType GetCharacterType() const { return MyType; }
+	int32 GetConsumeBerryAmount() const;
 
 	const FStatus GetFinalStatus();
 

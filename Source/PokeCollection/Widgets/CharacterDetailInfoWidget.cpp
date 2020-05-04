@@ -102,6 +102,11 @@ void UCharacterDetailInfoWidget::OnOpen()
 			AttackRange->SetText(FText::FromString(FString::FromInt(SelectedCharacter->GetAttackRange())));
 		}
 
+		if (ConsumeBerryAmount)
+		{
+			ConsumeBerryAmount->SetText(FText::FromString(FString::FromInt(SelectedCharacter->GetConsumeBerryAmount())));
+		}
+
 		SetTypeImages(SelectedCharacter->GetCharacterType());
 		SetBackgroundColor(SelectedCharacter->GetCharacterRank());
 	}

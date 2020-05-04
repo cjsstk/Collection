@@ -36,14 +36,25 @@ void ABattleManager::BattleStart()
 
 	PlayerCharacter->SetPlayerMode(EPlayerMode::BattleMode);
 
+	int32 SumConsumeBerryAmount = 0;
+
 	/** Set my characters */
 	int32 CurrentPartyNum = PlayerCharacter->GetCurrentSelectedPartyNum();
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = PlayerCharacter->GetPartyCharacters(CurrentPartyNum);
 
 	for (auto&& PartyMember : CurrentPartyCharacters)
 	{
+		if (!ensure(PartyMember.Value))
+		{
+			continue;
+		}
+
 		BattleMembers.AddUnique(PartyMember.Value);
+
+		SumConsumeBerryAmount += PartyMember.Value->GetConsumeBerryAmount();
 	}
+
+	PlayerCharacter->ConsumeBerry(SumConsumeBerryAmount);
 
 	/** Set enemy characters */
 	const FBattleStageInfo* BattleStageInfo = CMS::GetBattleStageDataTable(CurrentBattleStageKey);

@@ -73,6 +73,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackRange = 80.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ConsumeBerryAmount = 5;
+
 	/** Base Stats */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 BaseStat_HP = 1;

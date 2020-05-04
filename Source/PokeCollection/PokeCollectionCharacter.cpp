@@ -257,6 +257,16 @@ class UPokeEquipment* APokeCollectionCharacter::GetEquipmentByID(int32 InEquipme
 	return nullptr;
 }
 
+void APokeCollectionCharacter::ConsumeBerry(int32 InConsumeBerryAmount)
+{
+	if (BerryAmount < InConsumeBerryAmount)
+	{
+		ensure(0);
+	}
+
+	SetBerryAmount(BerryAmount - InConsumeBerryAmount);
+}
+
 void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();

@@ -40,6 +40,8 @@ public:
 	void SetJustBeforeBattle(bool bNewJustBeforeBattle) { bJustBeforeBattle = bNewJustBeforeBattle; }
 
 private:
+	bool CanStartBattle();
+
 	UPROPERTY(meta = (BindWidget))
 	class UButton* DecisionButton = nullptr;
 

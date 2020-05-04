@@ -58,6 +58,7 @@ void UCharacterSlot::InitByID(int32 InContentID)
 
 	SetContentLevel(Character->GetLevel());
 	SetTypeImages(Character->GetCharacterType());
+	SetJoinedPartyText(Character->GetJoinedPartyNum());
 }
 
 void UCharacterSlot::InitByKey(int32 InContentKey)
@@ -133,6 +134,21 @@ void UCharacterSlot::SetTypeImages(CharacterType InCharacterType)
 		Type2Image->SetBrushFromMaterial(Type2MaterialInstance);
 	}
 
+}
+
+void UCharacterSlot::SetJoinedPartyText(int32 InJoinedPartyNum)
+{
+	if (JoinedPartyText)
+	{
+		if (InJoinedPartyNum <= 0)
+		{
+			JoinedPartyText->SetVisibility(ESlateVisibility::Hidden);
+			return;
+		}
+
+		JoinedPartyText->SetText(FText::FromString(FString::FromInt(InJoinedPartyNum)));
+		JoinedPartyText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
 }
 
 void UCharacterBoxWidget::NativeConstruct() 
