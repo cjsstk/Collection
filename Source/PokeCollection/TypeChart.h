@@ -38,6 +38,8 @@ public:
 	EType Type2;
 };
 
+const static int32 CharacterTypeColumnNum = 6;
+
 //namespace TypeChart
 //{
 //	static TArray<float> TypeCharts = {

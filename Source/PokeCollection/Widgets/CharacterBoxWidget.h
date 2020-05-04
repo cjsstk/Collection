@@ -41,9 +41,6 @@ protected:
 
 	UPROPERTY(Transient)
 	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 CharacterTypeColumnNum = 6;
 };
 
 

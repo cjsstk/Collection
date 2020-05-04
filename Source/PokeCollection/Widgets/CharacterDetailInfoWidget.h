@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
+#include "CMSType.h"
 #include "CharacterDetailInfoWidget.generated.h"
 
 /**
@@ -14,16 +15,27 @@ class POKECOLLECTION_API UCharacterDetailInfoWidget : public UCharacterInfoConte
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeConstruct() override;
 	virtual void OnOpen() override;
 
 private:
 	void SetTypeImages(CharacterType InCharacterType);
+	void SetBackgroundColor(ERank InRank);
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* CharacterImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CharacterName = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* CharacterLevel = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* CurrentExp = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* MaxExp = nullptr;
 
 	/** Status */
 	UPROPERTY(meta = (BindWidget))
@@ -55,8 +67,18 @@ private:
 	class UImage* RankBackground = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* Type1 = nullptr;
+	class UImage* Type1Image = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* Type2 = nullptr;
+	class UImage* Type2Image = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMaterialInterface* TypeMaterial = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
+
 };

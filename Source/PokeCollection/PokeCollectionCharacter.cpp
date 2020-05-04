@@ -32,7 +32,10 @@ void APokeCollectionCharacter::InitHaveCharacters()
 
 	for (characterKey Key : SavedCharacterKeys)
 	{
-		AddNewCharacter(Key);
+		FInitCharacterParams Params;
+		Params.CharacterKey = Key;
+
+		AddNewCharacter(Params);
 	}
 }
 
@@ -99,9 +102,9 @@ void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 	}
 }
 
-void APokeCollectionCharacter::AddNewCharacter(characterKey NewCharacterKey)
+void APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitCharacterParams)
 {
-	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(NewCharacterKey);
+	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InInitCharacterParams.CharacterKey);
 	if (!CharacterInfo)
 	{
 		ensure(0);
@@ -111,13 +114,13 @@ void APokeCollectionCharacter::AddNewCharacter(characterKey NewCharacterKey)
 	APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
 	if (PokeCharacter)
 	{
-		PokeCharacter->Init(NewCharacterKey);
+		PokeCharacter->Init(InInitCharacterParams);
 		PokeCharacter->SetCharacterID(NextCharacterID);
 		++NextCharacterID;
 	}
 
 	HaveCharacters.AddUnique(PokeCharacter);
-	AddCharacterToIndex(NewCharacterKey);
+	AddCharacterToIndex(InInitCharacterParams.CharacterKey);
 
 	OnAddedNewCharacter.Broadcast();
 }
@@ -139,7 +142,10 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 
 	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
 	{
-		AddNewCharacter(NewCharacterKey);
+		FInitCharacterParams Params;
+		Params.CharacterKey = NewCharacterKey;
+
+		AddNewCharacter(Params);
 	}
 }
 

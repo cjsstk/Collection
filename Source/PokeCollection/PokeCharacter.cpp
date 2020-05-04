@@ -8,16 +8,34 @@
 
 #include "DrawDebugHelpers.h"
 
-void APokeCharacter::Init(characterKey InCharacterKey)
+void APokeCharacter::Init(FInitCharacterParams& InInitCharacterParams)
 {
-	if (InCharacterKey == INVALID_CHARACTERKEY)
+	if (InInitCharacterParams.CharacterKey == INVALID_CHARACTERKEY)
 	{
 		return;
 	}
 
-	CharacterKey = InCharacterKey;
+	CharacterKey = InInitCharacterParams.CharacterKey;
 
 	InitBaseStatus();
+
+	FStatus EvStatus;
+	EvStatus.HealthPoint = InInitCharacterParams.EvHealth;
+	EvStatus.Attack = InInitCharacterParams.EvAttack;
+	EvStatus.Defense = InInitCharacterParams.EvDefence;
+	EvStatus.SpecialAttack = InInitCharacterParams.EvSpecialAttack;
+	EvStatus.SpecialDefense = InInitCharacterParams.EvSpecialDefence;
+	EvStatus.Speed = InInitCharacterParams.EvSpeed;
+
+	InitEvStatus(EvStatus);
+
+	SetLevel(InInitCharacterParams.CharacterLevel);
+	TakeExperience(InInitCharacterParams.CurrentExp);
+
+	SetJoinedPartyNum(InInitCharacterParams.JoinedPartyNum);
+	SetJoinedSlotNum(InInitCharacterParams.JoinedSlotNum);
+
+	SetEnemy(InInitCharacterParams.bIsEnemy);
 
 	/*const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (ensure(CharacterInfo))
@@ -49,6 +67,11 @@ void APokeCharacter::SetLevel(int32 NewLevel)
 
 void APokeCharacter::TakeExperience(int32 InExp)
 {
+	if (MaxExp < 0)
+	{
+		return;
+	}
+
 	CurrentExp += InExp;
 
 	while (CurrentExp >= MaxExp)
@@ -216,6 +239,16 @@ void APokeCharacter::InitBaseStatus()
 		MyType.Type1 = CharacterInfo->Type1;
 		MyType.Type2 = CharacterInfo->Type2;
 	}
+}
+
+void APokeCharacter::InitEvStatus(FStatus InEvStat)
+{
+	EvStats.HealthPoint = InEvStat.HealthPoint;
+	EvStats.Attack = InEvStat.Attack;
+	EvStats.Defense = InEvStat.Defense;
+	EvStats.SpecialAttack = InEvStat.SpecialAttack;
+	EvStats.SpecialDefense = InEvStat.SpecialDefense;
+	EvStats.Speed = InEvStat.Speed;
 }
 
 FStatus APokeCharacter::CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat)

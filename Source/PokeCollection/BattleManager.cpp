@@ -56,10 +56,13 @@ void ABattleManager::BattleStart()
 			APokeCharacter* EnemyCharacter = NewObject<APokeCharacter>();
 			if (ensure(EnemyCharacter))
 			{
-				EnemyCharacter->Init(EnemyInfo.EnemyCharacterKey);
-				EnemyCharacter->SetLevel(EnemyInfo.EnemyCharacterLevel);
-				EnemyCharacter->SetJoinedSlotNum(EnemyInfo.EnemySlotNum);
-				EnemyCharacter->SetEnemy(true);
+				FInitCharacterParams Params;
+				Params.CharacterKey = EnemyInfo.EnemyCharacterKey;
+				Params.CharacterLevel = EnemyInfo.EnemyCharacterLevel;
+				Params.JoinedSlotNum = EnemyInfo.EnemySlotNum;
+				Params.bIsEnemy = true;
+
+				EnemyCharacter->Init(Params);
 				BattleMembers.AddUnique(EnemyCharacter);
 			}
 		}

@@ -54,7 +54,7 @@ class POKECOLLECTION_API APokeCharacter : public AActor, public ISortObjectInter
 	GENERATED_BODY()
 	
 public:
-	void Init(characterKey InCharacterKey);
+	void Init(FInitCharacterParams& InInitCharacterParams);
 
 	void SetBattleCharacterActor(class ABattleCharacterActor* InBattleCharacterActor);
 
@@ -71,6 +71,9 @@ public:
 
 	void SetLevel(int32 NewLevel);
 	int32 GetLevel() const { return Level; }
+
+	int32 GetCurrentExp() const { return CurrentExp; }
+	int32 GetMaxExp() const { return MaxExp; }
 
 	void TakeExperience(int32 InExp);
 
@@ -97,6 +100,7 @@ protected:
 
 private:
 	void InitBaseStatus();
+	void InitEvStatus(FStatus InEvStat);
 	FStatus CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat);
 
 	int32 CharacterID = 0;

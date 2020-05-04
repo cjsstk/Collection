@@ -266,7 +266,10 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 			return;
 		}
 
-		Player->AddNewCharacter(OutCharacterKey);
+		FInitCharacterParams Params;
+		Params.CharacterKey = OutCharacterKey;
+
+		Player->AddNewCharacter(Params);
 		PokeHud->OpenEggHatchingWidget(OutCharacterKey);
 	}
 

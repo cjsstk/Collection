@@ -17,6 +17,11 @@
 void UInGameCharacterInfoWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+void UInGameCharacterInfoWidget::OnOpen()
+{
+	Super::OnOpen();
 
 	if (!ensure(CatergoryScrollBox))
 	{
@@ -30,6 +35,7 @@ void UInGameCharacterInfoWidget::NativeConstruct()
 
 	CatergoryScrollBox->ClearChildren();
 	InfoContentsBox->ClearChildren();
+	InfoContents.Empty();
 
 	for (int32 ContextIndex = 0; ContextIndex < InfoContentWidgets.Num(); ++ContextIndex)
 	{
@@ -67,6 +73,7 @@ void UInGameCharacterInfoWidget::NativeConstruct()
 			}
 
 			InfoContentsBox->AddChild(InfoContentWidget);
+			InfoContents.Add(InfoContentWidget);
 		}
 
 	}
@@ -83,7 +90,7 @@ void UCharacterInfoContentWidget::NativeConstruct()
 
 void UCharacterInfoContentWidget::SetSelectedCharacter(APokeCharacter* InSelectedCharacter)
 {
-	SelectedCharacter = InSelectedCharacter;
+	CurrentSelectedCharacter = InSelectedCharacter;
 }
 
 void UInfoCategoryButtonWidget::NativeConstruct()

@@ -31,7 +31,7 @@ public:
 
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
-	void AddNewCharacter(characterKey NewCharacterKey);
+	void AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
 	void GetReward(FBattleReward InBattleReward);
 	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
 

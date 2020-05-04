@@ -43,11 +43,11 @@ public:
 	void SetSelectedCharacter(class APokeCharacter* InSelectedCharacter);
 
 protected:
-	class APokeCharacter* GetSelectedCharacter() const { return SelectedCharacter; }
+	class APokeCharacter* GetSelectedCharacter() const { return CurrentSelectedCharacter; }
 
 private:
 	UPROPERTY(Transient)
-	class APokeCharacter* SelectedCharacter = nullptr;
+	class APokeCharacter* CurrentSelectedCharacter = nullptr;
 
 };
 
@@ -74,6 +74,7 @@ class POKECOLLECTION_API UInGameCharacterInfoWidget : public UInGameWidget
 	
 public:
 	virtual void NativeConstruct() override;
+	virtual void OnOpen() override;
 
 	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
 	void SwitchContentWidget(int32 InContentIndex);
