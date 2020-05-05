@@ -80,12 +80,12 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 			continue;
 		}
 
-		/*if (!SkillInfo->SkillClass.Get())
+		if (!SkillInfo->SkillClass.Get())
 		{
 			continue;
-		}*/
+		}
 
-		UPokeSkill* Skill = NewObject<UPokeSkill>(UPokeSkill::StaticClass());
+		UPokeSkill* Skill = NewObject<UPokeSkill>(SkillInfo->SkillClass.Get());
 		if (ensure(Skill))
 		{
 			Skill->InitSkill(SkillKey);

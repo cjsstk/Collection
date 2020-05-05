@@ -53,3 +53,15 @@ protected:
 	TSubclassOf<class ASkillProjectileActor> SpawnProjectileActor = nullptr;
 
 };
+
+UCLASS()
+class POKECOLLECTION_API UPokeSkill_Ember : public UPokeSkill
+{
+	GENERATED_BODY()
+
+
+protected:
+	virtual void OnUseSkill(const FPokeUseSkillParams& Params) override;
+
+
+};

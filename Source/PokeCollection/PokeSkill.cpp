@@ -42,7 +42,20 @@ void UPokeSkill::SetSourceCharacter(ABattleCharacterActor* InSourceCharacter)
 
 void UPokeSkill::UseSkill(const FPokeUseSkillParams& Params)
 {
+	if (!ensure(SourceCharacter))
+	{
+		return;
+	}
+
+	if (!Params.TargetCharacter)
+	{
+		ensure(0);
+		return;
+	}
+
 	OnUseSkill(Params);
+
+	CurrentAttackCount = 0;
 }
 
 bool UPokeSkill::CanUseSkill()
@@ -57,17 +70,6 @@ void UPokeSkill::OnCharacterAttack()
 
 void UPokeSkill::OnUseSkill(const FPokeUseSkillParams& Params)
 {
-	if (!ensure(SourceCharacter))
-	{
-		return;
-	}
-
-	if (!Params.TargetCharacter)
-	{
-		ensure(0);
-		return;
-	}
-
 	int32 TotalSkillDamage = SkillDamage * Params.CharacterStat;
 
 	if (SpawnProjectileActor.Get())
@@ -94,5 +96,9 @@ void UPokeSkill::OnUseSkill(const FPokeUseSkillParams& Params)
 		Params.TargetCharacter->TakeBattleDamage(TotalSkillDamage);
 	}
 
-	CurrentAttackCount = 0;
+}
+
+void UPokeSkill_Ember::OnUseSkill(const FPokeUseSkillParams& Params)
+{
+	Super::OnUseSkill(Params);
 }

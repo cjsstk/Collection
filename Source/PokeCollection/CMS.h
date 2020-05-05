@@ -249,8 +249,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class ASkillProjectileActor> SpawnProjectileActor;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UPokeSkill> SkillClass;*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UPokeSkill> SkillClass;
 
 };
 
