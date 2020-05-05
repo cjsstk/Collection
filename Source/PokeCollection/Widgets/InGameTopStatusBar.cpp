@@ -4,9 +4,11 @@
 #include "InGameTopStatusBar.h"
 
 #include "Button.h"
+#include "Image.h"
 #include "TextBlock.h"
 
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 
 void UInGameTopStatusBar::NativeConstruct()
 {
@@ -60,6 +62,22 @@ void UInGameTopStatusBar::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 		}
 	}
 
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (PokeHud)
+	{
+		UInGameMainWidget* MainWidget = PokeHud->GetInGameMainWidget();
+		if (MainWidget && MainWidget->IsInViewport())
+		{
+			BackButtonImage->SetBrushFromTexture(nullptr);
+		}
+		else
+		{
+			if (BackButtonTexture)
+			{
+				BackButtonImage->SetBrushFromTexture(BackButtonTexture);
+			}
+		}
+	}
 }
 
 void UInGameTopStatusBar::OnBack()

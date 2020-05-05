@@ -44,4 +44,10 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* MoneyChargingText = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UImage* BackButtonImage = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	class UTexture2D* BackButtonTexture = nullptr;
+
 };
