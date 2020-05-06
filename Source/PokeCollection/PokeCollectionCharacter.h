@@ -35,6 +35,9 @@ public:
 	void GetReward(FBattleReward InBattleReward);
 	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
 
+	void PutOnEquipment(int32 InCharacterID, int32 InEquipmentID);
+	void TakeOffEquipment(int32 InCharacterID);
+
 	/** 
 	 * Player Info
 	 */

@@ -58,6 +58,9 @@ public:
 
 	void SetBattleCharacterActor(class ABattleCharacterActor* InBattleCharacterActor);
 
+	void PutOnEquipment(class UPokeEquipment* InEquipment);
+	void TakeOffEquipment();
+
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
 	int32 GetCharacterID() const { return CharacterID; }
 
@@ -153,4 +156,8 @@ private:
 	 */
 	int32 JoinedPartyNum = 0;
 	int32 JoinedSlotNum = 0;
+
+	/** */
+	UPROPERTY(Transient)
+	class UPokeEquipment* CurrentEquipment = nullptr;
 };

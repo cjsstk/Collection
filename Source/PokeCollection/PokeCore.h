@@ -6,6 +6,7 @@
 #include "GenericPlatform/GenericPlatformMisc.h"
 #include "UObject/NoExportTypes.h"
 
+class APokeCollectionCharacter;
 class ABattleManager;
 class AHttpActor;
 
@@ -13,6 +14,7 @@ enum class EType;
 
 namespace PokeCore
 {
+	class APokeCollectionCharacter* GetPokePlayer(const UWorld* WorldContext);
     class ABattleManager* GetBattleManager(const UWorld* WorldContext);
 	class AHttpActor* GetHttpActor(const UWorld* WorldContext);
 

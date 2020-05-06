@@ -118,6 +118,24 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ERank EquipmentRank = ERank::Normal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Equipment_Attack = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Equipment_Defense = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Equipment_SPAtk = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Equipment_SPDef = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Equipment_Speed = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Equipment_AttackRange = 0;
 };
 
 USTRUCT(BlueprintType)

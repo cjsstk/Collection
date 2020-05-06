@@ -5,11 +5,23 @@
 
 #include "BattleManager.h"
 #include "Net/HttpActor.h"
+#include "PokeCollectionCharacter.h"
 #include "PokeCollectionGameMode.h"
 #include "Level/InGameLevelScriptActor.h"
 #include "TypeChart.h"
 
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
+
+class APokeCollectionCharacter* PokeCore::GetPokePlayer(const UWorld* WorldContext)
+{
+	if (!WorldContext)
+	{
+		return nullptr;
+	}
+
+	return Cast<APokeCollectionCharacter>(UGameplayStatics::GetPlayerCharacter(WorldContext, 0));
+}
 
 ABattleManager* PokeCore::GetBattleManager(const UWorld* WorldContext)
 {

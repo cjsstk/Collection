@@ -4,6 +4,7 @@
 #include "PokeEquipment.h"
 
 #include "CMS.h"
+#include "PokeCharacter.h"
 
 void UPokeEquipment::Init(equipmentKey InEquipmentKey)
 {
@@ -13,6 +14,33 @@ void UPokeEquipment::Init(equipmentKey InEquipmentKey)
 	}
 
 	EquipmentKey = InEquipmentKey;
+
+	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(EquipmentKey);
+	if (!ensure(EquipmentInfo))
+	{
+		return;
+	}
+
+	EquipmentStatus.Attack = EquipmentInfo->Equipment_Attack;
+	EquipmentStatus.Defense = EquipmentInfo->Equipment_Defense;
+	EquipmentStatus.SpecialAttack = EquipmentInfo->Equipment_SPAtk;
+	EquipmentStatus.SpecialDefense = EquipmentInfo->Equipment_SPDef;
+	EquipmentStatus.Speed = EquipmentInfo->Equipment_Speed;
+	EquipmentStatus.AttackRange = EquipmentInfo->Equipment_AttackRange;
+}
+
+FEquipmentStatus UPokeEquipment::GetFinalEquipmentStatus()
+{
+	FEquipmentStatus FinalStatus;
+
+	FinalStatus.Attack = EquipmentStatus.Attack + Level;
+	FinalStatus.Defense = EquipmentStatus.Defense + Level;
+	FinalStatus.SpecialAttack = EquipmentStatus.SpecialAttack + Level;
+	FinalStatus.SpecialDefense = EquipmentStatus.SpecialDefense + Level;
+	FinalStatus.Speed = EquipmentStatus.Speed + Level;
+	FinalStatus.AttackRange = EquipmentStatus.AttackRange + Level;
+
+	return FinalStatus;
 }
 
 FName UPokeEquipment::GetEquipmentName() const

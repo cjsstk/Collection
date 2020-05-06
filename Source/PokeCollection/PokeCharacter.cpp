@@ -3,8 +3,11 @@
 
 #include "PokeCharacter.h"
 
-#include "InBattleCharacterPanel.h"
 #include "CMS.h"
+#include "InBattleCharacterPanel.h"
+#include "PokeCore.h"
+#include "PokeCollectionCharacter.h"
+#include "PokeEquipment.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -54,6 +57,33 @@ void APokeCharacter::SetBattleCharacterActor(ABattleCharacterActor* InBattleChar
 	}
 
 	MyBattleCharacter = InBattleCharacterActor;
+}
+
+void APokeCharacter::PutOnEquipment(class UPokeEquipment* InEquipment)
+{
+	if (!ensure(InEquipment))
+	{
+		return;
+	}
+
+	if (CurrentEquipment)
+	{
+		TakeOffEquipment();
+	}
+
+	CurrentEquipment = InEquipment;
+	CurrentEquipment->SetOwnerCharacterID(CharacterID);
+}
+
+void APokeCharacter::TakeOffEquipment()
+{
+	if (!ensure(CurrentEquipment))
+	{
+		return;
+	}
+
+	CurrentEquipment->SetOwnerCharacterID(-1);
+	CurrentEquipment = nullptr;
 }
 
 void APokeCharacter::SetLevel(int32 NewLevel)
@@ -181,7 +211,16 @@ float APokeCharacter::GetAttackRange() const
 		return false;
 	}
 
-	return CharacterInfo->AttackRange;
+	int32 AttackRange = CharacterInfo->AttackRange;
+
+	if (CurrentEquipment)
+	{
+		const FEquipmentStatus& EquipmentStatus = CurrentEquipment->GetFinalEquipmentStatus();
+
+		AttackRange += EquipmentStatus.AttackRange;
+	}
+
+	return AttackRange;
 }
 
 int32 APokeCharacter::GetConsumeBerryAmount() const
@@ -281,6 +320,17 @@ FStatus APokeCharacter::CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat)
 	FinalStat.SpecialAttack = InBaseStat.SpecialAttack * Level + InEvStat.SpecialAttack;
 	FinalStat.SpecialDefense = InBaseStat.SpecialDefense * Level + InEvStat.SpecialDefense;
 	FinalStat.Speed = InBaseStat.Speed + InEvStat.Speed;
+
+	if (CurrentEquipment)
+	{
+		const FEquipmentStatus& EquipmentStatus = CurrentEquipment->GetFinalEquipmentStatus();
+
+		FinalStat.Attack += EquipmentStatus.Attack;
+		FinalStat.Defense += EquipmentStatus.Defense;
+		FinalStat.SpecialAttack += EquipmentStatus.SpecialAttack;
+		FinalStat.SpecialDefense += EquipmentStatus.SpecialDefense;
+		FinalStat.Speed += EquipmentStatus.Speed;
+	}
 
 	return FinalStat;
 }

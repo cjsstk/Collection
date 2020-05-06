@@ -154,6 +154,35 @@ void APokeCollectionCharacter::SetMaxClearBattleStage(battleStageKey InBattleSta
 	MaxClearBattleStageNum = FMath::Max(MaxClearBattleStageNum, InBattleStageKey);
 }
 
+void APokeCollectionCharacter::PutOnEquipment(int32 InCharacterID, int32 InEquipmentID)
+{
+	APokeCharacter* PokeCharacter = GetCharacterByID(InCharacterID);
+	if (!PokeCharacter)
+	{
+		return;
+	}
+
+	UPokeEquipment* PokeEquipment = GetEquipmentByID(InEquipmentID);
+	if (!PokeEquipment)
+	{
+		return;
+	}
+
+	PokeCharacter->PutOnEquipment(PokeEquipment);
+
+}
+
+void APokeCollectionCharacter::TakeOffEquipment(int32 InCharacterID)
+{
+	APokeCharacter* PokeCharacter = GetCharacterByID(InCharacterID);
+	if (!PokeCharacter)
+	{
+		return;
+	}
+
+	PokeCharacter->TakeOffEquipment();
+}
+
 void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 {
 	PlayerLevel = NewLevel;
@@ -294,6 +323,8 @@ void APokeCollectionCharacter::BeginPlay()
 		HaveCharacters[i * 2]->SetJoinedPartyNum(1);
 		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
 	}
+
+	//PutOnEquipment(1, 1);
 }
 
 void APokeCollectionCharacter::Tick(float DeltaSeconds)

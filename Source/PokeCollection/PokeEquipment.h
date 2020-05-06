@@ -8,6 +8,31 @@
 #include "SortObjectInterface.h"
 #include "PokeEquipment.generated.h"
 
+USTRUCT(Atomic)
+struct FEquipmentStatus
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	int32 Attack = 0;
+
+	UPROPERTY()
+	int32 Defense = 0;
+
+	UPROPERTY()
+	int32 SpecialAttack = 0;
+
+	UPROPERTY()
+	int32 SpecialDefense = 0;
+
+	UPROPERTY()
+	int32 Speed = 0;
+
+	UPROPERTY()
+	int32 AttackRange = 0;
+};
+
 /**
  * 
  */
@@ -24,8 +49,11 @@ public:
 
 	int32 GetEquipmentKey() const { return EquipmentKey; }
 
-	int32 GetLevel() const { return Level; }
+	void SetOwnerCharacterID(int32 InCharacterID) { OwnerCharacterID = InCharacterID; }
+	int32 GetOwnerCharacterID() const { return OwnerCharacterID; }
 
+	int32 GetLevel() const { return Level; }
+	FEquipmentStatus GetFinalEquipmentStatus();
 	FName GetEquipmentName() const;
 	class UTexture2D* GetEquipmentProfileImage() const;
 	FText GetEquipmentDesc() const;
@@ -41,4 +69,7 @@ private:
 
 	int32 Level = 1;
 
+	int32 OwnerCharacterID = -1;
+
+	FEquipmentStatus EquipmentStatus;
 };
