@@ -27,9 +27,6 @@ private:
 	class UTextBlock* PlayerLevel = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* PlayerCurrentExp = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* PlayerMaxExp = nullptr;
+	class UTextBlock* PlayerExp = nullptr;
 
 };

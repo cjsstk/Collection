@@ -34,13 +34,11 @@ void UInGameProfileWidget::OnOpen()
 		PlayerLevel->SetText(FText::FromString(FString::FormatAsNumber(Player->GetPlayerLevel())));
 	}
 
-	if (PlayerCurrentExp)
+	if (PlayerExp)
 	{
-		PlayerCurrentExp->SetText(FText::FromString(FString::FormatAsNumber(Player->GetPlayerCurrentExp())));
-	}
-
-	if (PlayerMaxExp)
-	{
-		PlayerMaxExp->SetText(FText::FromString(FString::FormatAsNumber(Player->GetPlayerMaxExp())));
+		FString expDisplayStr = FString::FormatAsNumber(Player->GetPlayerCurrentExp());
+		expDisplayStr.Append(" / ");
+		expDisplayStr.Append(FString::FromInt(Player->GetPlayerMaxExp()));
+		PlayerExp->SetText(FText::FromString(expDisplayStr));
 	}
 }
