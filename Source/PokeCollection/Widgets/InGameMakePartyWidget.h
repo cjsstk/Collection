@@ -7,7 +7,7 @@
 #include "InGameMakePartyWidget.generated.h"
 
 /**
- * Party making widget
+ * 캐릭터 편성 화면에 나오는 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UInGameMakePartyWidget : public UInGameWidget

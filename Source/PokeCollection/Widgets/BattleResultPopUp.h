@@ -7,7 +7,9 @@
 #include "CMSType.h"
 #include "BattleResultPopUp.generated.h"
 
-
+/**
+ * 전투 끝나고 결과가 나타나는 팝업 위젯
+ */
 UCLASS()
 class POKECOLLECTION_API UBattleResultPopUp : public UUserWidget
 {

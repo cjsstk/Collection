@@ -31,6 +31,9 @@ private:
 	int32 SwitcherIndex = 0;
 };
 
+/**
+ * 캐릭터 정보 화면에서 표시될 위젯
+ */
 UCLASS()
 class POKECOLLECTION_API UCharacterInfoContentWidget : public UUserWidget
 {
@@ -65,7 +68,7 @@ public:
 };
 
 /**
- * Character info widget
+ * 박스에서 들어가는 캐릭터 정보 화면 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UInGameCharacterInfoWidget : public UInGameWidget

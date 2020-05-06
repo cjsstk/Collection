@@ -48,6 +48,9 @@ private:
 	}
 };
 
+/**
+ * 수집하는 캐릭터 클래스
+ */
 UCLASS()
 class POKECOLLECTION_API APokeCharacter : public AActor, public ISortObjectInterface
 {

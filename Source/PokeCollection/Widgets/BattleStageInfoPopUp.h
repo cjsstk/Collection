@@ -8,7 +8,7 @@
 #include "BattleStageInfoPopUp.generated.h"
 
 /** 
- * Touchable battle stage signboard in adventure widget 
+ * 모험 화면에 나타나는 전투 스테이지 간판 위젯
  */
 UCLASS(Blueprintable)
 class POKECOLLECTION_API UBattleStageSignboard : public UUserWidget
@@ -35,7 +35,7 @@ private:
 };
 
 /**
- * 
+ * 전투 스테이지 간판을 클릭하면 나타나는 스테이지 정보 화면 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UBattleStageInfoPopUp : public UUserWidget

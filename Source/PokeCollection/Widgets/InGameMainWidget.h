@@ -35,7 +35,7 @@ private:
 
 
 /**
- * In Game Main UI (Lobby)
+ * 메인 로비 화면 위젯
  */
 UCLASS(Blueprintable)
 class POKECOLLECTION_API UInGameMainWidget : public UInGameWidget

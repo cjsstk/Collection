@@ -8,7 +8,7 @@
 #include "CharacterDetailInfoWidget.generated.h"
 
 /**
- * 
+ * 캐릭터 상세 화면 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UCharacterDetailInfoWidget : public UCharacterInfoContentWidget

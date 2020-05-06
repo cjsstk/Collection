@@ -33,7 +33,7 @@ private:
 
 
 /**
- * Character Index Widget
+ * 캐릭터 도감 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UInGameIndexWidget : public UInGameWidget

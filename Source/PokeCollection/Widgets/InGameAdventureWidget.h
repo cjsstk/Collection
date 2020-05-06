@@ -8,6 +8,9 @@
 #include "InGameAdventureWidget.generated.h"
 
 
+/**
+ * 모험 화면 위젯에 나타나는 스테이지 위젯
+ */
 UCLASS()
 class POKECOLLECTION_API UStageWidget : public UUserWidget
 {
@@ -34,7 +37,7 @@ private:
 };
 
 /**
- * Adventure widget. Contains stage widgets
+ * 모험 화면 위젯.
  */
 UCLASS(Blueprintable)
 class POKECOLLECTION_API UInGameAdventureWidget : public UInGameWidget

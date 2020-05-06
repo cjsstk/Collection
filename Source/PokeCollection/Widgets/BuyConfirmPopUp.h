@@ -9,6 +9,9 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBuyButtonClicked, int32, InSlotKey);
 
+/**
+ * 상점에서 구매 확인을 표시하는 팝업 위젯
+ */
 UCLASS()
 class POKECOLLECTION_API UBuyConfirmPopUp : public UUserWidget
 {

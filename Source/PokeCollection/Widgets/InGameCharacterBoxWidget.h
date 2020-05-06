@@ -7,7 +7,7 @@
 #include "Widgets/CharacterBoxWidget.h"
 #include "InGameCharacterBoxWidget.generated.h"
 
-/** Character slot on making party */
+/** 편성 할 때 나타나는 캐릭터 슬롯 */
 UCLASS()
 class POKECOLLECTION_API UCharacterBoxSlot : public UCharacterSlot
 {
@@ -21,7 +21,7 @@ private:
 
 };
 
-/** exclude character from slot */
+/** 편성할 때 캐릭터를 파티에서 제외 시키는 슬롯 */
 UCLASS()
 class POKECOLLECTION_API UExcludeCharacterSlot : public UUserWidget
 {
@@ -40,7 +40,7 @@ private:
 
 
 /**
- * Making Party Character Box Widget
+ * 캐릭터 편성 할 때 캐릭터를 고르는 화면 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UInGameCharacterBoxWidget : public UInGameWidget
@@ -52,7 +52,6 @@ public:
 
 	virtual void OnOpen() override;
 
-	//void SetIsMakingParty(bool bInIsMakingParty) { bIsMakingParty = bInIsMakingParty; };
 	void SetEmptySlotSelected(bool bInIsEmptySlot) { bSelectEmptySlot = bInIsEmptySlot; };
 
 	void SetSelectedPartySlotNum(int32 InSelectedPartySlotNum) { SelectedPartySlotNum = InSelectedPartySlotNum; }

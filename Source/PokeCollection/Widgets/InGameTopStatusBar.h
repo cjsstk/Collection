@@ -9,7 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackButtonClicked);
 
 /**
- * 
+ * 게임 상단에서 유저 정보를 나타내는 위젯
  */
 UCLASS(Blueprintable)
 class POKECOLLECTION_API UInGameTopStatusBar : public UUserWidget

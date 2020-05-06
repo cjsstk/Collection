@@ -19,7 +19,7 @@ enum class EPlayerMode
 
 
 /**
- * 플레이어 클래스
+ * 플레이어(유저) 클래스
  */
 UCLASS(config=Game)
 class APokeCollectionCharacter : public ACharacter

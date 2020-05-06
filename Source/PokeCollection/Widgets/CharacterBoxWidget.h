@@ -8,7 +8,9 @@
 #include "TypeChart.h"
 #include "CharacterBoxWidget.generated.h"
 
-
+/**
+ * 캐릭터 정보가 담긴 슬롯
+ */
 UCLASS()
 class POKECOLLECTION_API UCharacterSlot : public UBoxSlot
 {
@@ -47,7 +49,9 @@ protected:
 	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
 };
 
-
+/**
+ * 박스에서 가진 캐릭터들이 나타나는 화면 위젯
+ */
 UCLASS()
 class POKECOLLECTION_API UCharacterBoxWidget : public UBoxContentWidget
 {
