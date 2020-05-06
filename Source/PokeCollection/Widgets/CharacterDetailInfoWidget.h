@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
-#include "CMSType.h"
 #include "CharacterDetailInfoWidget.generated.h"
 
 /**
@@ -20,7 +19,6 @@ public:
 
 private:
 	void SetTypeImages(CharacterType InCharacterType);
-	void SetBackgroundColor(ERank InRank);
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* CharacterImage = nullptr;
@@ -65,9 +63,6 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ConsumeBerryAmount = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* RankBackground = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Type1Image = nullptr;

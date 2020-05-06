@@ -69,6 +69,8 @@ void UInGameCharacterInfoWidget::OnOpen()
 				if (ensure(SelectedCharacter))
 				{
 					InfoContentWidget->SetSelectedCharacter(SelectedCharacter);
+
+					SetBackgroundColor(SelectedCharacter->GetCharacterRank());
 				}
 			}
 
@@ -134,4 +136,32 @@ void UInGameCharacterInfoWidget::SwitchContentWidget(int32 InContentIndex)
 	}
 
 	InfoContents[InContentIndex]->OnOpen();
+}
+
+void UInGameCharacterInfoWidget::SetBackgroundColor(ERank InRank)
+{
+	if (RankBackground)
+	{
+		FLinearColor Color;
+
+		switch (InRank)
+		{
+		case ERank::Normal:
+			Color = NormalColor;
+			break;
+		case ERank::Rare:
+			Color = RareColor;
+			break;
+		case ERank::SRare:
+			Color = SRareColor;
+			break;
+		case ERank::SSRare:
+			Color = SSRareColor;
+			break;
+		default:
+			break;
+		}
+
+		RankBackground->SetColorAndOpacity(Color);
+	}
 }

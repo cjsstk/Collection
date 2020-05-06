@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Widgets/InGameMainWidget.h"
 #include "TypeChart.h"
+#include "CMSType.h"
 #include "InGameCharacterInfoWidget.generated.h"
 
 UCLASS()
@@ -83,6 +84,11 @@ public:
 	void SwitchContentWidget(int32 InContentIndex);
 
 private:
+	void SetBackgroundColor(ERank InRank);
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* RankBackground = nullptr;
+
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* CatergoryScrollBox = nullptr;
 

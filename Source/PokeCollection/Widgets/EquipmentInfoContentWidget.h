@@ -1,4 +1,4 @@
-// Copyright Me. All Rights Reserved.
+Ôªø// Copyright Me. All Rights Reserved.
 
 #pragma once
 
@@ -13,9 +13,12 @@ class POKECOLLECTION_API UStatusChangeByEquipmentWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetChangeStatusText(int32 InExcludeStat, int32 InIncludeStat);
+	void SetChangeStatusText(FString InStatusName, int32 InExcludeStat, int32 InIncludeStat);
 
 private:
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* StatusNameText = nullptr;
+
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ExcludeEquipmentStatText = nullptr;
 
@@ -29,7 +32,7 @@ private:
 
 
 /**
- * ƒ≥∏Ø≈Õ ¿Â∫Ò »≠∏È ¿ß¡¨
+ * Ï∫êÎ¶≠ÌÑ∞ Ïû•ÎπÑ ÌôîÎ©¥ ÏúÑÏ†Ø
  */
 UCLASS()
 class POKECOLLECTION_API UEquipmentInfoContentWidget : public UCharacterInfoContentWidget

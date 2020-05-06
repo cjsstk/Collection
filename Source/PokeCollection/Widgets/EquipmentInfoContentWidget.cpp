@@ -1,4 +1,4 @@
-// Copyright Me. All Rights Reserved.
+﻿// Copyright Me. All Rights Reserved.
 
 
 #include "EquipmentInfoContentWidget.h"
@@ -7,8 +7,10 @@
 #include "PokeEquipment.h"
 
 #include "Button.h"
+#include "TextBlock.h"
 #include "Image.h"
 #include "VerticalBox.h"
+#include "VerticalBoxSlot.h"
 
 void UEquipmentInfoContentWidget::NativeConstruct()
 {
@@ -42,52 +44,83 @@ void UEquipmentInfoContentWidget::OnOpen()
 
 	StatusChangeBox->ClearChildren();
 
-	const FStatus& ExcludeEquipmentStatus = SelectedCharacter->GetFinalStatus(false);
+	FStatus ExcludeEquipmentStatus = SelectedCharacter->GetFinalStatus(false);
 	int32 ExcludeEquipmentAttackRange = SelectedCharacter->GetAttackRange(false);
-	const FEquipmentStatus& EquipmentStatus = Equipment->GetFinalEquipmentStatus();
+	FEquipmentStatus EquipmentStatus = Equipment ? Equipment->GetFinalEquipmentStatus() : FEquipmentStatus();
 
 	if (ensure(StatusChangeWidgetClass.Get()))
 	{
 		UStatusChangeByEquipmentWidget* AttackChangeWidget = CreateWidget<UStatusChangeByEquipmentWidget>(GetWorld(), StatusChangeWidgetClass.Get());
 		if (AttackChangeWidget)
 		{
-			AttackChangeWidget->SetChangeStatusText(ExcludeEquipmentStatus.Attack, ExcludeEquipmentStatus.Attack + EquipmentStatus.Attack);
-			StatusChangeBox->AddChildToVerticalBox(AttackChangeWidget);
+			AttackChangeWidget->SetChangeStatusText(FString(TEXT("공격")), ExcludeEquipmentStatus.Attack, ExcludeEquipmentStatus.Attack + EquipmentStatus.Attack);
+
+			UVerticalBoxSlot* BoxSlot = StatusChangeBox->AddChildToVerticalBox(AttackChangeWidget);
+			if (BoxSlot)
+			{
+				BoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				BoxSlot->SetSize(FSlateChildSize());
+			}
 		}
 
 		UStatusChangeByEquipmentWidget* DefenseChangeWidget = CreateWidget<UStatusChangeByEquipmentWidget>(GetWorld(), StatusChangeWidgetClass.Get());
 		if (DefenseChangeWidget)
 		{
-			DefenseChangeWidget->SetChangeStatusText(ExcludeEquipmentStatus.Defense, ExcludeEquipmentStatus.Defense + EquipmentStatus.Defense);
-			StatusChangeBox->AddChildToVerticalBox(DefenseChangeWidget);
+			DefenseChangeWidget->SetChangeStatusText(FString(TEXT("방어")), ExcludeEquipmentStatus.Defense, ExcludeEquipmentStatus.Defense + EquipmentStatus.Defense);
+			UVerticalBoxSlot* BoxSlot = StatusChangeBox->AddChildToVerticalBox(DefenseChangeWidget);
+			if (BoxSlot)
+			{
+				BoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				BoxSlot->SetSize(FSlateChildSize());
+			}
 		}
 
 		UStatusChangeByEquipmentWidget* SpecialAttackChangeWidget = CreateWidget<UStatusChangeByEquipmentWidget>(GetWorld(), StatusChangeWidgetClass.Get());
 		if (SpecialAttackChangeWidget)
 		{
-			SpecialAttackChangeWidget->SetChangeStatusText(ExcludeEquipmentStatus.SpecialAttack, ExcludeEquipmentStatus.SpecialAttack + EquipmentStatus.SpecialAttack);
-			StatusChangeBox->AddChildToVerticalBox(SpecialAttackChangeWidget);
+			SpecialAttackChangeWidget->SetChangeStatusText(FString(TEXT("특수공격")), ExcludeEquipmentStatus.SpecialAttack, ExcludeEquipmentStatus.SpecialAttack + EquipmentStatus.SpecialAttack);
+			UVerticalBoxSlot* BoxSlot = StatusChangeBox->AddChildToVerticalBox(SpecialAttackChangeWidget);
+			if (BoxSlot)
+			{
+				BoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				BoxSlot->SetSize(FSlateChildSize());
+			}
 		}
 
 		UStatusChangeByEquipmentWidget* SpecialDefenseChangeWidget = CreateWidget<UStatusChangeByEquipmentWidget>(GetWorld(), StatusChangeWidgetClass.Get());
 		if (SpecialDefenseChangeWidget)
 		{
-			SpecialDefenseChangeWidget->SetChangeStatusText(ExcludeEquipmentStatus.SpecialDefense, ExcludeEquipmentStatus.SpecialDefense + EquipmentStatus.SpecialDefense);
-			StatusChangeBox->AddChildToVerticalBox(SpecialDefenseChangeWidget);
+			SpecialDefenseChangeWidget->SetChangeStatusText(FString(TEXT("특수방어")), ExcludeEquipmentStatus.SpecialDefense, ExcludeEquipmentStatus.SpecialDefense + EquipmentStatus.SpecialDefense);
+			UVerticalBoxSlot* BoxSlot = StatusChangeBox->AddChildToVerticalBox(SpecialDefenseChangeWidget);
+			if (BoxSlot)
+			{
+				BoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				BoxSlot->SetSize(FSlateChildSize());
+			}
 		}
 
 		UStatusChangeByEquipmentWidget* SpeedChangeWidget = CreateWidget<UStatusChangeByEquipmentWidget>(GetWorld(), StatusChangeWidgetClass.Get());
 		if (SpeedChangeWidget)
 		{
-			SpeedChangeWidget->SetChangeStatusText(ExcludeEquipmentStatus.Speed, ExcludeEquipmentStatus.Speed + EquipmentStatus.Speed);
-			StatusChangeBox->AddChildToVerticalBox(SpeedChangeWidget);
+			SpeedChangeWidget->SetChangeStatusText(FString(TEXT("스피드")), ExcludeEquipmentStatus.Speed, ExcludeEquipmentStatus.Speed + EquipmentStatus.Speed);
+			UVerticalBoxSlot* BoxSlot = StatusChangeBox->AddChildToVerticalBox(SpeedChangeWidget);
+			if (BoxSlot)
+			{
+				BoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				BoxSlot->SetSize(FSlateChildSize());
+			}
 		}
 
 		UStatusChangeByEquipmentWidget* AttackRangeChangeWidget = CreateWidget<UStatusChangeByEquipmentWidget>(GetWorld(), StatusChangeWidgetClass.Get());
 		if (AttackRangeChangeWidget)
 		{
-			AttackRangeChangeWidget->SetChangeStatusText(ExcludeEquipmentAttackRange, ExcludeEquipmentAttackRange + EquipmentStatus.AttackRange);
-			StatusChangeBox->AddChildToVerticalBox(AttackRangeChangeWidget);
+			AttackRangeChangeWidget->SetChangeStatusText(FString(TEXT("사거리")), ExcludeEquipmentAttackRange, ExcludeEquipmentAttackRange + EquipmentStatus.AttackRange);
+			UVerticalBoxSlot* BoxSlot = StatusChangeBox->AddChildToVerticalBox(AttackRangeChangeWidget);
+			if (BoxSlot)
+			{
+				BoxSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+				BoxSlot->SetSize(FSlateChildSize());
+			}
 		}
 	}
 	
@@ -98,7 +131,28 @@ void UEquipmentInfoContentWidget::OnSlotButtonClicked()
 
 }
 
-void UStatusChangeByEquipmentWidget::SetChangeStatusText(int32 InExcludeStat, int32 InIncludeStat)
+void UStatusChangeByEquipmentWidget::SetChangeStatusText(FString InStatusName, int32 InExcludeStat, int32 InIncludeStat)
 {
+	if (StatusNameText)
+	{
+		StatusNameText->SetText(FText::FromString(InStatusName + FString(": ")));
+	}
 
+	if (ExcludeEquipmentStatText)
+	{
+		ExcludeEquipmentStatText->SetText(FText::FromString(FString::FromInt(InExcludeStat)));
+	}
+
+	if (IncludeEquipmentStatText)
+	{
+		IncludeEquipmentStatText->SetText(FText::FromString(FString::FromInt(InIncludeStat)));
+	}
+
+	if (ChangeAmountText)
+	{
+		FString Plus = FString("(+");
+		Plus += FString::FromInt(InIncludeStat - InExcludeStat);
+		Plus += FString(")");
+		ChangeAmountText->SetText(FText::FromString(Plus));
+	}
 }

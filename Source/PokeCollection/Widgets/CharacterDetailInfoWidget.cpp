@@ -108,7 +108,6 @@ void UCharacterDetailInfoWidget::OnOpen()
 		}
 
 		SetTypeImages(SelectedCharacter->GetCharacterType());
-		SetBackgroundColor(SelectedCharacter->GetCharacterRank());
 	}
 }
 
@@ -158,33 +157,5 @@ void UCharacterDetailInfoWidget::SetTypeImages(CharacterType InCharacterType)
 		Type2MaterialInstance->SetScalarParameterValue("RowIndexParam", Type2RawIndex);
 
 		Type2Image->SetBrushFromMaterial(Type2MaterialInstance);
-	}
-}
-
-void UCharacterDetailInfoWidget::SetBackgroundColor(ERank InRank)
-{
-	if (RankBackground)
-	{
-		FLinearColor Color;
-
-		switch (InRank)
-		{
-		case ERank::Normal:
-			Color = NormalColor;
-			break;
-		case ERank::Rare:
-			Color = RareColor;
-			break;
-		case ERank::SRare:
-			Color = SRareColor;
-			break;
-		case ERank::SSRare:
-			Color = SSRareColor;
-			break;
-		default:
-			break;
-		}
-
-		RankBackground->SetColorAndOpacity(Color);
 	}
 }
