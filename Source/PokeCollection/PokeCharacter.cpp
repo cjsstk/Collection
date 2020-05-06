@@ -197,7 +197,7 @@ ERank APokeCharacter::GetCharacterRank() const
 	return CharacterInfo->CharacterRank;
 }
 
-float APokeCharacter::GetAttackRange() const
+float APokeCharacter::GetAttackRange(bool bIncludeEquipment) const
 {
 	if (CharacterKey == INVALID_CHARACTERKEY)
 	{
@@ -213,7 +213,7 @@ float APokeCharacter::GetAttackRange() const
 
 	int32 AttackRange = CharacterInfo->AttackRange;
 
-	if (CurrentEquipment)
+	if (bIncludeEquipment && CurrentEquipment)
 	{
 		const FEquipmentStatus& EquipmentStatus = CurrentEquipment->GetFinalEquipmentStatus();
 
@@ -243,11 +243,22 @@ int32 APokeCharacter::GetConsumeBerryAmount() const
 	return CharacterInfo->ConsumeBerryAmount + AdditionalConsumeAmount;
 }
 
-const FStatus APokeCharacter::GetFinalStatus()
+const FStatus APokeCharacter::GetFinalStatus(bool bIncludeEquipment)
 {
 	FStatus FinalStatus;
 
 	FinalStatus = CalcFinalStatus(BaseStats, EvStats);
+
+	if (bIncludeEquipment && CurrentEquipment)
+	{
+		const FEquipmentStatus& EquipmentStatus = CurrentEquipment->GetFinalEquipmentStatus();
+
+		FinalStatus.Attack += EquipmentStatus.Attack;
+		FinalStatus.Defense += EquipmentStatus.Defense;
+		FinalStatus.SpecialAttack += EquipmentStatus.SpecialAttack;
+		FinalStatus.SpecialDefense += EquipmentStatus.SpecialDefense;
+		FinalStatus.Speed += EquipmentStatus.Speed;
+	}
 
 	return FinalStatus;
 }
@@ -320,17 +331,6 @@ FStatus APokeCharacter::CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat)
 	FinalStat.SpecialAttack = InBaseStat.SpecialAttack * Level + InEvStat.SpecialAttack;
 	FinalStat.SpecialDefense = InBaseStat.SpecialDefense * Level + InEvStat.SpecialDefense;
 	FinalStat.Speed = InBaseStat.Speed + InEvStat.Speed;
-
-	if (CurrentEquipment)
-	{
-		const FEquipmentStatus& EquipmentStatus = CurrentEquipment->GetFinalEquipmentStatus();
-
-		FinalStat.Attack += EquipmentStatus.Attack;
-		FinalStat.Defense += EquipmentStatus.Defense;
-		FinalStat.SpecialAttack += EquipmentStatus.SpecialAttack;
-		FinalStat.SpecialDefense += EquipmentStatus.SpecialDefense;
-		FinalStat.Speed += EquipmentStatus.Speed;
-	}
 
 	return FinalStat;
 }

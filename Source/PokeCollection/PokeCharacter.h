@@ -63,6 +63,7 @@ public:
 
 	void PutOnEquipment(class UPokeEquipment* InEquipment);
 	void TakeOffEquipment();
+	class UPokeEquipment* GetCurrentEquipment() const { return CurrentEquipment; }
 
 	void SetCharacterID(int32 InID) { CharacterID = InID; }
 	int32 GetCharacterID() const { return CharacterID; }
@@ -91,11 +92,11 @@ public:
 	class UTexture2D* GetCharacterImage() const;
 	class UPaperFlipbook* GetCharacterFlipbook() const;
 	ERank GetCharacterRank() const;
-	float GetAttackRange() const;
+	float GetAttackRange(bool bIncludeEquipment = true) const;
 	CharacterType GetCharacterType() const { return MyType; }
 	int32 GetConsumeBerryAmount() const;
 
-	const FStatus GetFinalStatus();
+	const FStatus GetFinalStatus(bool bIncludeEquipment = true);
 
 	/** 
 	 * ISortObjectInterface Interface

@@ -53,7 +53,7 @@ public:
 	int32 GetOwnerCharacterID() const { return OwnerCharacterID; }
 
 	int32 GetLevel() const { return Level; }
-	FEquipmentStatus GetFinalEquipmentStatus();
+	const FEquipmentStatus GetFinalEquipmentStatus();
 	FName GetEquipmentName() const;
 	class UTexture2D* GetEquipmentProfileImage() const;
 	FText GetEquipmentDesc() const;

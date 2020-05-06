@@ -29,7 +29,7 @@ void UPokeEquipment::Init(equipmentKey InEquipmentKey)
 	EquipmentStatus.AttackRange = EquipmentInfo->Equipment_AttackRange;
 }
 
-FEquipmentStatus UPokeEquipment::GetFinalEquipmentStatus()
+const FEquipmentStatus UPokeEquipment::GetFinalEquipmentStatus()
 {
 	FEquipmentStatus FinalStatus;
 
