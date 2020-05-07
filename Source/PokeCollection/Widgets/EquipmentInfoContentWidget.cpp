@@ -5,6 +5,7 @@
 
 #include "PokeCharacter.h"
 #include "PokeEquipment.h"
+#include "Widgets/EquipmentBoxWidget.h"
 
 #include "Button.h"
 #include "TextBlock.h"
@@ -33,13 +34,16 @@ void UEquipmentInfoContentWidget::OnOpen()
 	}
 
 	UPokeEquipment* Equipment = SelectedCharacter->GetCurrentEquipment();
-	if (Equipment)
+	if (EquipmentSlot)
 	{
-		EquipmentImage->SetBrushFromTexture(Equipment->GetEquipmentProfileImage());
-	}
-	else
-	{
-		EquipmentImage->SetBrushFromTexture(EmptyEquipmentTexture);
+		if (Equipment)
+		{
+			EquipmentSlot->InitByID(Equipment->GetEquipmentID());
+		}
+		else
+		{
+			EquipmentSlot->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 
 	StatusChangeBox->ClearChildren();

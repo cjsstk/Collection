@@ -20,7 +20,7 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void OnSelectButtonClicked() override;
 	virtual void InitByID(int32 InContentID) override;
-	virtual void InitByKey(int32 InContentKey);
+	virtual void InitByKey(int32 InContentKey) override;
 
 	void SetContentLevel(int32 InLevel);
 	void SetTypeImages(CharacterType InCharacterType);

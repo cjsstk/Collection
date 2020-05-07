@@ -7,7 +7,9 @@
 #include "Widgets/InGameBoxWidget.h"
 #include "EquipmentBoxWidget.generated.h"
 
-
+/** 
+ * 캐릭터 장비 정보 창에 나오는 장비 슬롯
+ */
 UCLASS()
 class POKECOLLECTION_API UEquipmentSlot : public UBoxSlot
 {
@@ -15,11 +17,34 @@ class POKECOLLECTION_API UEquipmentSlot : public UBoxSlot
 
 public:
 	virtual void NativeConstruct() override;
+	virtual void InitByID(int32 InContentID) override;
+	
+	void SetContentLevel(int32 InLevel);
+	bool SetOwnerCharacterImage(int32 InContentID);
 
+protected:
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* LevelText = nullptr;
+	
+	UPROPERTY(meta = (BindWidget))
+	class UImage* OwnerCharacterImage = nullptr;
+
+	bool bUseOwnerCharacterImage = false;
+};
+
+/**
+ * 장비 박스에 나오는 장비 슬롯
+ */
+UCLASS()
+class POKECOLLECTION_API UInBoxEquipmentSlot : public UEquipmentSlot
+{
+	GENERATED_BODY()
+
+public:
+	virtual void NativeConstruct() override;
 	virtual void OnSelectButtonClicked() override;
 
 protected:
-
 
 };
 

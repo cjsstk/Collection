@@ -324,7 +324,7 @@ void APokeCollectionCharacter::BeginPlay()
 		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
 	}
 
-	//PutOnEquipment(1, 1);
+	PutOnEquipment(1, 1);
 }
 
 void APokeCollectionCharacter::Tick(float DeltaSeconds)

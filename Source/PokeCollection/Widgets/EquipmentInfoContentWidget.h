@@ -51,7 +51,7 @@ private:
 	class UImage* SlotImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* EquipmentImage = nullptr;
+	class UEquipmentSlot* EquipmentSlot = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SlotButton = nullptr;
