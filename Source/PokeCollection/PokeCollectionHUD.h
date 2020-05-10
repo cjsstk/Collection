@@ -19,6 +19,7 @@ public:
 	void OpenInGameBoxWidget();
 	void OpenInGameCharacterBoxWidget(bool bIsEmpySlot);
 	void OpenInGameCharacterInfoWidget(int32 InCharacterID);
+	void OpenInGameChangeEquipmentWidget();
 	void OpenInGameShopWidget();
 	void OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType);
 	void OpenEggHatchingWidget(characterKey NewCharacterKey);
@@ -80,6 +81,9 @@ private:
 	TSubclassOf<class UInGameCharacterInfoWidget> InGameCharacterInfoWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameChangeEquipmentWidget> InGameChangeEquipmentWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameShopWidget> InGameShopWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -133,6 +137,9 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameCharacterInfoWidget* InGameCharacterInfoWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameChangeEquipmentWidget* InGameChangeEquipmentWidget = nullptr;
 
 	UPROPERTY(Transient)
 	class UInGameShopWidget* InGameShopWidget = nullptr;

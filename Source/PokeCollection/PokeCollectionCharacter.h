@@ -59,6 +59,7 @@ public:
 	int32 GetCurrentSelectedPartyNum() const { return CurrentSelectedParty; }
 
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
+	int32 GetMaxHaveEquipmentNum() const { return MaxHaveEquipmentsNum; }
 
 	bool IsCompleteIndexCharacter(characterKey InCharacterKey);;
 	bool IsClearBattleStage(int32 InBattleStageKey);

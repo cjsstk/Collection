@@ -18,7 +18,7 @@ class POKECOLLECTION_API UEquipmentSlot : public UBoxSlot
 public:
 	virtual void NativeConstruct() override;
 	virtual void InitByID(int32 InContentID) override;
-	
+
 	void SetContentLevel(int32 InLevel);
 	bool SetOwnerCharacterImage(int32 InContentID);
 

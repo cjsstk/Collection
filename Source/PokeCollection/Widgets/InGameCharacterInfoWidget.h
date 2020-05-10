@@ -80,6 +80,7 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void OnOpen() override;
 
+	int32 GetSelectedCharacterID() const { return SelectedCharacterID; }
 	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
 	void SwitchContentWidget(int32 InContentIndex);
 
@@ -104,6 +105,6 @@ private:
 	UPROPERTY(Transient)
 	TArray<class UCharacterInfoContentWidget*> InfoContents;
 
-	int32 SelectedCharacterID = 0;
+	int32 SelectedCharacterID = -1;
 
 };

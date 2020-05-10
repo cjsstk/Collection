@@ -3,6 +3,7 @@
 
 #include "EquipmentInfoContentWidget.h"
 
+#include "PokeCollectionHUD.h"
 #include "PokeCharacter.h"
 #include "PokeEquipment.h"
 #include "Widgets/EquipmentBoxWidget.h"
@@ -132,7 +133,13 @@ void UEquipmentInfoContentWidget::OnOpen()
 
 void UEquipmentInfoContentWidget::OnSlotButtonClicked()
 {
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (!PokeHud)
+	{
+		return;
+	}
 
+	PokeHud->OpenInGameChangeEquipmentWidget();
 }
 
 void UStatusChangeByEquipmentWidget::SetChangeStatusText(FString InStatusName, int32 InExcludeStat, int32 InIncludeStat)

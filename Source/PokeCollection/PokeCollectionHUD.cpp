@@ -16,6 +16,7 @@
 #include "Widgets/InGameBoxWidget.h"
 #include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
+#include "Widgets/InGameChangeEquipmentWidget.h"
 #include "Widgets/InGameDialogWidget.h"
 #include "Widgets/InGameIndexWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
@@ -96,6 +97,15 @@ void APokeCollectionHUD::BeginPlay()
 			if (ensure(InGameCharacterInfoWidget))
 			{
 				InGameCharacterInfoWidget->SetPrevWidget(InGameBoxWidget);
+			}
+		}
+
+		if (InGameChangeEquipmentWidgetClass.Get())
+		{
+			InGameChangeEquipmentWidget = CreateWidget<UInGameChangeEquipmentWidget>(GetWorld(), InGameChangeEquipmentWidgetClass, FName("InGameChangeEquipmentWidget"));
+			if (ensure(InGameChangeEquipmentWidget))
+			{
+				InGameChangeEquipmentWidget->SetPrevWidget(InGameCharacterInfoWidget);
 			}
 		}
 
@@ -220,6 +230,20 @@ void APokeCollectionHUD::OpenInGameCharacterInfoWidget(int32 InCharacterID)
 		InGameCharacterInfoWidget->AddToViewport();
 		InGameCharacterInfoWidget->SetSelectedCharacterID(InCharacterID);
 		InGameCharacterInfoWidget->OnOpen();
+	}
+}
+
+void APokeCollectionHUD::OpenInGameChangeEquipmentWidget()
+{
+	if (ensure(InGameCharacterInfoWidget))
+	{
+		InGameCharacterInfoWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameChangeEquipmentWidget))
+	{
+		InGameChangeEquipmentWidget->AddToViewport();
+		InGameChangeEquipmentWidget->OnOpen();
 	}
 }
 
