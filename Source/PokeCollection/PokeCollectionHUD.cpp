@@ -229,6 +229,7 @@ void APokeCollectionHUD::OpenInGameCharacterInfoWidget(int32 InCharacterID)
 	{
 		InGameCharacterInfoWidget->AddToViewport();
 		InGameCharacterInfoWidget->SetSelectedCharacterID(InCharacterID);
+		InGameCharacterInfoWidget->SwitchContentWidget(0);
 		InGameCharacterInfoWidget->OnOpen();
 	}
 }

@@ -80,7 +80,7 @@ void UInGameCharacterInfoWidget::OnOpen()
 
 	}
 
-	InfoContentsBox->SetActiveWidgetIndex(0);
+	InfoContentsBox->SetActiveWidgetIndex(SelectedContentWidgetIndex);
 }
 
 void UCharacterInfoContentWidget::NativeConstruct()
@@ -133,9 +133,13 @@ void UInGameCharacterInfoWidget::SwitchContentWidget(int32 InContentIndex)
 	if (InfoContentsBox)
 	{
 		InfoContentsBox->SetActiveWidgetIndex(InContentIndex);
+		SelectedContentWidgetIndex = InContentIndex;
 	}
 
-	InfoContents[InContentIndex]->OnOpen();
+	if (InfoContents.IsValidIndex(InContentIndex))
+	{
+		InfoContents[InContentIndex]->OnOpen();
+	}
 }
 
 void UInGameCharacterInfoWidget::SetBackgroundColor(ERank InRank)

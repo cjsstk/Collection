@@ -82,6 +82,7 @@ public:
 
 	int32 GetSelectedCharacterID() const { return SelectedCharacterID; }
 	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }
+
 	void SwitchContentWidget(int32 InContentIndex);
 
 private:
@@ -106,5 +107,7 @@ private:
 	TArray<class UCharacterInfoContentWidget*> InfoContents;
 
 	int32 SelectedCharacterID = -1;
+
+	int32 SelectedContentWidgetIndex = 0;
 
 };
