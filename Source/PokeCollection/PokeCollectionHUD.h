@@ -54,6 +54,7 @@ public:
 	class UInGameMakePartyWidget* GetInGameMakePartyWidget() const { return InGameMakePartyWidget; }
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
 	class UInGameCharacterInfoWidget* GetInGameCharacterInfoWidget() const { return InGameCharacterInfoWidget; }
+	class UInGameChangeEquipmentWidget* GetInGameChangeEquipmentWidget() const { return InGameChangeEquipmentWidget; }
 
 	FOnWidgetLoaded OnWidgetLoaded;
 

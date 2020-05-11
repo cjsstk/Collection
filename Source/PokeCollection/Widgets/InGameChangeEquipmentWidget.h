@@ -18,9 +18,11 @@ class POKECOLLECTION_API UChangeEquipmentSlot : public UEquipmentSlot
 
 public:
 	virtual void NativeConstruct() override;
+	virtual void InitByID(int32 InContentID) override;
 	virtual void OnSelectButtonClicked() override;
 
 protected:
+	int32 SlotEquipmentID = -1;
 
 };
 

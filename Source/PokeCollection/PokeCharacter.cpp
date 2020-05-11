@@ -66,6 +66,12 @@ void APokeCharacter::PutOnEquipment(class UPokeEquipment* InEquipment)
 		return;
 	}
 
+	if (InEquipment->GetOwnerCharacterID() >= 0)
+	{
+		// This equipment used already
+		ensure(0);
+	}
+
 	if (CurrentEquipment)
 	{
 		TakeOffEquipment();

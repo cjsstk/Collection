@@ -8,7 +8,7 @@
 #include "EquipmentBoxWidget.generated.h"
 
 /** 
- * 캐릭터 장비 정보 창에 나오는 장비 슬롯
+ * 캐릭터 장비 정보 창에 나오는 장비 장착 슬롯
  */
 UCLASS()
 class POKECOLLECTION_API UEquipmentSlot : public UBoxSlot

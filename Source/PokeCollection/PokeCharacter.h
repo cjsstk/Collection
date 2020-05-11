@@ -61,6 +61,7 @@ public:
 
 	void SetBattleCharacterActor(class ABattleCharacterActor* InBattleCharacterActor);
 
+	/** Use PutOnEquipment of PokeCollectionPlayer instead of this */
 	void PutOnEquipment(class UPokeEquipment* InEquipment);
 	void TakeOffEquipment();
 	class UPokeEquipment* GetCurrentEquipment() const { return CurrentEquipment; }

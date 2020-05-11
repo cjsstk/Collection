@@ -168,8 +168,18 @@ void APokeCollectionCharacter::PutOnEquipment(int32 InCharacterID, int32 InEquip
 		return;
 	}
 
-	PokeCharacter->PutOnEquipment(PokeEquipment);
+	if (PokeEquipment->GetOwnerCharacterID() >= 0)
+	{
+		APokeCharacter* PrevCharacter = GetCharacterByID(PokeEquipment->GetOwnerCharacterID());
+		if (!ensure(PrevCharacter))
+		{
+			return;
+		}
 
+		PrevCharacter->TakeOffEquipment();
+	}
+
+	PokeCharacter->PutOnEquipment(PokeEquipment);
 }
 
 void APokeCollectionCharacter::TakeOffEquipment(int32 InCharacterID)

@@ -160,7 +160,7 @@ bool UEquipmentSlot::SetOwnerCharacterImage(int32 InContentID)
 		return false;
 	}
 
-	if (Equipment->GetOwnerCharacterID() > 0)
+	if (Equipment->GetOwnerCharacterID() >= 0)
 	{
 		APokeCharacter* Character = Player->GetCharacterByID(Equipment->GetOwnerCharacterID());
 		if (ensure(Character))

@@ -3,6 +3,7 @@
 
 #include "InGameChangeEquipmentWidget.h"
 
+#include "Button.h"
 #include "UniformGridPanel.h"
 #include "UniformGridSlot.h"
 
@@ -19,18 +20,78 @@ void UChangeEquipmentSlot::NativeConstruct()
 	bUseOwnerCharacterImage = true;
 }
 
+void UChangeEquipmentSlot::InitByID(int32 InContentID)
+{
+	Super::InitByID(InContentID);
+
+	SlotEquipmentID = InContentID;
+}
+
 void UChangeEquipmentSlot::OnSelectButtonClicked()
 {
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player) || !GetOwningPlayer())
+	{
+		return;
+	}
+
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	UInGameCharacterInfoWidget* InfoWidget = PokeHud->GetInGameCharacterInfoWidget();
+	if (!InfoWidget)
+	{
+		return;
+	}
+
+	Player->PutOnEquipment(InfoWidget->GetSelectedCharacterID(), SlotEquipmentID);
+
+	PokeHud->OnBackButtonClicked(PokeHud->GetInGameChangeEquipmentWidget());
 }
 
 /** UExcludeEquipmentSlot */
 void UExcludeEquipmentSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (ExcludeButton)
+	{
+		ExcludeButton->OnClicked.AddUniqueDynamic(this, &UExcludeEquipmentSlot::OnExcludeButtonClicked);
+	}
 }
 
 void UExcludeEquipmentSlot::OnExcludeButtonClicked()
 {
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player) || !GetOwningPlayer())
+	{
+		return;
+	}
+
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	UInGameCharacterInfoWidget* InfoWidget = PokeHud->GetInGameCharacterInfoWidget();
+	if (!InfoWidget)
+	{
+		return;
+	}
+
+	APokeCharacter* Character = Player->GetCharacterByID(InfoWidget->GetSelectedCharacterID());
+	if (!ensure(Character))
+	{
+		return;
+	}
+
+	Character->TakeOffEquipment();
+
+	PokeHud->OnBackButtonClicked(PokeHud->GetInGameChangeEquipmentWidget());
 }
 
 /** UInGameChangeEquipmentWidget */
