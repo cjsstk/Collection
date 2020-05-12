@@ -9,6 +9,7 @@
 #include "Widgets/BattleResultPopUp.h"
 #include "Widgets/BattleStageInfoPopUp.h"
 #include "Widgets/BuyConfirmPopUp.h"
+#include "Widgets/ChangeEquipmentInfoPopUp.h"
 #include "Widgets/EggHatchingWidget.h"
 #include "Widgets/EquipmentInfoPopUp.h"
 #include "Widgets/InGameAdventureWidget.h"
@@ -135,6 +136,11 @@ void APokeCollectionHUD::BeginPlay()
 		if (EquipmentInfoPopUpClass.Get())
 		{
 			EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
+		}
+
+		if (ChangeEquipmentInfoPopUpClass.Get())
+		{
+			ChangeEquipmentInfoPopUp = CreateWidget<UChangeEquipmentInfoPopUp>(GetWorld(), ChangeEquipmentInfoPopUpClass, FName("ChangeEquipmentInfoPopUp"));
 		}
 
 		if (InGameIndexWidgetClass.Get())
@@ -378,6 +384,15 @@ void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 	{
 		EquipmentInfoPopUp->AddToViewport(2);
 		EquipmentInfoPopUp->InitInfo(InEquipmentID);
+	}
+}
+
+void APokeCollectionHUD::OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID)
+{
+	if (ensure(ChangeEquipmentInfoPopUp))
+	{
+		ChangeEquipmentInfoPopUp->AddToViewport(2);
+		ChangeEquipmentInfoPopUp->InitInfo(InNextEquipmentID);
 	}
 }
 

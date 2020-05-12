@@ -47,9 +47,7 @@ void UChangeEquipmentSlot::OnSelectButtonClicked()
 		return;
 	}
 
-	Player->PutOnEquipment(InfoWidget->GetSelectedCharacterID(), SlotEquipmentID);
-
-	PokeHud->OnBackButtonClicked(PokeHud->GetInGameChangeEquipmentWidget());
+	PokeHud->OpenChangeEquipmentInfoPopUp(SlotEquipmentID);
 }
 
 /** UExcludeEquipmentSlot */

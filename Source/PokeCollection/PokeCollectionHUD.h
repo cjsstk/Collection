@@ -31,6 +31,7 @@ public:
 	void OpenInGameBattleWidget(const TArray<class ABattleCharacterActor*>& InPlayerBattleCharacter);
 	void OpenBattleResultPopUp(FBattleReward& InBattleReward);
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
+	void OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID);
 
 	void OpenDialogWidget(int32 InDialogKey);
 
@@ -118,6 +119,9 @@ private:
 	TSubclassOf<class UEquipmentInfoPopUp> EquipmentInfoPopUpClass;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UChangeEquipmentInfoPopUp> ChangeEquipmentInfoPopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameDialogWidget> InGameDialogWidgetClass;
 
 	//
@@ -175,4 +179,6 @@ private:
 	UPROPERTY(Transient)
 	class UEquipmentInfoPopUp* EquipmentInfoPopUp = nullptr;
 
+	UPROPERTY(Transient)
+	class UChangeEquipmentInfoPopUp* ChangeEquipmentInfoPopUp = nullptr;
 };

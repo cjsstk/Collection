@@ -8,6 +8,17 @@
 #include "SortObjectInterface.h"
 #include "PokeEquipment.generated.h"
 
+enum class EEquipmentStatus
+{
+	Attack,
+	Defense,
+	SpecialAttack,
+	SpecialDefense,
+	Speed,
+	AttackRange,
+	Count
+};
+
 USTRUCT(Atomic)
 struct FEquipmentStatus
 {
@@ -54,6 +65,7 @@ public:
 
 	int32 GetLevel() const { return Level; }
 	const FEquipmentStatus GetFinalEquipmentStatus();
+	TArray<int32> GetFinalEquipmentStatus2();
 	FName GetEquipmentName() const;
 	class UTexture2D* GetEquipmentProfileImage() const;
 	FText GetEquipmentDesc() const;

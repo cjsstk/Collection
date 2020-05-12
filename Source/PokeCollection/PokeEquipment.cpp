@@ -43,6 +43,21 @@ const FEquipmentStatus UPokeEquipment::GetFinalEquipmentStatus()
 	return FinalStatus;
 }
 
+TArray<int32> UPokeEquipment::GetFinalEquipmentStatus2()
+{
+	TArray<int32> FinalStatus;
+	FinalStatus.Init(0, (int32)EEquipmentStatus::Count);
+
+	FinalStatus[(int32)EEquipmentStatus::Attack] = EquipmentStatus.Attack + Level;
+	FinalStatus[(int32)EEquipmentStatus::Defense] = EquipmentStatus.Defense + Level;
+	FinalStatus[(int32)EEquipmentStatus::SpecialAttack] = EquipmentStatus.SpecialAttack + Level;
+	FinalStatus[(int32)EEquipmentStatus::SpecialDefense] = EquipmentStatus.SpecialDefense + Level;
+	FinalStatus[(int32)EEquipmentStatus::Speed] = EquipmentStatus.Speed + Level;
+	FinalStatus[(int32)EEquipmentStatus::AttackRange] = EquipmentStatus.AttackRange + Level;
+
+	return FinalStatus;
+}
+
 FName UPokeEquipment::GetEquipmentName() const
 {
 	if (EquipmentKey == INVALID_CHARACTERKEY)
