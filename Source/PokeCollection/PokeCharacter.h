@@ -147,6 +147,7 @@ private:
 	/** 
 	 * In Battle
 	 */
+	UPROPERTY(Transient)
 	class AInBattleCharacterPanel* CurrentBattlePanel = nullptr;
 	bool bIsEnemy = false;
 

@@ -115,11 +115,15 @@ private:
 	int32 PlayerMaxExp = 1000;
 
 	battleStageKey CurrentSelectedBattleStageKey = 0;
-	int32 CurrentSelectedStageNum = 1;
 	int32 MaxClearBattleStageNum = 0;
+
+	int32 CurrentSelectedStageNum = 1;
 	int32 MaxOpenedStageNum = 2;
 
-	int32 CurrentSelectedParty = 1;
+	int32 CurrentSelectedParty = 1;	// 선택한 파티 번호
+
+	int32 BattleClearCount = 0;		// 총 배틀 클리어 횟수
+	int32 GetCharacterCount = 0;	// 총 얻은 캐릭터 수
 
 	/**
 	 * Characters
