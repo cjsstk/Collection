@@ -35,4 +35,5 @@ protected:
 private:
 	FHttpModule* Http;
 
+	FString AuthToken;
 };

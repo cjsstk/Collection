@@ -24,6 +24,17 @@ AHttpActor::AHttpActor(const class FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 
 	Http = &FHttpModule::Get();
+
+	FString LoadedToken;
+	FString FileName = FPaths::ProjectConfigDir() + "/Token.txt";
+	if (FFileHelper::LoadFileToString(LoadedToken, *FileName))
+	{
+		AuthToken = LoadedToken;
+	}
+	else
+	{
+		ensure(0);
+	}
 }
 
 void AHttpActor::HttpCall()
@@ -66,7 +77,7 @@ void AHttpActor::RequestLogin(const FString& InLoginId)
 	Request->SetVerb(HTTPVerb::GET);
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	Request->SetHeader("Authorization", TEXT("Bearer marei"));
+	Request->SetHeader("Authorization", AuthToken);
 
 	Request->ProcessRequest();
 }
@@ -100,7 +111,7 @@ void AHttpActor::RequestRegist(const FString& InRegistId)
 	Request->SetContentAsString(OutputString);
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	Request->SetHeader("Authorization", TEXT("Bearer marei"));
+	Request->SetHeader("Authorization", AuthToken);
 
 	Request->ProcessRequest();
 }
