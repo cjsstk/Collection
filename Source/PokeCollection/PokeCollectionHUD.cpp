@@ -384,6 +384,15 @@ void APokeCollectionHUD::OpenBattleResultPopUp(FBattleReward& InBattleReward)
 	}
 }
 
+void APokeCollectionHUD::OpenBattleLosePopUp()
+{
+	UBattleLosePopUp* BattleLosePopUp = CreateWidget<UBattleLosePopUp>(GetWorld(), BattleLosePopUpClass, FName("BattleLosePopUp"));
+	if (ensure(BattleLosePopUp))
+	{
+		BattleLosePopUp->AddToViewport(2);
+	}
+}
+
 void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 {
 	if (ensure(EquipmentInfoPopUp))

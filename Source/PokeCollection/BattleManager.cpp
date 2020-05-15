@@ -121,9 +121,11 @@ void ABattleManager::BattleStart()
 	OnBattleStart.Broadcast();
 }
 
-void ABattleManager::BattleEnd()
+void ABattleManager::BattleEnd(bool bIsWin)
 {
-	GetWorldTimerManager().SetTimer(BattleEndTimerHandle, this, &ABattleManager::TakeReward, BattleEndDelaySeconds, false);
+	FTimerDelegate RespawnDelegate = FTimerDelegate::CreateUObject(this, &ABattleManager::OpenResult, bIsWin);
+
+	GetWorldTimerManager().SetTimer(BattleEndTimerHandle, RespawnDelegate, BattleEndDelaySeconds, false);
 
 	bIsBattlePlaying = false;
 	OnBattleEnd.Broadcast();
@@ -136,25 +138,32 @@ void ABattleManager::BattleShutdown()
 	OnBattleShutdown.Broadcast();
 }
 
-void ABattleManager::TakeReward()
+void ABattleManager::OpenResult(bool bIsWin)
 {
-	FBattleReward Reward;
-	GetBattleReward(CurrentBattleStageKey, Reward);
-
-	if (ensure(PlayerCharacter))
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	APokeCollectionHUD* PokeHud = PC ? Cast<APokeCollectionHUD>(PC->GetHUD()) : nullptr;
+	if (!PokeHud)
 	{
-		PlayerCharacter->GetReward(Reward);
-		PlayerCharacter->SetMaxClearBattleStage(CurrentBattleStageKey);
+		ensure(0);
+		return;
 	}
 
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
+	if (bIsWin)
 	{
-		APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(PC->GetHUD());
-		if (PokeHud)
+		FBattleReward Reward;
+		GetBattleReward(CurrentBattleStageKey, Reward);
+
+		if (ensure(PlayerCharacter))
 		{
-			PokeHud->OpenBattleResultPopUp(Reward);
+			PlayerCharacter->GetReward(Reward);
+			PlayerCharacter->SetMaxClearBattleStage(CurrentBattleStageKey);
 		}
+
+		PokeHud->OpenBattleResultPopUp(Reward);
+	}
+	else
+	{
+		PokeHud->OpenBattleLosePopUp();
 	}
 }
 
@@ -300,9 +309,9 @@ void ABattleManager::TickCheckBattleEnd()
 		}
 	}
 
-	if (LeaveMyCharacterNum == 0 || LeaveEnemyCharacterNum == 0)
+	if (LeaveMyCharacterNum <= 0 || LeaveEnemyCharacterNum <= 0)
 	{
-		BattleEnd();
+		BattleEnd(LeaveEnemyCharacterNum <= 0);
 	}
 }
 

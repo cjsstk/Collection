@@ -25,9 +25,9 @@ public:
 	ABattleManager();
 
 	void BattleStart();
-	void BattleEnd();
+	void BattleEnd(bool bIsWin);
 	void BattleShutdown();
-	void TakeReward();
+	void OpenResult(bool bIsWin);
 
 	void AddBattleLog(FString& InBattleLog);
 

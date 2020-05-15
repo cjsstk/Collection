@@ -28,3 +28,23 @@ private:
 	class UButton* BackgroundButton = nullptr;
 
 };
+
+/**
+ * 전투 패배 팝업
+ */
+UCLASS()
+class POKECOLLECTION_API UBattleLosePopUp : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnBackgroundButtonClicked();
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* BackgroundButton = nullptr;
+
+};

@@ -30,6 +30,7 @@ public:
 	void OpenBattleStageInfoPopUp(battleStageKey InBattleStageKey);
 	void OpenInGameBattleWidget(const TArray<class ABattleCharacterActor*>& InPlayerBattleCharacter);
 	void OpenBattleResultPopUp(FBattleReward& InBattleReward);
+	void OpenBattleLosePopUp();
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 	void OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID);
 
@@ -114,6 +115,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UBattleResultPopUp> BattleResultPopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UBattleLosePopUp> BattleLosePopUpClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UEquipmentInfoPopUp> EquipmentInfoPopUpClass;

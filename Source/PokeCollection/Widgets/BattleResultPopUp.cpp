@@ -46,3 +46,36 @@ void UBattleResultPopUp::OnBackgroundButtonClicked()
 		BattleManager->BattleShutdown();
 	}
 }
+
+void UBattleLosePopUp::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (BackgroundButton)
+	{
+		BackgroundButton->OnClicked.AddUniqueDynamic(this, &UBattleLosePopUp::OnBackgroundButtonClicked);
+	}
+}
+
+void UBattleLosePopUp::OnBackgroundButtonClicked()
+{
+	RemoveFromViewport();
+
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (PokeHud)
+	{
+		PokeHud->OpenInGameMakePartyWidget(true);
+
+		UInGameTopStatusBar* TopStatusBar = PokeHud->GetInGameTopStatusBar();
+		if (ensure(TopStatusBar))
+		{
+			TopStatusBar->AddToViewport(1);
+		}
+	}
+
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (ensure(BattleManager))
+	{
+		BattleManager->BattleShutdown();
+	}
+}
