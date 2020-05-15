@@ -47,6 +47,25 @@ private:
 
 };
 
+UCLASS()
+class POKECOLLECTION_API UBattleLogWidget : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	virtual void NativeConstruct() override;
+
+	UFUNCTION()
+	void OnBattleLogAdded(FString& NewBattleLog);
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UScrollBox* BattleLogBox = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> LogTextClass;
+};
+
 /**
  * In Battle widget
  */
@@ -60,9 +79,18 @@ public:
 
 	void InitBattleCharacters(const TArray<class ABattleCharacterActor*>& InPlayerBattleCharacter);
 
+	UFUNCTION()
+	void OnLogButtonClicked();
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UHorizontalBox* SkillSlotBox = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UBattleLogWidget* LogWidget = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* LogButton = nullptr;
 
 	UPROPERTY(Transient)
 	TArray<class ABattleCharacterActor*> PlayerBattleCharacters;

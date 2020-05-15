@@ -1,10 +1,18 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "BattleCharacterCombatComponent.h"
 
 #include "BattleCharacterActor.h"
+#include "PokeCore.h"
 #include "PokeSkill.h"
+
+static TAutoConsoleVariable<int32> CVarCanEnemyAttack
+(
+	TEXT("poke.canEnemyAttack"),
+	1,
+	TEXT("1: Enemy can attack, 0: Enemy can't attack")
+);
 
 UBattleCharacterCombatComponent::UBattleCharacterCombatComponent()
 {
@@ -24,6 +32,9 @@ void UBattleCharacterCombatComponent::AttackTarget()
 	{
 		return;
 	}
+
+	FString BattleLog = Character->IsEnemy() ? TEXT("적 ") : FString();
+	BattleLog += Character->GetCharacterName().ToString() + TEXT("의 ");
 
 	Character->ChangeSprite(ESpriteType::Attack);
 
@@ -45,6 +56,8 @@ void UBattleCharacterCombatComponent::AttackTarget()
 				Params.CharacterStat = Status.SpecialAttack;
 				Skill->UseSkill(Params);
 
+				BattleLog += Skill->GetSkillName().ToString() + TEXT(" 스킬!");
+
 				break;
 			}
 		}
@@ -63,7 +76,12 @@ void UBattleCharacterCombatComponent::AttackTarget()
 		TargetCharacter->TakeBattleDamage(AttackDamage / 3);
 
 		OnCharacterAttack.Broadcast();
+
+		BattleLog += TEXT("공격!");
 	}
+
+	PokeCore::AddBattleLog(GetWorld(), BattleLog);
+
 }
 
 void UBattleCharacterCombatComponent::BeginPlay()
@@ -97,12 +115,10 @@ void UBattleCharacterCombatComponent::TickFindNewTarget()
 		return;
 	}
 
-	// Temp
-	if (BattleCharacter->IsEnemy())
+	if (CVarCanEnemyAttack.GetValueOnGameThread() < 1 && BattleCharacter->IsEnemy())
 	{
 		return;
 	}
-	//
 
 	const TArray<AActor*> AttackOverlapActors = BattleCharacter->GetAttackOverlapActors();
 	for (AActor* AttackOverlapActor : AttackOverlapActors)

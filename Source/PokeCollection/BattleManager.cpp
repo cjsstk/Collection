@@ -158,6 +158,13 @@ void ABattleManager::TakeReward()
 	}
 }
 
+void ABattleManager::AddBattleLog(FString& InBattleLog)
+{
+	BattleLogs.Add(InBattleLog);
+
+	OnBattleLogAdded.Broadcast(InBattleLog);
+}
+
 const TArray<class ABattleCharacterActor*> ABattleManager::GetPlayerBattleCharacters()
 {
 	TArray<class ABattleCharacterActor*> PlayerBattleCharacters;
@@ -344,6 +351,7 @@ void ABattleManager::ClearBattleManager()
 	}
 
 	CreatedBattleCharacters.Empty();
+	BattleLogs.Empty();
 
 	GetWorldTimerManager().ClearTimer(BattleEndTimerHandle);
 }

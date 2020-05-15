@@ -11,6 +11,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleStart);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleShutdown);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleLogAdded, FString&, NewBattleLog);
 
 /**
  * 
@@ -28,6 +29,8 @@ public:
 	void BattleShutdown();
 	void TakeReward();
 
+	void AddBattleLog(FString& InBattleLog);
+
 	const TArray<class ABattleCharacterActor*> GetPlayerBattleCharacters();
 	const TArray<class ABattleCharacterActor*> GetEnemyBattleCharacters();
 
@@ -41,6 +44,7 @@ public:
 	FOnBattleStart OnBattleStart;
 	FOnBattleEnd OnBattleEnd;
 	FOnBattleShutdown OnBattleShutdown;
+	FOnBattleLogAdded OnBattleLogAdded;
 
 protected:
 	virtual void BeginPlay() override;
@@ -63,6 +67,9 @@ private:
 
 	UPROPERTY(Transient)
 	class APokeCollectionCharacter* PlayerCharacter;
+
+	UPROPERTY(Transient)
+	TArray<FString> BattleLogs;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABattleCharacterActor> BattleCharacterActorClass;

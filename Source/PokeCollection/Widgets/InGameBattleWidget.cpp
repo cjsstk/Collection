@@ -4,10 +4,13 @@
 #include "InGameBattleWidget.h"
 
 #include "Button.h"
+#include "Components/ScrollBox.h"
 #include "HorizontalBox.h"
 #include "HorizontalBoxSlot.h"
 #include "Image.h"
 #include "ProgressBar.h"
+#include "TextBlock.h"
+#include "WidgetTree.h"
 
 #include "BattleCharacterActor.h"
 #include "BattleCharacterCombatComponent.h"
@@ -41,6 +44,15 @@ void UInGameBattleWidget::NativeConstruct()
 		}*/
 	}
 
+	if (LogWidget)
+	{
+		LogWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (LogButton)
+	{
+		LogButton->OnClicked.AddUniqueDynamic(this, &UInGameBattleWidget::OnLogButtonClicked);
+	}
 }
 
 void UInGameBattleWidget::InitBattleCharacters(const TArray<class ABattleCharacterActor*>& InPlayerBattleCharacter)
@@ -64,6 +76,24 @@ void UInGameBattleWidget::InitBattleCharacters(const TArray<class ABattleCharact
 		}
 	}
 }
+
+void UInGameBattleWidget::OnLogButtonClicked()
+{
+	if (!ensure(LogWidget))
+	{
+		return;
+	}
+
+	if (LogWidget->IsVisible())
+	{
+		LogWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else
+	{
+		LogWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
 
 void UBattleCharacterSkillSlot::SetOwnerBattleCharacter(class ABattleCharacterActor& InBattleCharacter)
 {
@@ -194,4 +224,37 @@ void UBattleCharacterSkillSlot::InitSlotInfo()
 	}
 
 	ActiveSkill = Skills[3];
+}
+
+void UBattleLogWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if (BattleLogBox)
+	{
+		BattleLogBox->ClearChildren();
+	}
+
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (BattleManager)
+	{
+		BattleManager->OnBattleLogAdded.AddUniqueDynamic(this, &UBattleLogWidget::OnBattleLogAdded);
+	}
+}
+
+void UBattleLogWidget::OnBattleLogAdded(FString& NewBattleLog)
+{
+	if (!BattleLogBox)
+	{
+		return;
+	}
+
+	UTextBlock* LogText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+	if (ensure(LogText))
+	{
+		LogText->SetText(FText::FromString(NewBattleLog));
+		BattleLogBox->AddChild(LogText);
+	}
+
+	BattleLogBox->ScrollToEnd();
 }

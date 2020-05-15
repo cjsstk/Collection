@@ -18,6 +18,7 @@ void UPokeSkill::InitSkill(int32 InSkillKey)
 		return;
 	}
 
+	SkillName = SkillInfo->SkillName;
 	SkillDamage = SkillInfo->SkillDamage;
 	AttackCount = SkillInfo->AttackCount;
 	SpawnProjectileActor = SkillInfo->SpawnProjectileActor;

@@ -26,7 +26,7 @@ public:
 	void TakeBattleDamage(int32 InDamage);
 	void ChangeSprite(ESpriteType InSpriteType);
 
-
+	FName GetCharacterName() const { return CharacterName; }
 	UTexture2D* GetBattleProfile() const { return CharacterBattleProfile; }
 	const TArray<AActor*>& GetAttackOverlapActors() const { return AttackOverlapActors; };
 	const TArray<class UPokeSkill*>& GetSkills() const { return Skills; }
@@ -93,5 +93,6 @@ private:
 
 	bool bIsEnemy = false;
 
+	FName CharacterName;
 	FString DebugString;
 };

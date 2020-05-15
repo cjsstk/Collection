@@ -61,6 +61,17 @@ AHttpActor* PokeCore::GetHttpActor(const UWorld* WorldContext)
 	return PokeGameMode->GetHttpActor();
 }
 
+void PokeCore::AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog)
+{
+	ABattleManager* BM = GetBattleManager(WorldContext);
+	if (!BM)
+	{
+		return;
+	}
+
+	BM->AddBattleLog(NewBattleLog);
+}
+
 //float PokeCore::GetTypeEffective(EType InAttackType, EType InDefenseType)
 //{
 //	int32 EffectiveIndex = ((int32)InAttackType * (int32)EType::Count) + (int32)InDefenseType;

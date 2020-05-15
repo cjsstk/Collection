@@ -37,6 +37,7 @@ public:
 	bool CanUseSkill();
 	int32 GetMaxAttackCount() const { return AttackCount; }
 	int32 GetCurrentAttackCount() const { return CurrentAttackCount; }
+	FText GetSkillName() const { return SkillName; }
 
 	UFUNCTION()
 	void OnCharacterAttack();
@@ -47,6 +48,7 @@ protected:
 	UPROPERTY(Transient)
 	class ABattleCharacterActor* SourceCharacter = nullptr;
 
+	FText SkillName;
 	int32 SkillDamage = 0;
 	int32 AttackCount = 0;
 	int32 CurrentAttackCount = 0;

@@ -18,6 +18,8 @@ namespace PokeCore
     class ABattleManager* GetBattleManager(const UWorld* WorldContext);
 	class AHttpActor* GetHttpActor(const UWorld* WorldContext);
 
+	void AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog);
+
 	const static FString DeviceId = FGenericPlatformMisc::GetDeviceId();
 
 	/*static TArray<float> TypeCharts = {
