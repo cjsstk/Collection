@@ -18,6 +18,7 @@ void APokeCharacter::Init(FInitCharacterParams& InInitCharacterParams)
 		return;
 	}
 
+	CharacterID = InInitCharacterParams.CharacterID;
 	CharacterKey = InInitCharacterParams.CharacterKey;
 
 	InitBaseStatus();

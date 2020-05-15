@@ -6,14 +6,15 @@
 #include "CMS.h"
 #include "PokeCharacter.h"
 
-void UPokeEquipment::Init(equipmentKey InEquipmentKey)
+void UPokeEquipment::Init(FInitEquipmentParams& InInitEquipmentParams)
 {
-	if (InEquipmentKey == INVALID_EQUIPMENTKEY)
+	if (InInitEquipmentParams.EquipmentKey == INVALID_EQUIPMENTKEY)
 	{
 		return;
 	}
 
-	EquipmentKey = InEquipmentKey;
+	EquipmentID = InInitEquipmentParams.EquipmentID;
+	EquipmentKey = InInitEquipmentParams.EquipmentKey;
 
 	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(EquipmentKey);
 	if (!ensure(EquipmentInfo))

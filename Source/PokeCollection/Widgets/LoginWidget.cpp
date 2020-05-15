@@ -20,7 +20,7 @@ void ULoginWidget::NativeConstruct()
 		return;
 	}
 
-	HttpActor->OnHttpResponseReceived.BindUObject(this, &ULoginWidget::OnLoginResponsed);
+	HttpActor->OnHttpLoginResponseReceived.BindUObject(this, &ULoginWidget::OnLoginResponsed);
 	HttpActor->RequestLogin(PokeCore::DeviceId);
 
 	if (GuestLoginButton)

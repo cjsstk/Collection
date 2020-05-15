@@ -52,6 +52,12 @@ void APokeCollectionHUD::BeginPlay()
 	}
 	else if (LevelName == FString("InGameLevel"))
 	{
+		if (LoginWidget)
+		{
+			LoginWidget->BeginDestroy();
+			LoginWidget = nullptr;
+		}
+
 		if (InGameTopStatusBarClass.Get())
 		{
 			InGameTopStatusBar = CreateWidget<UInGameTopStatusBar>(GetWorld(), InGameTopStatusBarClass, FName("InGameTopStatusBar"));

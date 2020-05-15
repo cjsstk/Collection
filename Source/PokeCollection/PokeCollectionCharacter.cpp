@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 
 #include "PokeCharacter.h"
+#include "PokeCore.h"
 #include "PokeCollectionGameMode.h"
 #include "PokeEquipment.h"
 #include "PokePlayerController.h"
@@ -28,8 +29,6 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 
 void APokeCollectionCharacter::InitHaveCharacters()
 {
-	NextCharacterID = 0;
-
 	for (characterKey Key : SavedCharacterKeys)
 	{
 		FInitCharacterParams Params;
@@ -41,26 +40,12 @@ void APokeCollectionCharacter::InitHaveCharacters()
 
 void APokeCollectionCharacter::InitHaveEquipments()
 {
-	NextEquipmentID = 0;
-
 	for (equipmentKey Key : SavedEquipmentKeys)
 	{
-		const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(Key);
-		if (!EquipmentInfo)
-		{
-			ensure(0);
-			continue;
-		}
+		FInitEquipmentParams Params;
+		Params.EquipmentKey = Key;
 
-		UPokeEquipment* PokeEquipment = NewObject<UPokeEquipment>();
-		if (PokeEquipment)
-		{
-			PokeEquipment->Init(Key);
-			PokeEquipment->SetEquipmentID(NextEquipmentID);
-			++NextEquipmentID;
-		}
-
-		HaveEquipments.AddUnique(PokeEquipment);
+		AddNewEquipment(Params);
 	}
 }
 
@@ -111,18 +96,45 @@ void APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitChara
 		return;
 	}
 
+	if (InInitCharacterParams.CharacterID < 0)
+	{
+		InInitCharacterParams.CharacterID = GetUsableCharacterID();
+	}
+
 	APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
 	if (PokeCharacter)
 	{
 		PokeCharacter->Init(InInitCharacterParams);
-		PokeCharacter->SetCharacterID(NextCharacterID);
-		++NextCharacterID;
+		//PokeCharacter->SetCharacterID(InInitCharacterParams.CharacterID);
+		//++NextCharacterID;
 	}
 
 	HaveCharacters.AddUnique(PokeCharacter);
 	AddCharacterToIndex(InInitCharacterParams.CharacterKey);
 
 	OnAddedNewCharacter.Broadcast();
+}
+
+void APokeCollectionCharacter::AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams)
+{
+	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InInitEquipmentParams.EquipmentKey);
+	if (!ensure(EquipmentInfo))
+	{
+		return;
+	}
+
+	if (InInitEquipmentParams.EquipmentID < 0)
+	{
+		InInitEquipmentParams.EquipmentID = GetUsableEquipmentID();
+	}
+
+	UPokeEquipment* PokeEquipment = NewObject<UPokeEquipment>();
+	if (PokeEquipment)
+	{
+		PokeEquipment->Init(InInitEquipmentParams);
+	}
+
+	HaveEquipments.AddUnique(PokeEquipment);
 }
 
 void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
@@ -310,6 +322,12 @@ void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	FString MapName = GetWorld()->GetMapName();
+	if (!MapName.Contains(FString(TEXT("InGameLevel"))))
+	{
+		return;
+	}
+
 	TArray<FCharacterInfo*> AllCharacterData;
 	CMS::GetAllCharacterDataTable(AllCharacterData);
 	for (FCharacterInfo* CharacterData : AllCharacterData)
@@ -322,6 +340,18 @@ void APokeCollectionCharacter::BeginPlay()
 		CharacterIndex.Emplace(CharacterData->CharacterKey, false);
 	}
 
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	HttpActor->OnHttpLoginResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnLoginResponsed);
+	HttpActor->OnHttpHaveCharactersResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveCharactersResponsed);
+	HttpActor->OnHttpHaveEquipmentsResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveEquipmentsResponsed);
+
+	//HttpActor->RequestLogin(PokeCore::DeviceId);
+	//HttpActor->RequestHaveCharacters(PokeCore::DeviceId);
 
 	InitHaveCharacters();
 	InitHaveEquipments();
@@ -334,7 +364,7 @@ void APokeCollectionCharacter::BeginPlay()
 		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
 	}
 
-	PutOnEquipment(1, 1);
+	//PutOnEquipment(1, 1);
 }
 
 void APokeCollectionCharacter::Tick(float DeltaSeconds)
@@ -377,4 +407,63 @@ void APokeCollectionCharacter::AddCharacterToIndex(characterKey InCharacterKey)
 	{
 		*IndexCharacter = true;
 	}
+}
+
+int32 APokeCollectionCharacter::GetUsableCharacterID()
+{
+	int32 UsableCharacterID = 0;
+
+	while (HaveCharacters.FindByPredicate([UsableCharacterID](APokeCharacter* PC) { return (PC->GetCharacterID() == UsableCharacterID); }))
+	{
+		UsableCharacterID++;
+	}
+	
+	return UsableCharacterID;
+}
+
+int32 APokeCollectionCharacter::GetUsableEquipmentID()
+{
+	int32 UsableEquipmentID = 0;
+
+	while (HaveEquipments.FindByPredicate([UsableEquipmentID](UPokeEquipment* PE) { return (PE->GetEquipmentID() == UsableEquipmentID); }))
+	{
+		UsableEquipmentID++;
+	}
+
+	return UsableEquipmentID;
+}
+
+void APokeCollectionCharacter::OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+	if (!ResponceJson)
+	{
+		return;
+	}
+
+	int32 recievedCode = ResponceJson->GetIntegerField("code");
+	if (recievedCode == 200)
+	{
+		
+	}
+	else
+	{
+		ensure(0);
+	}
+}
+
+void APokeCollectionCharacter::OnHaveCharactersResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+	/*APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
+	if (PokeCharacter)
+	{
+		FInitCharacterParams Params;
+
+		PokeCharacter->Init(Params);
+		HaveCharacters.AddUnique(PokeCharacter);
+	}*/
+}
+
+void APokeCollectionCharacter::OnHaveEquipmentsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+
 }

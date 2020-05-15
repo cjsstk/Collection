@@ -18,15 +18,20 @@ class POKECOLLECTION_API AHttpActor : public AActor
 public:	
 	AHttpActor(const class FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION()
-	void HttpCall();
-
 	void RequestLogin(const FString& InLoginId);
 	void RequestRegist(const FString& InRegistId);
+	void RequestHaveCharacters(const FString& InUserId);
+	void RequestHaveEquipments(const FString& InUserId);
 
-	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnLoginResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHaveCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHaveEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
-	FOnHttpResponseReceived OnHttpResponseReceived;
+	FOnHttpResponseReceived OnHttpLoginResponseReceived;
+	FOnHttpResponseReceived OnHttpRegistResponseReceived;
+	FOnHttpResponseReceived OnHttpHaveCharactersResponseReceived;
+	FOnHttpResponseReceived OnHttpHaveEquipmentsResponseReceived;
 
 protected:
 	virtual void BeginPlay() override;

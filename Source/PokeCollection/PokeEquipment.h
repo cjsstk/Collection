@@ -53,7 +53,7 @@ class POKECOLLECTION_API UPokeEquipment : public UObject, public ISortObjectInte
 	GENERATED_BODY()
 	
 public:
-	void Init(equipmentKey InEquipmentKey);
+	void Init(FInitEquipmentParams& InInitEquipmentParams);
 
 	void SetEquipmentID(int32 InID) { EquipmentID = InID; }
 	int32 GetEquipmentID() const { return EquipmentID; }
@@ -79,7 +79,7 @@ private:
 	int32 EquipmentID = 0;
 	int32 EquipmentKey = 1;
 
-	int32 Level = 1;
+	int32 Level = 0;
 
 	int32 OwnerCharacterID = -1;
 

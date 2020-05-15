@@ -57,6 +57,9 @@ struct FInitCharacterParams
 
 public:
 	UPROPERTY()
+	int32 CharacterID = -1;
+
+	UPROPERTY()
 	int32 CharacterKey = 0;
 
 	UPROPERTY()
@@ -91,6 +94,28 @@ public:
 
 	UPROPERTY()
 	bool bIsEnemy = false;
+};
+
+USTRUCT()
+struct FInitEquipmentParams
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	int32 EquipmentID = -1;
+
+	UPROPERTY()
+	int32 EquipmentKey = 0;
+
+	UPROPERTY()
+	int32 EquipmentLevel = 0;
+
+	UPROPERTY()
+	int32 CurrentExp = 0;
+
+	UPROPERTY()
+	int32 OwnerCharacterID = -1;
 };
 
 static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));

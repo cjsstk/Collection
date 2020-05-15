@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CMSType.h"
+#include "Net/HttpActor.h"
 #include "PokeCollectionCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAddedNewCharacter);
@@ -32,6 +33,7 @@ public:
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
 	void AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
+	void AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams);
 	void GetReward(FBattleReward InBattleReward);
 	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
 
@@ -101,6 +103,15 @@ private:
 	void TickResourceCharge(float DeltaSeconds);
 	void AddCharacterToIndex(characterKey InCharacterKey);
 	
+	int32 GetUsableCharacterID();
+	int32 GetUsableEquipmentID();
+
+	/** 
+	 * Http
+	 */
+	void OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
+	void OnHaveCharactersResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
+	void OnHaveEquipmentsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;
@@ -128,8 +139,6 @@ private:
 	/**
 	 * Characters
 	 */
-	int32 NextCharacterID = 0;
-
 	int32 MaxHaveCharactersNum = 100;
 
 	UPROPERTY(Transient)
@@ -140,8 +149,6 @@ private:
 	/** 
 	 * Equipments
 	 */
-	int32 NextEquipmentID = 0;
-
 	int32 MaxHaveEquipmentsNum = 100;
 
 	UPROPERTY(Transient)
