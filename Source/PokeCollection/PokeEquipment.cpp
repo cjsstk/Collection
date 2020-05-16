@@ -90,7 +90,7 @@ UTexture2D* UPokeEquipment::GetEquipmentProfileImage() const
 		return nullptr;
 	}
 
-	return EquipmentInfo->EquipmentProfile;
+	return EquipmentInfo->EquipmentProfile.LoadSynchronous();
 }
 
 FText UPokeEquipment::GetEquipmentDesc() const

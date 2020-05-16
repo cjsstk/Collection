@@ -150,7 +150,7 @@ UTexture2D* APokeCharacter::GetCharacterProfileImage() const
 		return nullptr;
 	}
 
-	return CharacterInfo->CharacterProfile;
+	return CharacterInfo->CharacterProfile.LoadSynchronous();
 }
 
 UTexture2D* APokeCharacter::GetCharacterImage() const
@@ -167,7 +167,7 @@ UTexture2D* APokeCharacter::GetCharacterImage() const
 		return nullptr;
 	}
 
-	return CharacterInfo->CharacterImage;
+	return CharacterInfo->CharacterImage.LoadSynchronous();
 }
 
 UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const

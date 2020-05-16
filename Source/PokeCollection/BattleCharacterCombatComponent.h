@@ -8,6 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterAttack);
 
+struct FPokeUseSkillParams;
 
 UCLASS()
 class POKECOLLECTION_API UBattleCharacterCombatComponent : public UActorComponent
@@ -18,6 +19,7 @@ public:
 	UBattleCharacterCombatComponent();
 
 	void AttackTarget();
+	void UseActiveSkill(FPokeUseSkillParams& InParams);
 
 	class ABattleCharacterActor* GetCurrentTargetCharacter() const { return TargetCharacter; };
 

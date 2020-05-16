@@ -12,6 +12,7 @@ enum class ESpriteType
 	Idle,
 	Attack,
 	Move,
+	Skill,
 };
 
 UCLASS()
@@ -25,7 +26,7 @@ public:
 	void InitBattleCharacter(class APokeCharacter& InPokeCharacter);
 
 	void TakeBattleDamage(int32 InDamage);
-	void ChangeSprite(ESpriteType InSpriteType);
+	void ChangeSprite(ESpriteType InSpriteType, int32 InSkillIndex = 0);
 
 	FName GetCharacterName() const { return CharacterName; }
 	UTexture2D* GetBattleProfile() const { return CharacterBattleProfile; }
@@ -89,6 +90,9 @@ private:
 
 	UPROPERTY(Transient)
 	UPaperFlipbook* CharacterSprite_Move;
+
+	UPROPERTY(Transient)
+	TArray<UPaperFlipbook*> CharacterSprite_Skills;
 
 	FStatus CurrentFinalStatus;
 

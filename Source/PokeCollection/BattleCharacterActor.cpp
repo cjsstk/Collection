@@ -49,10 +49,15 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 		CharacterSprite_Attack = CharacterInfo->CharacterSprite_Attack.LoadSynchronous();
 		CharacterSprite_Move = CharacterInfo->CharacterSprite_Move.LoadSynchronous();
 
+		CharacterSprite_Skills.Add(CharacterInfo->CharacterSprite_Skill1.LoadSynchronous());
+		CharacterSprite_Skills.Add(CharacterInfo->CharacterSprite_Skill2.LoadSynchronous());
+		CharacterSprite_Skills.Add(CharacterInfo->CharacterSprite_Skill3.LoadSynchronous());
+		CharacterSprite_Skills.Add(CharacterInfo->CharacterSprite_Skill4.LoadSynchronous());
+
 		RenderComponent->SetFlipbook(CharacterSprite_Idle);
 	}
 
-	CharacterBattleProfile = CharacterInfo->CharacterBattleProfile;
+	CharacterBattleProfile = CharacterInfo->CharacterBattleProfile.LoadSynchronous();
 	CharacterName = CharacterInfo->CharacterName;
 
 	FStatus FinalStatus = InPokeCharacter.GetFinalStatus();
@@ -101,7 +106,7 @@ void ABattleCharacterActor::TakeBattleDamage(int32 InDamage)
 	}
 }
 
-void ABattleCharacterActor::ChangeSprite(ESpriteType InSpriteType)
+void ABattleCharacterActor::ChangeSprite(ESpriteType InSpriteType, int32 InSkillIndex)
 {
 	if (!ensure(RenderComponent))
 	{
@@ -121,6 +126,18 @@ void ABattleCharacterActor::ChangeSprite(ESpriteType InSpriteType)
 	case ESpriteType::Move:
 		RenderComponent->SetFlipbook(CharacterSprite_Move);
 		RenderComponent->SetLooping(true);
+		break;
+	case ESpriteType::Skill:
+		if (CharacterSprite_Skills.IsValidIndex(InSkillIndex))
+		{
+			RenderComponent->SetFlipbook(CharacterSprite_Skills[InSkillIndex]);
+		}
+		else
+		{
+			RenderComponent->SetFlipbook(CharacterSprite_Attack);
+		}
+		RenderComponent->SetLooping(false);
+		break;
 	default:
 		break;
 	}
@@ -133,7 +150,12 @@ bool ABattleCharacterActor::IsDead() const
 
 bool ABattleCharacterActor::IsAttacking() const
 {
-	return RenderComponent && (RenderComponent->GetFlipbook() == CharacterSprite_Attack);
+	if (!RenderComponent)
+	{
+		return false;
+	}
+
+	return (RenderComponent->GetFlipbook() == CharacterSprite_Attack || CharacterSprite_Skills.Contains(RenderComponent->GetFlipbook()));
 }
 
 void ABattleCharacterActor::OnBattleEnded()

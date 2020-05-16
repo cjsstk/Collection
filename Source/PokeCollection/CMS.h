@@ -50,19 +50,31 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Move;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Skill1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Skill2;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Skill3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Skill4;
+
 	/** Slot Image */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* CharacterProfile;
+	TSoftObjectPtr<UTexture2D> CharacterProfile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* CharacterBattleProfile;
+	TSoftObjectPtr<UTexture2D> CharacterBattleProfile;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture* CharacterIndexProfile;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UTexture* CharacterIndexProfile;*/
 
 	/** full screen image */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* CharacterImage;
+	TSoftObjectPtr<UTexture2D> CharacterImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ERank CharacterRank = ERank::Normal;
@@ -114,7 +126,7 @@ public:
 	FName EquipmentName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* EquipmentProfile;
+	TSoftObjectPtr<UTexture2D> EquipmentProfile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText EquipmentDesc;
@@ -151,7 +163,7 @@ public:
 	FText EggName;
 
 	UPROPERTY(EditDefaultsOnly)
-	UTexture2D* EggImage;
+	TSoftObjectPtr<UTexture2D> EggImage;
 
 	UPROPERTY(EditDefaultsOnly)
 	FText EggPrice;
@@ -258,7 +270,7 @@ public:
 	FText SkillName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* SkillIcon;
+	TSoftObjectPtr<UTexture2D> SkillIcon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 SkillDamage = 0;

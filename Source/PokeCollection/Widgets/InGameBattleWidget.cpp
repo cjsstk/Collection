@@ -119,10 +119,12 @@ void UBattleCharacterSkillSlot::OnUseSkillButtonClicked()
 		FPokeUseSkillParams Params;
 
 		UBattleCharacterCombatComponent* CombatComp = OwnerBattleCharacter->GetCombatComponent();
-		if (CombatComp)
+		if (!CombatComp)
 		{
-			Params.TargetCharacter = CombatComp->GetCurrentTargetCharacter();
+			return;
 		}
+
+		Params.TargetCharacter = CombatComp->GetCurrentTargetCharacter();
 
 		if (!Params.TargetCharacter)
 		{
@@ -143,7 +145,7 @@ void UBattleCharacterSkillSlot::OnUseSkillButtonClicked()
 			}
 		}
 
-		ActiveSkill->UseSkill(Params);
+		CombatComp->UseActiveSkill(Params);
 	}
 }
 

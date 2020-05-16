@@ -36,8 +36,6 @@ void UBattleCharacterCombatComponent::AttackTarget()
 	FString BattleLog = Character->IsEnemy() ? TEXT("적 ") : FString();
 	BattleLog += Character->GetCharacterName().ToString() + TEXT("의 ");
 
-	Character->ChangeSprite(ESpriteType::Attack);
-
 	const FStatus& Status = Character->GetFinalStatus();
 	bool bUseSkill = false;
 
@@ -49,6 +47,8 @@ void UBattleCharacterCombatComponent::AttackTarget()
 			UPokeSkill* Skill = Skills[Index];
 			if (Skill && Skill->CanUseSkill())
 			{
+				Character->ChangeSprite(ESpriteType::Skill, Index);
+
 				bUseSkill = true;
 
 				FPokeUseSkillParams Params;
@@ -66,6 +66,8 @@ void UBattleCharacterCombatComponent::AttackTarget()
 	// Normal Attack
 	if (!bUseSkill)
 	{
+		Character->ChangeSprite(ESpriteType::Attack);
+
 		int32 AttackDamage = Status.Attack;
 
 		if (AttackDamage <= 0)
@@ -82,6 +84,28 @@ void UBattleCharacterCombatComponent::AttackTarget()
 
 	PokeCore::AddBattleLog(GetWorld(), BattleLog);
 
+}
+
+void UBattleCharacterCombatComponent::UseActiveSkill(FPokeUseSkillParams& InParams)
+{
+	ABattleCharacterActor* Character = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(Character))
+	{
+		return;
+	}
+
+	const TArray<UPokeSkill*> Skills = Character->GetSkills();
+
+	if (!Skills.IsValidIndex(3))
+	{
+		return;
+	}
+
+	UPokeSkill* ActiveSkill = Skills[3];
+	ActiveSkill->UseSkill(InParams);
+
+	AttackDelayAgeSeconds = 0.0f;
+	Character->ChangeSprite(ESpriteType::Skill, 3);
 }
 
 void UBattleCharacterCombatComponent::BeginPlay()
@@ -136,6 +160,17 @@ void UBattleCharacterCombatComponent::TickFindNewTarget()
 
 void UBattleCharacterCombatComponent::TickAttackTarget(float DeltaTime)
 {
+	ABattleCharacterActor* BattleCharacter = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(BattleCharacter))
+	{
+		return;
+	}
+
+	if (BattleCharacter->IsAttacking())
+	{
+		return;
+	}
+
 	AttackDelayAgeSeconds += DeltaTime;
 
 	if (AttackDelayAgeSeconds < AttackDelaySeconds)

@@ -255,7 +255,7 @@ void UBoxSlot::InitByKey(int32 InContentKey)
 		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InContentKey);
 		if (ensure(CharacterInfo))
 		{
-			SetContentImage(CharacterInfo->CharacterProfile);
+			SetContentImage(CharacterInfo->CharacterProfile.LoadSynchronous());
 			SetContentName(FText::FromName(CharacterInfo->CharacterName));
 			SetBackgroundColor(CharacterInfo->CharacterRank);
 		}
@@ -266,7 +266,7 @@ void UBoxSlot::InitByKey(int32 InContentKey)
 		const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InContentKey);
 		if (ensure(EquipmentInfo))
 		{
-			SetContentImage(EquipmentInfo->EquipmentProfile);
+			SetContentImage(EquipmentInfo->EquipmentProfile.LoadSynchronous());
 			SetContentName(FText::FromName(EquipmentInfo->EquipmentName));
 			SetBackgroundColor(EquipmentInfo->EquipmentRank);
 		}

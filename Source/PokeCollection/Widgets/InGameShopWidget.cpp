@@ -141,7 +141,7 @@ void UShopSlot::InitSlot(int32 InSlotKey, EShopSlotType InSlotType)
 			break;
 		}
 
-		SetSlotImage(ShopInfo->EggImage);
+		SetSlotImage(ShopInfo->EggImage.LoadSynchronous());
 		SetSlotName(ShopInfo->EggName);
 		SetSlotPrice(ShopInfo->EggPrice);
 	}

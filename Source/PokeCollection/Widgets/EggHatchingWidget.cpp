@@ -65,7 +65,7 @@ void UEggHatchingWidget::StartHatching(characterKey InCharacterKey)
 
 	if (CharacterImage)
 	{
-		CharacterImage->SetBrushFromTexture(HatchingCharacter->CharacterImage);
+		CharacterImage->SetBrushFromTexture(HatchingCharacter->CharacterImage.LoadSynchronous());
 	}
 
 	if (HatchingText)
