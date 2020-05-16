@@ -11,6 +11,7 @@ enum class ESpriteType
 {
 	Idle,
 	Attack,
+	Move,
 };
 
 UCLASS()
@@ -60,9 +61,6 @@ private:
 	class UBoxComponent* BodyBoxComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	class USphereComponent* AttackRangeSphereComponent = nullptr;
-
-	UPROPERTY(VisibleAnywhere)
 	class UPaperFlipbookComponent* RenderComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
@@ -89,9 +87,13 @@ private:
 	UPROPERTY(Transient)
 	UPaperFlipbook* CharacterSprite_Attack;
 
+	UPROPERTY(Transient)
+	UPaperFlipbook* CharacterSprite_Move;
+
 	FStatus CurrentFinalStatus;
 
 	bool bIsEnemy = false;
+	float AttackRange = 0.0f;
 
 	FName CharacterName;
 	FString DebugString;

@@ -22,4 +22,5 @@ protected:
 private:
 	class ABattleCharacterActor* GetBattleCharacter();
 
+	bool bIsMoving = false;
 };

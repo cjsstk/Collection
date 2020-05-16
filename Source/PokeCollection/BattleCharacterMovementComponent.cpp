@@ -24,11 +24,13 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 	ABattleCharacterActor* BattleCharacter = GetBattleCharacter();
 	if (!ensure(BattleCharacter))
 	{
+		bIsMoving = false;
 		return;
 	}
 
 	if (BattleCharacter->IsAttacking())
 	{
+		bIsMoving = false;
 		return;
 	}
 
@@ -36,7 +38,14 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 	if (AttackOverlapCharacters.Num() > 0)
 	{
 		//BattleCharacter->AddDebugString(FString::Printf(TEXT("%d"), AttackOverlapCharacters.Num()), true);
+		bIsMoving = false;
 		return;
+	}
+
+	if (!bIsMoving)
+	{
+		BattleCharacter->ChangeSprite(ESpriteType::Move);
+		bIsMoving = true;
 	}
 
 	float CharacterSpeedStat = (float)BattleCharacter->GetFinalStatus().Speed;

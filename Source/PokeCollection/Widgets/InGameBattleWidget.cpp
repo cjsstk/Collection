@@ -129,7 +129,7 @@ void UBattleCharacterSkillSlot::OnUseSkillButtonClicked()
 			ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
 			if (BattleManager)
 			{
-				const TArray<class ABattleCharacterActor*> Enemies = BattleManager->GetEnemyBattleCharacters();
+				const TArray<class ABattleCharacterActor*> Enemies = BattleManager->GetBattleCharacters(true);
 				for (auto&& Enemy : Enemies)
 				{
 					if (!Enemy || Enemy->IsDead())

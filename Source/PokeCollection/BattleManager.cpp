@@ -113,7 +113,7 @@ void ABattleManager::BattleStart()
 		if (PokeHud)
 		{
 
-			PokeHud->OpenInGameBattleWidget(GetPlayerBattleCharacters());
+			PokeHud->OpenInGameBattleWidget(GetBattleCharacters(false));
 		}
 	}
 
@@ -174,44 +174,24 @@ void ABattleManager::AddBattleLog(FString& InBattleLog)
 	OnBattleLogAdded.Broadcast(InBattleLog);
 }
 
-const TArray<class ABattleCharacterActor*> ABattleManager::GetPlayerBattleCharacters()
+const TArray<class ABattleCharacterActor*> ABattleManager::GetBattleCharacters(bool bIsEnemy)
 {
-	TArray<class ABattleCharacterActor*> PlayerBattleCharacters;
+	TArray<class ABattleCharacterActor*> BattleCharacters;
 
-	for (ABattleCharacterActor* BattleCharacters : CreatedBattleCharacters)
+	for (ABattleCharacterActor* BattleCharacter : CreatedBattleCharacters)
 	{
-		if (!ensure(BattleCharacters))
+		if (!ensure(BattleCharacter))
 		{
-			return PlayerBattleCharacters;
+			return BattleCharacters;
 		}
 
-		if (!BattleCharacters->IsEnemy())
+		if (bIsEnemy == BattleCharacter->IsEnemy())
 		{
-			PlayerBattleCharacters.Add(BattleCharacters);
+			BattleCharacters.Add(BattleCharacter);
 		}
 	}
 
-	return PlayerBattleCharacters;
-}
-
-const TArray<class ABattleCharacterActor*> ABattleManager::GetEnemyBattleCharacters()
-{
-	TArray<class ABattleCharacterActor*> EnemyBattleCharacters;
-
-	for (ABattleCharacterActor* BattleCharacters : CreatedBattleCharacters)
-	{
-		if (!ensure(BattleCharacters))
-		{
-			return EnemyBattleCharacters;
-		}
-
-		if (BattleCharacters->IsEnemy())
-		{
-			EnemyBattleCharacters.Add(BattleCharacters);
-		}
-	}
-
-	return EnemyBattleCharacters;
+	return BattleCharacters;
 }
 
 AInBattleCharacterPanel* ABattleManager::GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel)

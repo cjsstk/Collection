@@ -27,9 +27,6 @@ ABattleCharacterActor::ABattleCharacterActor()
 	RenderComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("FlipbookComponent"));
 	RenderComponent->SetupAttachment(RootComponent);
 
-	AttackRangeSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("AttackRangeComponent"));
-	AttackRangeSphereComponent->SetupAttachment(RootComponent);
-
 	MovementComponent = CreateDefaultSubobject<UBattleCharacterMovementComponent>(TEXT("MovementComponent"));
 
 	CombatComponent = CreateDefaultSubobject<UBattleCharacterCombatComponent>(TEXT("CombatComponent"));
@@ -48,10 +45,11 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	if (ensure(RenderComponent))
 	{
-		RenderComponent->SetFlipbook(CharacterInfo->CharacterSprite_Idle);
+		CharacterSprite_Idle = CharacterInfo->CharacterSprite_Idle.LoadSynchronous();
+		CharacterSprite_Attack = CharacterInfo->CharacterSprite_Attack.LoadSynchronous();
+		CharacterSprite_Move = CharacterInfo->CharacterSprite_Move.LoadSynchronous();
 
-		CharacterSprite_Idle = CharacterInfo->CharacterSprite_Idle;
-		CharacterSprite_Attack = CharacterInfo->CharacterSprite_Attack;
+		RenderComponent->SetFlipbook(CharacterSprite_Idle);
 	}
 
 	CharacterBattleProfile = CharacterInfo->CharacterBattleProfile;
@@ -62,8 +60,7 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	bIsEnemy = InPokeCharacter.IsEnemy();
 
-	float AttackRange = InPokeCharacter.GetAttackRange();
-	AttackRangeSphereComponent->SetSphereRadius(AttackRange);
+	AttackRange = InPokeCharacter.GetAttackRange();
 
 	const TArray<int32> SkillKeys = CharacterInfo->SkillKeys;
 	for (int32 SkillIndex = 0; SkillIndex < 4; ++SkillIndex)
@@ -121,6 +118,9 @@ void ABattleCharacterActor::ChangeSprite(ESpriteType InSpriteType)
 		RenderComponent->SetFlipbook(CharacterSprite_Attack);
 		RenderComponent->SetLooping(false);
 		break;
+	case ESpriteType::Move:
+		RenderComponent->SetFlipbook(CharacterSprite_Move);
+		RenderComponent->SetLooping(true);
 	default:
 		break;
 	}
@@ -196,27 +196,25 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 
 void ABattleCharacterActor::TickUpdateAttackOverlapActors()
 {
-	if (AttackRangeSphereComponent)
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (!BattleManager)
 	{
-		AttackOverlapActors.Empty();
+		return;
+	}
 
-		TArray<AActor*> OverlapActors;
-		AttackRangeSphereComponent->GetOverlappingActors(OverlapActors, ABattleCharacterActor::StaticClass());
+	AttackOverlapActors.Empty();
 
-		for (AActor* OverlapActor : OverlapActors)
+	const TArray<ABattleCharacterActor*> Enemies = BattleManager->GetBattleCharacters(!bIsEnemy);
+	for (ABattleCharacterActor* Enemy : Enemies)
+	{
+		if (!Enemy || Enemy->IsDead())
 		{
-			if (!OverlapActor || OverlapActor == this)
-			{
-				continue;
-			}
+			continue;
+		}
 
-			ABattleCharacterActor* OverlapBattleCharacter = Cast<ABattleCharacterActor>(OverlapActor);
-			if (!OverlapBattleCharacter || OverlapBattleCharacter->IsEnemy() == bIsEnemy)
-			{
-				continue;
-			}
-
-			AttackOverlapActors.AddUnique(OverlapActor);
+		if (FMath::Square(AttackRange) > FVector::DistSquared(GetActorLocation(), Enemy->GetActorLocation()))
+		{
+			AttackOverlapActors.AddUnique(Enemy);
 		}
 	}
 }

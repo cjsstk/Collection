@@ -31,8 +31,7 @@ public:
 
 	void AddBattleLog(FString& InBattleLog);
 
-	const TArray<class ABattleCharacterActor*> GetPlayerBattleCharacters();
-	const TArray<class ABattleCharacterActor*> GetEnemyBattleCharacters();
+	const TArray<class ABattleCharacterActor*> GetBattleCharacters(bool bIsEnemy);
 
 	int32 GetBattleStageKey() const { return CurrentBattleStageKey; }
 	void SetBattleStageKey(battleStageKey InBattleStageKey) { CurrentBattleStageKey = InBattleStageKey; };

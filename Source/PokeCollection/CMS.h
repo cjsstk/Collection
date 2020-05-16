@@ -42,10 +42,13 @@ public:
 	FName CharacterName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPaperFlipbook* CharacterSprite_Idle;
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Idle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UPaperFlipbook* CharacterSprite_Attack;
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Attack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UPaperFlipbook> CharacterSprite_Move;
 
 	/** Slot Image */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

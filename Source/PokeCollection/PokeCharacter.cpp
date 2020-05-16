@@ -184,7 +184,7 @@ UPaperFlipbook* APokeCharacter::GetCharacterFlipbook() const
 		return nullptr;
 	}
 
-	return CharacterInfo->CharacterSprite_Idle;
+	return CharacterInfo->CharacterSprite_Idle.LoadSynchronous();
 }
 
 ERank APokeCharacter::GetCharacterRank() const
@@ -306,7 +306,7 @@ void APokeCharacter::InitBaseStatus()
 	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(CharacterKey);
 	if (ensure(CharacterInfo))
 	{
-		BaseStats.HealthPoint = CharacterInfo->BaseStat_Attack;
+		BaseStats.HealthPoint = CharacterInfo->BaseStat_HP;
 		BaseStats.Attack = CharacterInfo->BaseStat_Attack;
 		BaseStats.Defense = CharacterInfo->BaseStat_Defence;
 		BaseStats.SpecialAttack = CharacterInfo->BaseStat_SPAtk;
