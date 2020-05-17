@@ -66,6 +66,9 @@ public:
 	bool IsCompleteIndexCharacter(characterKey InCharacterKey);;
 	bool IsClearBattleStage(int32 InBattleStageKey);
 
+	void ChangeBattleSpeedMultiplier();
+	int32 GetBattleSpeedMultiplier() const { return BattleSpeedMultiplier; }
+
 	const TArray<class APokeCharacter*>& GetHaveCharacters() const;
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 	class APokeCharacter* GetCharacterByID(int32 InCharacterID) const;
@@ -135,6 +138,8 @@ private:
 
 	int32 BattleClearCount = 0;		// 총 배틀 클리어 횟수
 	int32 GetCharacterCount = 0;	// 총 얻은 캐릭터 수
+
+	int32 BattleSpeedMultiplier = 1;
 
 	/**
 	 * Characters

@@ -14,6 +14,7 @@
 #include "BattleManager.h"
 #include "CMS.h"
 #include "PokeCore.h"
+#include "PokeCollectionCharacter.h"
 #include "PokeSkill.h"
 
 
@@ -96,6 +97,12 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 			Skills.Add(Skill);
 		}
 	}
+
+	APokeCollectionCharacter* Player = PokeCore::GetPokePlayer(GetWorld());
+	if (ensure(Player))
+	{
+		SetBattleSpeed(Player->GetBattleSpeedMultiplier());
+	}
 }
 
 void ABattleCharacterActor::TakeBattleDamage(int32 InDamage)
@@ -173,6 +180,11 @@ void ABattleCharacterActor::OnFlipbookPlayingEnd()
 	RenderComponent->SetFlipbook(CharacterSprite_Idle);
 	RenderComponent->SetLooping(true);
 	RenderComponent->Play();
+}
+
+void ABattleCharacterActor::OnBattleSpeedChange(int32 NewBattleSpeed)
+{
+	SetBattleSpeed(NewBattleSpeed);
 }
 
 void ABattleCharacterActor::AddDebugString(const FString& InDebugString, bool bAddNewLine/* = true*/)
@@ -253,5 +265,15 @@ void ABattleCharacterActor::SetFinalStatus(FStatus& InFinalStatus)
 	if (ensure(HealthPointComponent))
 	{
 		HealthPointComponent->InitHP(CurrentFinalStatus.HealthPoint);
+	}
+}
+
+void ABattleCharacterActor::SetBattleSpeed(int32 NewBattleSpeed)
+{
+	CurrentBattleSpeed = NewBattleSpeed;
+
+	if (RenderComponent)
+	{
+		RenderComponent->SetPlayRate(CurrentBattleSpeed);
 	}
 }

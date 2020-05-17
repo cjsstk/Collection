@@ -36,12 +36,16 @@ public:
 	bool IsEnemy() const { return bIsEnemy; }
 	bool IsDead() const;
 	bool IsAttacking() const;
+	int32 GetCurrentBattleSpeedMultiplier() const { return CurrentBattleSpeed; }
 
 	UFUNCTION()
 	void OnBattleEnded();
 
 	UFUNCTION()
 	void OnFlipbookPlayingEnd();
+
+	UFUNCTION()
+	void OnBattleSpeedChange(int32 NewBattleSpeed);
 
 	void AddDebugString(const FString& InDebugString, bool bAddNewLine = true);
 
@@ -57,6 +61,7 @@ protected:
 private:
 	void TickUpdateAttackOverlapActors();
 	void SetFinalStatus(FStatus& InFinalStatus);
+	void SetBattleSpeed(int32 NewBattleSpeed);
 
 	UPROPERTY(VisibleAnywhere)
 	class UBoxComponent* BodyBoxComponent = nullptr;
@@ -98,6 +103,8 @@ private:
 
 	bool bIsEnemy = false;
 	float AttackRange = 0.0f;
+
+	int32 CurrentBattleSpeed = 1;
 
 	FName CharacterName;
 	FString DebugString;

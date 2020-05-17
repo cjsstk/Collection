@@ -16,6 +16,13 @@
 #include "PokePlayerController.h"
 #include "CMS.h"
 
+static TAutoConsoleVariable<int32> CVarMaxBattleSpeedMultiplier
+(
+	TEXT("poke.maxBattleSpeedMultiplier"),
+	3,
+	TEXT("MaxBattleSpeedMultiplier")
+);
+
 //////////////////////////////////////////////////////////////////////////
 // APokeCollectionCharacter
 
@@ -239,6 +246,12 @@ bool APokeCollectionCharacter::IsCompleteIndexCharacter(characterKey InCharacter
 bool APokeCollectionCharacter::IsClearBattleStage(int32 InBattleStageKey)
 {
 	return (MaxClearBattleStageNum >= InBattleStageKey);
+}
+
+void APokeCollectionCharacter::ChangeBattleSpeedMultiplier()
+{
+	/** BattleSpeedMultiplier is 1 ~ 3 */
+	BattleSpeedMultiplier = (BattleSpeedMultiplier % CVarMaxBattleSpeedMultiplier.GetValueOnGameThread()) + 1;
 }
 
 const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const

@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "InGameBattleWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleSpeedChange, int32, NewBattleSpeed);
+
 UCLASS()
 class POKECOLLECTION_API UBattleCharacterSkillSlot : public UUserWidget
 {
@@ -82,6 +84,11 @@ public:
 	UFUNCTION()
 	void OnLogButtonClicked();
 
+	UFUNCTION()
+	void OnChangeBattleSpeedButtonClicked();
+
+	FOnBattleSpeedChange OnBattleSpeedChange;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UHorizontalBox* SkillSlotBox = nullptr;
@@ -91,6 +98,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* LogButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ChangeBattleSpeedButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BattleSpeedText = nullptr;
 
 	UPROPERTY(Transient)
 	TArray<class ABattleCharacterActor*> PlayerBattleCharacters;

@@ -4,6 +4,8 @@
 #include "BattleCharacterMovementComponent.h"
 
 #include "BattleCharacterActor.h"
+#include "PokeCore.h"
+#include "PokeCollectionCharacter.h"
 
 UBattleCharacterMovementComponent::UBattleCharacterMovementComponent()
 {
@@ -49,7 +51,7 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 	}
 
 	float CharacterSpeedStat = (float)BattleCharacter->GetFinalStatus().Speed;
-	float MoveSpeed = DeltaTime * CharacterSpeedStat;
+	float MoveSpeed = DeltaTime * CharacterSpeedStat * BattleCharacter->GetCurrentBattleSpeedMultiplier();
 	MoveSpeed = BattleCharacter->IsEnemy() ? MoveSpeed * -1 : MoveSpeed;
 	FVector NewLocation = BattleCharacter->GetActorLocation() + FVector(0, MoveSpeed, 0);
 

@@ -5,6 +5,7 @@
 
 #include "BattleCharacterActor.h"
 #include "PokeCore.h"
+#include "PokeCollectionCharacter.h"
 #include "PokeSkill.h"
 
 static TAutoConsoleVariable<int32> CVarCanEnemyAttack
@@ -171,7 +172,7 @@ void UBattleCharacterCombatComponent::TickAttackTarget(float DeltaTime)
 		return;
 	}
 
-	AttackDelayAgeSeconds += DeltaTime;
+	AttackDelayAgeSeconds += DeltaTime * BattleCharacter->GetCurrentBattleSpeedMultiplier();
 
 	if (AttackDelayAgeSeconds < AttackDelaySeconds)
 	{

@@ -17,6 +17,7 @@
 #include "BattleCharacterHealthComponent.h"
 #include "BattleManager.h"
 #include "PokeCore.h"
+#include "PokeCollectionCharacter.h"
 #include "PokeSkill.h"
 
 void UInGameBattleWidget::NativeConstruct()
@@ -53,11 +54,28 @@ void UInGameBattleWidget::NativeConstruct()
 	{
 		LogButton->OnClicked.AddUniqueDynamic(this, &UInGameBattleWidget::OnLogButtonClicked);
 	}
+
+	if (ChangeBattleSpeedButton)
+	{
+		ChangeBattleSpeedButton->OnClicked.AddUniqueDynamic(this, &UInGameBattleWidget::OnChangeBattleSpeedButtonClicked);
+	}
+
+	if (BattleSpeedText)
+	{
+		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+		if (!Player)
+		{
+			return;
+		}
+
+		BattleSpeedText->SetText(FText::FromString(FString::FromInt(Player->GetBattleSpeedMultiplier())));
+	}
 }
 
 void UInGameBattleWidget::InitBattleCharacters(const TArray<class ABattleCharacterActor*>& InPlayerBattleCharacter)
 {
 	PlayerBattleCharacters.Empty();
+	OnBattleSpeedChange.Clear();
 
 	PlayerBattleCharacters = InPlayerBattleCharacter;
 
@@ -73,6 +91,8 @@ void UInGameBattleWidget::InitBattleCharacters(const TArray<class ABattleCharact
 
 			SkillSlot->SetOwnerBattleCharacter(*PlayerBattleCharacters[Index]);
 			SkillSlot->SetVisibility(ESlateVisibility::Visible);
+
+			OnBattleSpeedChange.AddUniqueDynamic(PlayerBattleCharacters[Index], &ABattleCharacterActor::OnBattleSpeedChange);
 		}
 	}
 }
@@ -92,6 +112,26 @@ void UInGameBattleWidget::OnLogButtonClicked()
 	{
 		LogWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
+}
+
+void UInGameBattleWidget::OnChangeBattleSpeedButtonClicked()
+{
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!Player)
+	{
+		return;
+	}
+
+	Player->ChangeBattleSpeedMultiplier();
+
+	if (BattleSpeedText)
+	{
+		BattleSpeedText->SetText(FText::FromString(FString::FromInt(Player->GetBattleSpeedMultiplier())));
+	}
+
+	OnBattleSpeedChange.Broadcast(Player->GetBattleSpeedMultiplier());
+
+	UE_LOG(LogTemp, Log, TEXT("Battle Speed: %d"), Player->GetBattleSpeedMultiplier());
 }
 
 
