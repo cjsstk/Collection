@@ -30,7 +30,9 @@ void UBattleCharacterHealthComponent::SetHealthPoint(int32 InHealthPoint)
 	if (CurrentHealthPoint <= 0)
 	{
 		bIsDead = true;
-		GetOwner()->Destroy();
+		//GetOwner()->Destroy();
+
+		GetOwner()->SetActorHiddenInGame(true);
 	}
 }
 

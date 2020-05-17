@@ -92,7 +92,7 @@ void ABattleManager::BattleStart()
 			bool bTraced = GetWorld()->LineTraceSingleByChannel(HitResult, BattlePanel->GetActorLocation(), EndLocation, ECollisionChannel::ECC_WorldStatic);
 			if (ensure(bTraced))
 			{
-				FVector SpawnedActorLocation = HitResult.Location;
+				FVector SpawnedActorLocation = HitResult.Location - FVector(BattleMember->GetJoinedSlotNum(), 0, 0);
 				FRotator SpawnedActorRotator = FRotator(0, bIsEnemy ? 180 : 0, 0);
 				ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(BattleCharacterActorClass.Get(), SpawnedActorLocation, SpawnedActorRotator, FActorSpawnParameters());
 

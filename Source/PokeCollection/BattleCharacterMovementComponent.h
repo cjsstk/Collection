@@ -20,6 +20,8 @@ protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+	void TickMovement(float DeltaTime);
+
 	class ABattleCharacterActor* GetBattleCharacter();
 
 	bool bIsMoving = false;

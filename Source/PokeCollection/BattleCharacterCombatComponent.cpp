@@ -119,6 +119,17 @@ void UBattleCharacterCombatComponent::TickComponent(float DeltaTime, ELevelTick 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	ABattleCharacterActor* BattleCharacter = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(BattleCharacter))
+	{
+		return;
+	}
+
+	if (BattleCharacter->IsDead())
+	{
+		return;
+	}
+
 	TickFindNewTarget();
 	TickAttackTarget(DeltaTime);
 }

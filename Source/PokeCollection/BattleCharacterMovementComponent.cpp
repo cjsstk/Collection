@@ -23,6 +23,22 @@ void UBattleCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	ABattleCharacterActor* BattleCharacter = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(BattleCharacter))
+	{
+		return;
+	}
+
+	if (BattleCharacter->IsDead())
+	{
+		return;
+	}
+
+	TickMovement(DeltaTime);
+}
+
+void UBattleCharacterMovementComponent::TickMovement(float DeltaTime)
+{
 	ABattleCharacterActor* BattleCharacter = GetBattleCharacter();
 	if (!ensure(BattleCharacter))
 	{

@@ -230,6 +230,11 @@ void ABattleCharacterActor::Tick(float DeltaSeconds)
 
 void ABattleCharacterActor::TickUpdateAttackOverlapActors()
 {
+	if (IsDead())
+	{
+		return;
+	}
+
 	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
 	if (!BattleManager)
 	{
