@@ -63,7 +63,10 @@ public:
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
 	int32 GetMaxHaveEquipmentNum() const { return MaxHaveEquipmentsNum; }
 
-	bool IsCompleteIndexCharacter(characterKey InCharacterKey);;
+	void SetMainCharacterID(int32 NewMainCharacterID);
+	int32 GetMainCharacterID() const { return MainCharacterID; }
+
+	bool IsCompleteIndexCharacter(characterKey InCharacterKey);
 	bool IsClearBattleStage(int32 InBattleStageKey);
 
 	void ChangeBattleSpeedMultiplier();
@@ -99,6 +102,7 @@ private:
 	void InitHaveCharacters();
 	void InitHaveEquipments();
 	void InitPlayerInfo();
+	void InitMainCharacter();
 
 	void SetPlayerMaxExp(int32 InMaxExp);
 	void SetBerryAmount(int32 NewBerryAmount) { BerryAmount = FMath::Clamp(NewBerryAmount, 0, INT32_MAX); }
@@ -148,6 +152,8 @@ private:
 
 	UPROPERTY(Transient)
 	TArray<class APokeCharacter*> HaveCharacters;
+
+	int32 MainCharacterID = -1;		// 메인캐릭터 아이디
 
 	TMap<int32, bool> CharacterIndex;
 

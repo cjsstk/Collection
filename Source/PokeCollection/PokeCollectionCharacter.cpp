@@ -61,6 +61,12 @@ void APokeCollectionCharacter::InitPlayerInfo()
 	SetPlayerLevel(1);
 }
 
+void APokeCollectionCharacter::InitMainCharacter()
+{
+	if (SavedCharacterKeys[0])
+		MainCharacterID = SavedCharacterKeys[0];
+}
+
 void APokeCollectionCharacter::SetPlayerMaxExp(int32 InMaxExp)
 {
 	PlayerMaxExp = InMaxExp;
@@ -228,6 +234,17 @@ void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 
 }
 
+void APokeCollectionCharacter::SetMainCharacterID(int32 NewMainCharacterID)
+{
+	APokeCharacter* PokeCharacter = GetCharacterByID(NewMainCharacterID);
+	if (!PokeCharacter)
+	{
+		return;
+	}
+
+	MainCharacterID = NewMainCharacterID;
+}
+
 void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey)
 {
 	if (InBattleStageKey == INVALID_BATTLESTAGEKEY)
@@ -367,6 +384,7 @@ void APokeCollectionCharacter::BeginPlay()
 	//HttpActor->RequestHaveCharacters(PokeCore::DeviceId);
 
 	InitHaveCharacters();
+	InitMainCharacter();
 	InitHaveEquipments();
 	InitPlayerInfo();
 
