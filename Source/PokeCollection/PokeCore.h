@@ -11,6 +11,7 @@ class ABattleManager;
 class AHttpActor;
 
 enum class EType;
+enum class EStatus;
 
 namespace PokeCore
 {
@@ -21,6 +22,8 @@ namespace PokeCore
 	void AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog);
 
 	const static FString DeviceId = FGenericPlatformMisc::GetDeviceId();
+
+	FString GetStatusString(EStatus InStat);
 
 	/*static TArray<float> TypeCharts = {
 		1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, 0.5f,    0,    1,    1, 0.5f,    1,

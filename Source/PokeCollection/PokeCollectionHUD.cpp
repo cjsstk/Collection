@@ -139,11 +139,6 @@ void APokeCollectionHUD::BeginPlay()
 			}
 		}
 
-		if (EquipmentInfoPopUpClass.Get())
-		{
-			EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
-		}
-
 		if (ChangeEquipmentInfoPopUpClass.Get())
 		{
 			ChangeEquipmentInfoPopUp = CreateWidget<UChangeEquipmentInfoPopUp>(GetWorld(), ChangeEquipmentInfoPopUpClass, FName("ChangeEquipmentInfoPopUp"));
@@ -184,11 +179,6 @@ void APokeCollectionHUD::BeginPlay()
 		if (InGameBattleWidgetClass.Get())
 		{
 			InGameBattleWidget = CreateWidget<UInGameBattleWidget>(GetWorld(), InGameBattleWidgetClass, FName("InGameBattleWidget"));
-		}
-
-		if (BattleResultPopUpClass.Get())
-		{
-			BattleResultPopUp = CreateWidget<UBattleResultPopUp>(GetWorld(), BattleResultPopUpClass, FName("BattleResultPopUp"));
 		}
 	}
 
@@ -377,6 +367,12 @@ void APokeCollectionHUD::OpenInGameBattleWidget(const TArray<class ABattleCharac
 
 void APokeCollectionHUD::OpenBattleResultPopUp(FBattleReward& InBattleReward)
 {
+	if (!BattleResultPopUpClass.Get())
+	{
+		return;
+	}
+
+	UBattleResultPopUp* BattleResultPopUp = CreateWidget<UBattleResultPopUp>(GetWorld(), BattleResultPopUpClass, FName("BattleResultPopUp"));
 	if (ensure(BattleResultPopUp))
 	{
 		BattleResultPopUp->AddToViewport(1);
@@ -395,6 +391,12 @@ void APokeCollectionHUD::OpenBattleLosePopUp()
 
 void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 {
+	if (!EquipmentInfoPopUpClass.Get())
+	{
+		return;
+	}
+
+	UEquipmentInfoPopUp* EquipmentInfoPopUp = CreateWidget<UEquipmentInfoPopUp>(GetWorld(), EquipmentInfoPopUpClass, FName("EquipmentInfoPopUp"));
 	if (ensure(EquipmentInfoPopUp))
 	{
 		EquipmentInfoPopUp->AddToViewport(2);

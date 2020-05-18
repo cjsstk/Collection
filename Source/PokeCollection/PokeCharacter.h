@@ -9,6 +9,7 @@
 #include "SortObjectInterface.h"
 #include "PokeCharacter.generated.h"
 
+
 USTRUCT(Atomic)
 struct FStatus
 {
@@ -98,6 +99,9 @@ public:
 	int32 GetConsumeBerryAmount() const;
 
 	const FStatus GetFinalStatus(bool bIncludeEquipment = true);
+	void AddEvStat(TArray<int32> InEvStatus);
+	int32 GetEvStat(EStatus InEvStat);
+	int32 GetRemainEvStatPoint();
 
 	/** 
 	 * ISortObjectInterface Interface
@@ -110,7 +114,7 @@ protected:
 private:
 	void InitBaseStatus();
 	void InitEvStatus(FStatus InEvStat);
-	FStatus CalcFinalStatus(FStatus InBaseStat, FStatus InEvStat);
+	FStatus CalcFinalStatus(FStatus InBaseStat, TArray<int32>& InEvStat);
 
 	int32 CharacterID = 0;
 	int32 CharacterKey = 1;
@@ -135,14 +139,17 @@ private:
 	FStatus BaseStats;
 
 	UPROPERTY()
-	FStatus EvStats;
+	TArray<int32> EvStats;
 
-	int32 Level = 1;
+	int32 Level = 10;
 
 	CharacterType MyType;
 
 	int32 CurrentExp = 0;
 	int32 MaxExp = 0;
+
+	/** Use GetRemainEvStatPoint() */
+	int32 RemainEvStatPoint = 0;
 
 	/** 
 	 * In Battle

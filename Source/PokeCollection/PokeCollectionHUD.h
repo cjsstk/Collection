@@ -178,11 +178,5 @@ private:
 	class UInGameBattleWidget* InGameBattleWidget = nullptr;
 
 	UPROPERTY(Transient)
-	class UBattleResultPopUp* BattleResultPopUp = nullptr;
-
-	UPROPERTY(Transient)
-	class UEquipmentInfoPopUp* EquipmentInfoPopUp = nullptr;
-
-	UPROPERTY(Transient)
 	class UChangeEquipmentInfoPopUp* ChangeEquipmentInfoPopUp = nullptr;
 };

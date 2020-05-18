@@ -23,6 +23,18 @@ enum class ERank : uint8
 	SSRare,
 };
 
+UENUM()
+enum class EStatus : int32
+{
+	HealthPoint,
+	Attack,
+	Defense,
+	SpAttack,
+	SpDefense,
+	Speed,
+	Count
+};
+
 enum class EShopSlotType
 {
 	Character,
