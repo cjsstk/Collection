@@ -13,6 +13,7 @@
 #include "PokeCore.h"
 #include "PokeCollectionGameMode.h"
 #include "PokeEquipment.h"
+#include "PokeItem.h"
 #include "PokePlayerController.h"
 #include "CMS.h"
 
@@ -53,6 +54,17 @@ void APokeCollectionCharacter::InitHaveEquipments()
 		Params.EquipmentKey = Key;
 
 		AddNewEquipment(Params);
+	}
+}
+
+void APokeCollectionCharacter::InitHaveItems()
+{
+	for (itemKey Key : SavedItemKeys)
+	{
+		FInitItemParams Params;
+		Params.ItemKey = Key;
+
+		AddNewItem(Params);
 	}
 }
 
@@ -148,6 +160,28 @@ void APokeCollectionCharacter::AddNewEquipment(FInitEquipmentParams& InInitEquip
 	}
 
 	HaveEquipments.AddUnique(PokeEquipment);
+}
+
+void APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
+{
+	const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InInitItemParams.ItemKey);
+	if (!ensure(ItemInfo))
+	{
+		return;
+	}
+
+	if (InInitItemParams.ItemID < 0)
+	{
+		InInitItemParams.ItemID = GetUsableItemID();
+	}
+
+	UPokeItem* PokeItem = NewObject<UPokeItem>();
+	if (PokeItem)
+	{
+		PokeItem->Init(InInitItemParams);
+	}
+
+	HaveItems.AddUnique(PokeItem);
 }
 
 void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
@@ -386,6 +420,7 @@ void APokeCollectionCharacter::BeginPlay()
 	InitHaveCharacters();
 	InitMainCharacter();
 	InitHaveEquipments();
+	InitHaveItems();
 	InitPlayerInfo();
 
 	// Temp slot setting
@@ -462,6 +497,18 @@ int32 APokeCollectionCharacter::GetUsableEquipmentID()
 	}
 
 	return UsableEquipmentID;
+}
+
+int32 APokeCollectionCharacter::GetUsableItemID()
+{
+	int32 UsableItemID = 0;
+
+	while (HaveItems.FindByPredicate([UsableItemID](UPokeItem* PokeItem) { return (PokeItem->GetItemID() == UsableItemID); }))
+	{
+		UsableItemID++;
+	}
+
+	return UsableItemID;
 }
 
 void APokeCollectionCharacter::OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)

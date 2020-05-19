@@ -34,6 +34,8 @@ public:
 
 	void AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
 	void AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams);
+	void AddNewItem(FInitItemParams& InInitItemParams);
+
 	void GetReward(FBattleReward InBattleReward);
 	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
 
@@ -101,6 +103,8 @@ protected:
 private:
 	void InitHaveCharacters();
 	void InitHaveEquipments();
+	void InitHaveItems();
+
 	void InitPlayerInfo();
 	void InitMainCharacter();
 
@@ -112,6 +116,7 @@ private:
 	
 	int32 GetUsableCharacterID();
 	int32 GetUsableEquipmentID();
+	int32 GetUsableItemID();
 
 	/** 
 	 * Http
@@ -165,6 +170,11 @@ private:
 	UPROPERTY(Transient)
 	TArray<class UPokeEquipment*> HaveEquipments;
 
+	/** 
+	 * Items
+	 */
+	UPROPERTY(Transient)
+	TArray<class UPokeItem*> HaveItems;
 
 	/** 
 	 * Character Party
@@ -178,6 +188,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<int32> SavedEquipmentKeys;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<int32> SavedItemKeys;
 
 	/** 
 	 * Resource

@@ -319,7 +319,7 @@ namespace CMS
 
 	const FCharacterInfo* GetCharacterDataTable(characterKey CharacterKey);
 	const FEquipmentInfo* GetEquipmentDataTable(equipmentKey EquipmentKey);
-	const FPokeItemInfo* GetItemDataTable(int32 ItemKey);
+	const FPokeItemInfo* GetItemDataTable(itemKey ItemKey);
 	const FCharacterShopInfo* GetCharacterShopDataTable(int32 CharShopKey);
 	const FStageInfo* GetStageDataTable(int32 StageKey);
 	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);

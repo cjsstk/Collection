@@ -99,7 +99,7 @@ const FEquipmentInfo* CMS::GetEquipmentDataTable(equipmentKey EquipmentKey)
     return EquipmentInfo;
 }
 
-const FPokeItemInfo* CMS::GetItemDataTable(int32 ItemKey)
+const FPokeItemInfo* CMS::GetItemDataTable(itemKey ItemKey)
 {
 	if (ItemKey == INVALID_ITEMKEY)
 	{

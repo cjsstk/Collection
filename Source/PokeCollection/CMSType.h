@@ -75,7 +75,7 @@ public:
 	int32 CharacterID = -1;
 
 	UPROPERTY()
-	int32 CharacterKey = 0;
+	int32 CharacterKey = INVALID_CHARACTERKEY;
 
 	UPROPERTY()
 	int32 CharacterLevel = 1;
@@ -121,7 +121,7 @@ public:
 	int32 EquipmentID = -1;
 
 	UPROPERTY()
-	int32 EquipmentKey = 0;
+	int32 EquipmentKey = INVALID_EQUIPMENTKEY;
 
 	UPROPERTY()
 	int32 EquipmentLevel = 0;
@@ -143,7 +143,7 @@ public:
 	int32 ItemID = -1;
 
 	UPROPERTY()
-	int32 ItemKey = 0;
+	int32 ItemKey = INVALID_ITEMKEY;
 
 	UPROPERTY()
 	int32 ItemStackNum = 1;
