@@ -153,6 +153,8 @@ void UCharacterSlot::SetJoinedPartyText(int32 InJoinedPartyNum)
 
 void UCharacterBoxWidget::NativeConstruct() 
 {
+	BoxContentType = EBoxContentType::Character;
+
 	Super::NativeConstruct();
 }
 
@@ -161,15 +163,6 @@ void UCharacterBoxWidget::OnOpen()
 	Super::OnOpen();
 
 	SetFocus();
-
-	RefreshSlot();
-}
-
-void UCharacterBoxWidget::SortContent(FPokeSortInfo InSortInfo)
-{
-	Super::SortContent(InSortInfo);
-
-	CurrentSortInfo = InSortInfo;
 
 	RefreshSlot();
 }

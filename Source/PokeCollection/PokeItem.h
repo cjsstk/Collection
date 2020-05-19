@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "SortObjectInterface.h"
+#include "CMSType.h"
 #include "PokeItem.generated.h"
 
 /**
@@ -20,7 +21,9 @@ public:
 
 	int32 GetItemID() const { return ItemID; }
 	int32 GetItemKey() const { return ItemKey; }
+	
 	int32 GetStackNum() const { return StackNum; }
+	void SetStackNum(int32 NewStackNum) { StackNum = NewStackNum; }
 
 	/*FString GetItemName() const;
 	class UTexture2D* GetItemImage() const;
@@ -30,12 +33,13 @@ public:
 	/**
 	 * ISortObjectInterface Interface
 	 */
-	//virtual int32 GetObjectSortValue(ESortCategory InSortCategory) const override;
+	virtual int32 GetObjectSortValue(ESortCategory InSortCategory) const override;
 
 private:
 	int32 ItemID = 0;
 	int32 ItemKey = 1;
 
+	ERank ItemRank = ERank::Normal;
 	int32 StackNum = 1;
 
 };

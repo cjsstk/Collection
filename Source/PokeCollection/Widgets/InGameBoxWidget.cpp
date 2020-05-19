@@ -16,6 +16,7 @@
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
 #include "PokeEquipment.h"
+#include "PokeItem.h"
 #include "Widgets/SortWidget.h"
 
 void UBoxContentWidget::NativeConstruct()
@@ -46,6 +47,9 @@ void UBoxContentWidget::NativeConstruct()
 	case EBoxContentType::Equipment:
 		MaxHaveNum = Player->GetMaxHaveCharactersNum();
 		break;
+	case EBoxContentType::Item:
+		MaxHaveNum = CMS::GetItemDataNum();
+		break;
 	default:
 		break;
 	}
@@ -66,6 +70,13 @@ void UBoxContentWidget::NativeConstruct()
 		}
 	}
 
+}
+
+void UBoxContentWidget::SortContent(FPokeSortInfo InSortInfo)
+{
+	CurrentSortInfo = InSortInfo;
+
+	RefreshSlot();
 }
 
 TArray<class ISortObjectInterface*> UBoxContentWidget::SortObject(TArray<class ISortObjectInterface*> InObjects)
@@ -246,7 +257,7 @@ void UBoxSlot::NativeConstruct()
 
 void UBoxSlot::InitByKey(int32 InContentKey)
 {
-	CharacterKey = InContentKey;
+	ContentKey = InContentKey;
 
 	switch (BoxContentType)
 	{
@@ -269,6 +280,17 @@ void UBoxSlot::InitByKey(int32 InContentKey)
 			SetContentImage(EquipmentInfo->EquipmentProfile.LoadSynchronous());
 			SetContentName(FText::FromName(EquipmentInfo->EquipmentName));
 			SetBackgroundColor(EquipmentInfo->EquipmentRank);
+		}
+		break;
+	}
+	case EBoxContentType::Item:
+	{
+		const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InContentKey);
+		if (ensure(ItemInfo))
+		{
+			SetContentImage(ItemInfo->ItemIcon.LoadSynchronous());
+			SetContentName(FText::FromName(ItemInfo->ItemName));
+			SetBackgroundColor(ItemInfo->ItemRank);
 		}
 		break;
 	}
@@ -311,6 +333,18 @@ void UBoxSlot::InitByID(int32 InContentID)
 
 		int32 EquipmentKey = Equipment->GetEquipmentKey();
 		InitByKey(EquipmentKey);
+		break;
+	}
+	case EBoxContentType::Item:
+	{
+		UPokeItem* Item = Player->GetItemByID(InContentID);
+		if (!Item)
+		{
+			return;
+		}
+
+		int32 ItemKey = Item->GetItemKey();
+		InitByKey(ItemKey);
 		break;
 	}
 	default:

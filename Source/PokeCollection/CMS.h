@@ -336,6 +336,8 @@ namespace CMS
 	void GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray);
 	void GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray);
 
+	int32 GetItemDataNum();
+
 	static UDataTable* CharacterDataTable = nullptr;
 	static UDataTable* EquipmentDataTable = nullptr;
 	static UDataTable* ItemDataTable = nullptr;

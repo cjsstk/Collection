@@ -60,7 +60,6 @@ class POKECOLLECTION_API UCharacterBoxWidget : public UBoxContentWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void OnOpen() override;
-	virtual void SortContent(FPokeSortInfo InSortInfo) override;
 	virtual void RefreshSlot() override;
 
 private:

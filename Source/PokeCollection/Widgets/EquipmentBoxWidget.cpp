@@ -16,8 +16,9 @@
 
 void UEquipmentBoxWidget::NativeConstruct()
 {
-	Super::NativeConstruct();
+	BoxContentType = EBoxContentType::Equipment;
 
+	Super::NativeConstruct();
 }
 
 void UEquipmentBoxWidget::OnOpen()
@@ -25,15 +26,6 @@ void UEquipmentBoxWidget::OnOpen()
 	Super::OnOpen();
 
 	SetFocus();
-
-	RefreshSlot();
-}
-
-void UEquipmentBoxWidget::SortContent(FPokeSortInfo InSortInfo)
-{
-	Super::SortContent(InSortInfo);
-
-	CurrentSortInfo = InSortInfo;
 
 	RefreshSlot();
 }

@@ -170,18 +170,26 @@ void APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 		return;
 	}
 
-	if (InInitItemParams.ItemID < 0)
+	UPokeItem* HaveItem = GetItemByKey(InInitItemParams.ItemKey);
+	if (HaveItem)
 	{
-		InInitItemParams.ItemID = GetUsableItemID();
+		HaveItem->SetStackNum(HaveItem->GetStackNum() + InInitItemParams.ItemStackNum);
 	}
-
-	UPokeItem* PokeItem = NewObject<UPokeItem>();
-	if (PokeItem)
+	else
 	{
-		PokeItem->Init(InInitItemParams);
-	}
+		if (InInitItemParams.ItemID < 0)
+		{
+			InInitItemParams.ItemID = GetUsableItemID();
+		}
 
-	HaveItems.AddUnique(PokeItem);
+		UPokeItem* PokeItem = NewObject<UPokeItem>();
+		if (PokeItem)
+		{
+			PokeItem->Init(InInitItemParams);
+		}
+
+		HaveItems.AddUnique(PokeItem);
+	}
 }
 
 void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
@@ -366,6 +374,32 @@ class UPokeEquipment* APokeCollectionCharacter::GetEquipmentByID(int32 InEquipme
 		if (Equipment && Equipment->GetEquipmentID() == InEquipmentID)
 		{
 			return Equipment;
+		}
+	}
+
+	return nullptr;
+}
+
+UPokeItem* APokeCollectionCharacter::GetItemByKey(int32 InItemKey)
+{
+	for (UPokeItem* Item : HaveItems)
+	{
+		if (Item && Item->GetItemKey() == InItemKey)
+		{
+			return Item;
+		}
+	}
+
+	return nullptr;
+}
+
+UPokeItem* APokeCollectionCharacter::GetItemByID(int32 InItemID)
+{
+	for (UPokeItem* Item : HaveItems)
+	{
+		if (Item && Item->GetItemID() == InItemID)
+		{
+			return Item;
 		}
 	}
 

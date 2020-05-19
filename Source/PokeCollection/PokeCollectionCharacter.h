@@ -82,6 +82,9 @@ public:
 	const TArray<class UPokeEquipment*>& GetHaveEquipments() const;
 	class UPokeEquipment* GetEquipmentByID(int32 InEquipmentID) const;
 
+	class UPokeItem* GetItemByKey(int32 InItemKey);
+	class UPokeItem* GetItemByID(int32 InItemID);
+
 	int32 GetBerryAmount() const { return BerryAmount; }
 	int32 GetMoneyAmount() const { return MoneyAmount; }
 	int32 GetStardustAmount() const { return StardustAmount; }

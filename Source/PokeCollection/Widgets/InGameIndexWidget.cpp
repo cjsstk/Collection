@@ -163,7 +163,7 @@ void UCharacterIndexSlot::RefreshSlot()
 	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 	if (ensure(Player))
 	{
-		bEnabled = Player->IsCompleteIndexCharacter(CharacterKey);
+		bEnabled = Player->IsCompleteIndexCharacter(ContentKey);
 
 		/*if (SlotMaterialInstance)
 		{

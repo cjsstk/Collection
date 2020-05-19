@@ -15,6 +15,7 @@ enum class EBoxContentType
 {
 	Character,
 	Equipment,
+	Item,
 };
 
 UCLASS(abstract)
@@ -52,7 +53,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* NameText = nullptr;
 
-	int32 CharacterKey = 0;
+	int32 ContentKey = 0;
 	int32 ContentID = 0;
 
 	EBoxContentType BoxContentType = EBoxContentType::Character;
@@ -68,7 +69,7 @@ class POKECOLLECTION_API UBoxContentWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void OnOpen() {};
-	virtual void SortContent(FPokeSortInfo InSortInfo) {};
+	virtual void SortContent(FPokeSortInfo InSortInfo);
 	virtual void RefreshSlot() {};
 
 	//virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent);

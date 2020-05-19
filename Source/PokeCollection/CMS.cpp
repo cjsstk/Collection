@@ -262,3 +262,11 @@ void CMS::GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray)
 
 	TypeDataTable->GetAllRows(FString(""), OutArray);
 }
+
+int32 CMS::GetItemDataNum()
+{
+	TArray<FPokeItemInfo*> AllItems;
+	ItemDataTable->GetAllRows(FString(""), AllItems);
+
+	return AllItems.Num();
+}

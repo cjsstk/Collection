@@ -20,4 +20,31 @@ void UPokeItem::Init(FInitItemParams& InInitItemParams)
 	{
 		return;
 	}
+
+	ItemRank = ItemInfo->ItemRank;
+}
+
+int32 UPokeItem::GetObjectSortValue(ESortCategory InSortCategory) const
+{
+	int32 SortValue = 0;
+
+	switch (InSortCategory)
+	{
+	case ESortCategory::Level:
+		SortValue = 0;
+		break;
+	case ESortCategory::Rank:
+		SortValue = (int32)ItemRank;
+		break;
+	case ESortCategory::Index:
+		SortValue = ItemKey;
+		break;
+	case ESortCategory::ID:
+		SortValue = ItemID;
+		break;
+	default:
+		break;
+	}
+
+	return SortValue;
 }
