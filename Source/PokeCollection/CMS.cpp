@@ -20,6 +20,12 @@ void CMS::LoadCMS()
         EquipmentDataTable = EquipmentDT.Object;
     }
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> ItemDT(TEXT("/Game/CMS/ItemInfo"));
+	if (ensure(ItemDT.Succeeded()))
+	{
+		ItemDataTable = ItemDT.Object;
+	}
+
     static ConstructorHelpers::FObjectFinder<UDataTable> CharacterShopDT(TEXT("/Game/CMS/CharacterShopInfo"));
     if (ensure(CharacterShopDT.Succeeded()))
     {
@@ -91,6 +97,18 @@ const FEquipmentInfo* CMS::GetEquipmentDataTable(equipmentKey EquipmentKey)
     FEquipmentInfo* EquipmentInfo = EquipmentDataTable->FindRow<FEquipmentInfo>(FName(*(FString::FormatAsNumber(EquipmentKey))), FString(""));
 
     return EquipmentInfo;
+}
+
+const FPokeItemInfo* CMS::GetItemDataTable(int32 ItemKey)
+{
+	if (ItemKey == INVALID_ITEMKEY)
+	{
+		return nullptr;
+	}
+
+	FPokeItemInfo* ItemInfo = ItemDataTable->FindRow<FPokeItemInfo>(FName(*(FString::FormatAsNumber(ItemKey))), FString(""));
+
+	return ItemInfo;
 }
 
 const FCharacterShopInfo* CMS::GetCharacterShopDataTable(int32 CharShopKey)

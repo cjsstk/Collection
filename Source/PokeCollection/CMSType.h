@@ -11,6 +11,9 @@ const static characterKey INVALID_CHARACTERKEY = 0;
 using equipmentKey = int32;
 const static equipmentKey INVALID_EQUIPMENTKEY = 0;
 
+using itemKey = int32;
+const static itemKey INVALID_ITEMKEY = 0;
+
 using battleStageKey = int32;
 const static battleStageKey INVALID_BATTLESTAGEKEY = 0;
 
@@ -128,6 +131,23 @@ public:
 
 	UPROPERTY()
 	int32 OwnerCharacterID = -1;
+};
+
+USTRUCT()
+struct FInitItemParams
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	int32 ItemID = -1;
+
+	UPROPERTY()
+	int32 ItemKey = 0;
+
+	UPROPERTY()
+	int32 ItemStackNum = 1;
+
 };
 
 static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));
