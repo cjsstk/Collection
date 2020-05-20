@@ -172,6 +172,9 @@ public:
 	ERank ItemRank = ERank::Normal;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ItemPrice = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsUsable = false;
 
 	/** Key: equipmentKey, Value: percent */
@@ -197,6 +200,16 @@ public:
 	/** Key: characterkey, Value: percent */
 	UPROPERTY(EditDefaultsOnly)
 	TMap<ERank, float> ComeOutCharacterInfo;
+};
+
+USTRUCT(BlueprintType)
+struct FItemShopInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	int32 ItemKey;
 };
 
 USTRUCT(BlueprintType)
@@ -321,6 +334,7 @@ namespace CMS
 	const FEquipmentInfo* GetEquipmentDataTable(equipmentKey EquipmentKey);
 	const FPokeItemInfo* GetItemDataTable(itemKey ItemKey);
 	const FCharacterShopInfo* GetCharacterShopDataTable(int32 CharShopKey);
+	const FItemShopInfo* GetItemShopDataTable(int32 ItemShopKey);
 	const FStageInfo* GetStageDataTable(int32 StageKey);
 	void GetAllStageDataTable(TArray<FStageInfo*>& OutArray);
 	const FBattleStageInfo* GetBattleStageDataTable(battleStageKey BattleStageKey);
@@ -342,6 +356,7 @@ namespace CMS
 	static UDataTable* EquipmentDataTable = nullptr;
 	static UDataTable* ItemDataTable = nullptr;
 	static UDataTable* CharacterShopDataTable = nullptr;
+	static UDataTable* ItemShopDataTable = nullptr;
 	static UDataTable* StageDataTable = nullptr;
 	static UDataTable* BattleStageDataTable = nullptr;
 	static UDataTable* TypeDataTable = nullptr;

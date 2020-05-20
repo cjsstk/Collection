@@ -24,7 +24,7 @@ private:
 
 
 UCLASS()
-class POKECOLLECTION_API UEquipmentShopWidget : public UShopContentWidget
+class POKECOLLECTION_API UItemShopWidget : public UShopContentWidget
 {
 	GENERATED_BODY()
 

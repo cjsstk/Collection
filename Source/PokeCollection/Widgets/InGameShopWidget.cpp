@@ -147,6 +147,17 @@ void UShopSlot::InitSlot(int32 InSlotKey, EShopSlotType InSlotType)
 	}
 		break;
 	case EShopSlotType::Item:
+	{
+		const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(SlotKey);
+		if (!ItemInfo)
+		{
+			break;
+		}
+
+		SetSlotImage(ItemInfo->ItemIcon.LoadSynchronous());
+		SetSlotName(FText::FromName(ItemInfo->ItemName));
+		SetSlotPrice(FText::FromString(FString::FromInt(ItemInfo->ItemPrice)));
+	}
 		break;
 	default:
 		break;
@@ -218,7 +229,7 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 
 	int32 EggPrice = FCString::Atoi(*(CurrentShopInfo->EggPrice).ToString());
 
-	if (!PayEggPrice(EggPrice))
+	if (!PaySlotPrice(EggPrice))
 	{
 		return;
 	}
@@ -280,7 +291,7 @@ void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
 {
 }
 
-bool UShopSlot::PayEggPrice(int32 InEggMoney)
+bool UShopSlot::PaySlotPrice(int32 InEggMoney)
 {
 	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 	if (!ensure(Player))

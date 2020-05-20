@@ -32,6 +32,12 @@ void CMS::LoadCMS()
         CharacterShopDataTable = CharacterShopDT.Object;
     }
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> ItemShopDT(TEXT("/Game/CMS/ItemShopInfo"));
+	if (ensure(ItemShopDT.Succeeded()))
+	{
+		ItemShopDataTable = ItemShopDT.Object;
+	}
+
     static ConstructorHelpers::FObjectFinder<UDataTable> StageDT(TEXT("/Game/CMS/StageInfo"));
     if (ensure(StageDT.Succeeded()))
     {
@@ -121,6 +127,18 @@ const FCharacterShopInfo* CMS::GetCharacterShopDataTable(int32 CharShopKey)
     FCharacterShopInfo* CharacterShopInfo = CharacterShopDataTable->FindRow<FCharacterShopInfo>(FName(*(FString::FormatAsNumber(CharShopKey))), FString(""));
 
     return CharacterShopInfo;
+}
+
+const FItemShopInfo* CMS::GetItemShopDataTable(int32 ItemShopKey)
+{
+	if (ItemShopKey <= 0)
+	{
+		return nullptr;
+	}
+
+	FItemShopInfo* ItemShopInfo = ItemShopDataTable->FindRow<FItemShopInfo>(FName(*(FString::FormatAsNumber(ItemShopKey))), FString(""));
+
+	return ItemShopInfo;
 }
 
 const FStageInfo* CMS::GetStageDataTable(int32 StageKey)
