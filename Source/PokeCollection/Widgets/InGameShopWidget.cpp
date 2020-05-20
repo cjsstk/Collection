@@ -115,7 +115,7 @@ void UShopSlot::NativeConstruct()
 		SelectButton->OnClicked.AddUniqueDynamic(this, &UShopSlot::OnSlotSelected);
 	}
 
-	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	/*APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
 	if (PokeHud)
 	{
 		UBuyConfirmPopUp* BuyPopUp = PokeHud->GetBuyConfirmPopUp();
@@ -123,7 +123,7 @@ void UShopSlot::NativeConstruct()
 		{
 			BuyPopUp->OnBuyButtonClicked.AddUniqueDynamic(this, &UShopSlot::OnBuyThisSlot);
 		}
-	}
+	}*/
 }
 
 void UShopSlot::InitSlot(int32 InSlotKey, EShopSlotType InSlotType)
@@ -189,6 +189,12 @@ void UShopSlot::OnSlotSelected()
 	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
 	if (PokeHud)
 	{
+		UBuyConfirmPopUp* BuyPopUp = PokeHud->GetBuyConfirmPopUp();
+		if (ensure(BuyPopUp))
+		{
+			BuyPopUp->OnBuyButtonClicked.AddUniqueDynamic(this, &UShopSlot::OnBuyThisSlot);
+		}
+
 		PokeHud->OpenBuyConfirmPopUp(SlotKey, SlotType);
 	}
 }
@@ -289,6 +295,7 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 
 void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
 {
+
 }
 
 bool UShopSlot::PaySlotPrice(int32 InEggMoney)

@@ -10,6 +10,7 @@
 #include "PokeCollectionCharacter.h"
 
 #define LOCTEXT_NAMESPACE "BuyConfirm"
+#define LOCTEXT_NAMESPACE "ItemBuyConfirm"
 
 void UBuyConfirmPopUp::NativeConstruct()
 {
@@ -33,6 +34,13 @@ void UBuyConfirmPopUp::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	TickCheckBuyEnable();
 }
 
+void UBuyConfirmPopUp::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	OnBuyButtonClicked.Clear();
+}
+
 void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 {
 	SelectedSlotKey = InSlotKey;
@@ -46,8 +54,8 @@ void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 		const FCharacterShopInfo* ShopInfo = CMS::GetCharacterShopDataTable(InSlotKey);
 		if (ensure(ShopInfo))
 		{
-			SlotName = ShopInfo->EggName;
-			SlotPrice = FCString::Atoi(*(ShopInfo->EggPrice).ToString());
+			//SlotName = ShopInfo->EggName;
+			//SlotPrice = FCString::Atoi(*(ShopInfo->EggPrice).ToString());
 
 			FFormatNamedArguments Arguments;
 			Arguments.Add(TEXT("SlotName"), ShopInfo->EggName);
@@ -58,6 +66,20 @@ void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 	}
 		break;
 	case EShopSlotType::Item:
+	{
+		const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InSlotKey);
+		if (ensure(ItemInfo))
+		{
+			//SlotName = ItemInfo->ItemName;
+			//SlotPrice = FCString::Atoi(*(ItemInfo->EggPrice).ToString());
+
+			FFormatNamedArguments Arguments;
+			Arguments.Add(TEXT("SlotName"), FText::FromName(ItemInfo->ItemName));
+			Arguments.Add(TEXT("SlotPrice"), FText::FromString(FString::FromInt(ItemInfo->ItemPrice)));
+
+			ConfirmText = FText::Format(NSLOCTEXT("ItemBuyConfirmText", "ItemBuyConfirm", "{SlotName}을 {SlotPrice}원에 구입하겠습니까?"), Arguments);
+		}
+	}
 		break;
 	default:
 		break;

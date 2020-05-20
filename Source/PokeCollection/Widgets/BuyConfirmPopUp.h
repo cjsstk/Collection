@@ -20,6 +20,7 @@ class POKECOLLECTION_API UBuyConfirmPopUp : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void NativeDestruct() override;
 
 	void InitText(int32 InSlotKey, EShopSlotType InSlotType);
 
