@@ -3,6 +3,7 @@
 
 #include "ItemBoxWidget.h"
 
+#include "UniformGridPanel.h"
 #include "TextBlock.h"
 
 #include "PokeCollectionCharacter.h"
@@ -28,67 +29,67 @@ void UItemBoxWidget::RefreshSlot()
 {
 	Super::RefreshSlot();
 
-	//APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
-	//if (!ensure(Player))
-	//{
-	//	return;
-	//}
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
 
-	//if (!GridPanel)
-	//{
-	//	return;
-	//}
+	if (!GridPanel)
+	{
+		return;
+	}
 
-	//if (!BoxSlotClass.Get())
-	//{
-	//	return;
-	//}
+	if (!BoxSlotClass.Get())
+	{
+		return;
+	}
 
-	//const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
-	////
+	const TArray<UPokeItem*>& HaveItems = Player->GetHaveItems();
+	//
 
-	//TArray<ISortObjectInterface*> HaveSortCharacters;
+	TArray<ISortObjectInterface*> HaveSortItems;
 
-	//for (auto&& HaveCharacter : HaveCharacters)
-	//{
-	//	HaveSortCharacters.Add(HaveCharacter);
-	//}
+	for (auto&& HaveItem : HaveItems)
+	{
+		HaveSortItems.Add(HaveItem);
+	}
 
-	//HaveSortCharacters = SortObject(HaveSortCharacters);
+	HaveSortItems = SortObject(HaveSortItems);
 
-	////
-	//const int32 SlotNum = GridPanel->GetChildrenCount();
+	//
+	const int32 SlotNum = GridPanel->GetChildrenCount();
 
-	//for (int32 Index = 0; Index < SlotNum; Index++)
-	//{
-	//	UCharacterSlot* BoxSlot = Cast<UCharacterSlot>(GridPanel->GetChildAt(Index));
-	//	if (BoxSlot)
-	//	{
-	//		if (HaveSortCharacters.IsValidIndex(Index))
-	//		{
-	//			APokeCharacter* CurrentCharacter = Cast<APokeCharacter>(HaveSortCharacters[Index]);
-	//			if (!ensure(CurrentCharacter))
-	//			{
-	//				continue;
-	//			}
+	for (int32 Index = 0; Index < SlotNum; Index++)
+	{
+		UItemSlot* BoxSlot = Cast<UItemSlot>(GridPanel->GetChildAt(Index));
+		if (BoxSlot)
+		{
+			if (HaveSortItems.IsValidIndex(Index))
+			{
+				UPokeItem* CurrentItem = Cast<UPokeItem>(HaveSortItems[Index]);
+				if (!ensure(CurrentItem))
+				{
+					continue;
+				}
 
-	//			BoxSlot->InitByID(CurrentCharacter->GetCharacterID());
-	//			BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	//		}
-	//		else
-	//		{
-	//			if ((Index / ColumnNum) > ((HaveSortCharacters.Num() - 1) / ColumnNum))
-	//			{
-	//				BoxSlot->SetVisibility(ESlateVisibility::Collapsed);
-	//			}
-	//			else
-	//			{
-	//				BoxSlot->SetVisibility(ESlateVisibility::Hidden);
-	//			}
-	//		}
-	//	}
+				BoxSlot->InitByID(CurrentItem->GetItemID());
+				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
+			else
+			{
+				if ((Index / ColumnNum) > ((HaveSortItems.Num() - 1) / ColumnNum))
+				{
+					BoxSlot->SetVisibility(ESlateVisibility::Collapsed);
+				}
+				else
+				{
+					BoxSlot->SetVisibility(ESlateVisibility::Hidden);
+				}
+			}
+		}
 
-	//}
+	}
 }
 
 void UItemSlot::NativeConstruct()

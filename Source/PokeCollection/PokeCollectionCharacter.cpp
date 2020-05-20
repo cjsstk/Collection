@@ -380,6 +380,11 @@ class UPokeEquipment* APokeCollectionCharacter::GetEquipmentByID(int32 InEquipme
 	return nullptr;
 }
 
+const TArray<class UPokeItem*>& APokeCollectionCharacter::GetHaveItems() const
+{
+	return HaveItems;
+}
+
 UPokeItem* APokeCollectionCharacter::GetItemByKey(int32 InItemKey)
 {
 	for (UPokeItem* Item : HaveItems)

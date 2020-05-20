@@ -164,6 +164,11 @@ void UInGameBoxWidget::NativeConstruct()
 		EquipmentBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameBoxWidget::OnEquipmentBoxButtonClicked);
 	}
 
+	if (ItemBoxButton)
+	{
+		ItemBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameBoxWidget::OnItemBoxButtonClicked);
+	}
+
 	ContentsBox->ClearChildren();
 	BoxContents.Empty();
 	BoxContents.Init(nullptr, ContentWidgets.Num());
@@ -212,6 +217,7 @@ void UInGameBoxWidget::OnCharacterBoxButtonClicked()
 
 	CharacterSortWidget->SetVisibility(ESlateVisibility::Visible);
 	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
+	ItemSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInGameBoxWidget::OnEquipmentBoxButtonClicked()
@@ -229,6 +235,25 @@ void UInGameBoxWidget::OnEquipmentBoxButtonClicked()
 
 	CharacterSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 	EquipmentSortWidget->SetVisibility(ESlateVisibility::Visible);
+	ItemSortWidget->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UInGameBoxWidget::OnItemBoxButtonClicked()
+{
+	CurrentBoxContentType = EBoxContentType::Item;
+
+	if (!BoxContents[(int32)CurrentBoxContentType])
+	{
+		ensure(0);
+		return;
+	}
+
+	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
+	BoxContents[(int32)CurrentBoxContentType]->OnOpen();
+
+	CharacterSortWidget->SetVisibility(ESlateVisibility::Collapsed);
+	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
+	ItemSortWidget->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UInGameBoxWidget::SortContentWidget(FPokeSortInfo InSortInfo)

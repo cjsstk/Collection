@@ -129,6 +129,9 @@ public:
 	void OnEquipmentBoxButtonClicked();
 
 	UFUNCTION()
+	void OnItemBoxButtonClicked();
+
+	UFUNCTION()
 	void SortContentWidget(FPokeSortInfo InSortInfo);
 
 private:
@@ -139,6 +142,9 @@ private:
 	class UButton* EquipmentBoxButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
+	class UButton* ItemBoxButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
 	class UWidgetSwitcher* ContentsBox = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
@@ -146,6 +152,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class USortWidget* EquipmentSortWidget = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class USortWidget* ItemSortWidget = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FBoxContentStruct> ContentWidgets;
