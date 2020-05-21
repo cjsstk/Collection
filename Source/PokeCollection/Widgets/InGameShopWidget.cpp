@@ -295,7 +295,28 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 
 void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
 {
+	if (InSlotKey != SlotKey)
+	{
+		return;
+	}
 
+	const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InSlotKey);
+	if (!ensure(ItemInfo))
+	{
+		return;
+	}
+
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	FInitItemParams Params;
+	Params.ItemKey = InSlotKey;
+	Params.ItemStackNum = 1;
+
+	Player->AddNewItem(Params);
 }
 
 bool UShopSlot::PaySlotPrice(int32 InEggMoney)

@@ -68,8 +68,16 @@ void UItemShopWidget::OnOpen()
 		{
 			int32 SlotItemKey = ItemShopInfo->ItemKey;
 
-			ShopSlot->InitSlot(InfoKey + 1, EShopSlotType::Item);
-			ShopSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(SlotItemKey);
+			if (ItemInfo)
+			{
+				ShopSlot->InitSlot(SlotItemKey, EShopSlotType::Item);
+				ShopSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
+			else
+			{
+				ShopSlot->SetVisibility(ESlateVisibility::Hidden);
+			}
 		}
 		else
 		{

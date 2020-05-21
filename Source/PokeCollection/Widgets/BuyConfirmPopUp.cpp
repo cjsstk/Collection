@@ -55,7 +55,7 @@ void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 		if (ensure(ShopInfo))
 		{
 			//SlotName = ShopInfo->EggName;
-			//SlotPrice = FCString::Atoi(*(ShopInfo->EggPrice).ToString());
+			SlotPrice = FCString::Atoi(*(ShopInfo->EggPrice).ToString());
 
 			FFormatNamedArguments Arguments;
 			Arguments.Add(TEXT("SlotName"), ShopInfo->EggName);
@@ -71,7 +71,7 @@ void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 		if (ensure(ItemInfo))
 		{
 			//SlotName = ItemInfo->ItemName;
-			//SlotPrice = FCString::Atoi(*(ItemInfo->EggPrice).ToString());
+			SlotPrice = ItemInfo->ItemPrice;
 
 			FFormatNamedArguments Arguments;
 			Arguments.Add(TEXT("SlotName"), FText::FromName(ItemInfo->ItemName));
