@@ -453,7 +453,7 @@ void APokeCollectionCharacter::BeginPlay()
 	HttpActor->OnHttpHaveCharactersResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveCharactersResponsed);
 	HttpActor->OnHttpHaveEquipmentsResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveEquipmentsResponsed);
 
-	//HttpActor->RequestLogin(PokeCore::DeviceId);
+	HttpActor->RequestLogin(PokeCore::DeviceId);
 	//HttpActor->RequestHaveCharacters(PokeCore::DeviceId);
 
 	InitHaveCharacters();
@@ -560,7 +560,9 @@ void APokeCollectionCharacter::OnLoginResponsed(FHttpRequestPtr Request, TShared
 	int32 recievedCode = ResponceJson->GetIntegerField("code");
 	if (recievedCode == 200)
 	{
-		
+		TSharedPtr<FJsonObject> b = ResponceJson->GetObjectField("data");
+
+		int32 c = b->GetIntegerField("level");
 	}
 	else
 	{
