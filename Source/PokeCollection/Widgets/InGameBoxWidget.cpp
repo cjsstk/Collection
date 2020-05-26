@@ -187,6 +187,7 @@ void UInGameBoxWidget::NativeConstruct()
 
 	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
 	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
+	ItemSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UInGameBoxWidget::OnOpen()
