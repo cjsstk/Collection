@@ -17,8 +17,10 @@ class POKECOLLECTION_API ULoginWidget : public UUserWidget
 	
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	void OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
+	void OnRegistResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 
 	UFUNCTION()
 	void OnLoginButtonClick();
@@ -34,4 +36,5 @@ private:
 	class UTextBlock* StartText = nullptr;
 
 	bool bShouldRegist = false;
+	bool bCanStartGame = false;
 };

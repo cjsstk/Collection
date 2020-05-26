@@ -21,6 +21,7 @@ void ULoginWidget::NativeConstruct()
 	}
 
 	HttpActor->OnHttpLoginResponseReceived.BindUObject(this, &ULoginWidget::OnLoginResponsed);
+	HttpActor->OnHttpRegistResponseReceived.BindUObject(this, &ULoginWidget::OnRegistResponsed);
 	HttpActor->RequestLogin(PokeCore::DeviceId);
 
 	if (GuestLoginButton)
@@ -30,6 +31,17 @@ void ULoginWidget::NativeConstruct()
 
 	GuestLoginText->SetVisibility(ESlateVisibility::Collapsed);
 	StartText->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void ULoginWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (bCanStartGame)
+	{
+		UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("InGameLevel")));
+		bCanStartGame = false;
+	}
 }
 
 void ULoginWidget::OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
@@ -58,6 +70,26 @@ void ULoginWidget::OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObj
 
 }
 
+void ULoginWidget::OnRegistResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+	if (!ResponceJson)
+	{
+		return;
+	}
+
+	int32 recievedCode = ResponceJson->GetIntegerField("code");
+	if (recievedCode == 200)
+	{
+		bCanStartGame = true;
+	}
+	else
+	{
+		// 생성 실패
+		// DB error
+		ensure(0);
+	}
+}
+
 void ULoginWidget::OnLoginButtonClick()
 {
 	if (bShouldRegist)
@@ -69,6 +101,7 @@ void ULoginWidget::OnLoginButtonClick()
 		}
 
 		HttpActor->RequestRegist(PokeCore::DeviceId);
+		return;
 	}
 
 	UGameplayStatics::OpenLevel(GetWorld(), FName(TEXT("InGameLevel")));

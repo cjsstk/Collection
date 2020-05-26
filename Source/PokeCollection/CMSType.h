@@ -66,6 +66,61 @@ public:
 };
 
 USTRUCT()
+struct FInitPlayerParams
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	FString PlayerNickname;
+
+	UPROPERTY()
+	int32 PlayerLevel = 1;
+
+	UPROPERTY()
+	int32 PlayerCurrentExp = 0;
+
+	UPROPERTY()
+	int32 PlayerMoney = 0;
+
+	UPROPERTY()
+	int32 PlayerBerry = 0;
+
+	UPROPERTY()
+	int32 PlayerStardust = 0;
+
+	UPROPERTY()
+	int32 MaxClearBattleStage = 0;
+
+	UPROPERTY()
+	int32 LastSelectedChapter = 0;
+
+	UPROPERTY()
+	int32 MaxOpenedChapter = 0;
+
+	UPROPERTY()
+	int32 LastSelectedParty = 0;
+
+	UPROPERTY()
+	int32 BattleClearCount = 0;
+
+	UPROPERTY()
+	int32 GetCharacterCount = 0;
+
+	UPROPERTY()
+	int32 MaxHaveCharactersNum = 0;
+
+	UPROPERTY()
+	int32 MaxHaveEquipmentsNum = 0;
+
+	UPROPERTY()
+	FString Index;
+
+	UPROPERTY()
+	int32 BattleSpeed = 0;
+};
+
+USTRUCT()
 struct FInitCharacterParams
 {
 	GENERATED_BODY()

@@ -68,9 +68,37 @@ void APokeCollectionCharacter::InitHaveItems()
 	}
 }
 
-void APokeCollectionCharacter::InitPlayerInfo()
+void APokeCollectionCharacter::InitPlayerInfo(FInitPlayerParams& Params)
 {
-	SetPlayerLevel(1);
+	PlayerNickName = FName(*Params.PlayerNickname);
+	PlayerLevel = Params.PlayerLevel;
+
+	const FPlayerExperienceTable* ExpTable = CMS::GetPlayerExperienceTable(PlayerLevel);
+	if (ExpTable)
+	{
+		SetPlayerMaxExp(ExpTable->NeedExperienceForNextLevel);
+	}
+	else
+	{
+		SetPlayerMaxExp(99999);
+	}
+
+	PlayerCurrentExp = Params.PlayerCurrentExp;
+	MoneyAmount = Params.PlayerMoney;
+	BerryAmount = Params.PlayerBerry;
+	StardustAmount = Params.PlayerStardust;
+	MaxClearBattleStageNum = Params.MaxClearBattleStage;
+	CurrentSelectedChapterNum = Params.LastSelectedChapter;
+	MaxOpenedChapterNum = Params.MaxOpenedChapter;
+	CurrentSelectedParty = Params.LastSelectedParty;
+	BattleClearCount = Params.BattleClearCount;
+	GetCharacterCount = Params.GetCharacterCount;
+	MaxHaveCharactersNum = Params.MaxHaveCharactersNum;
+	MaxHaveEquipmentsNum = Params.MaxHaveEquipmentsNum;
+	SetIndex(Params.Index);
+	BattleSpeedMultiplier = Params.BattleSpeed;
+
+	bPlayerLoaded = true;
 }
 
 void APokeCollectionCharacter::InitMainCharacter()
@@ -82,6 +110,34 @@ void APokeCollectionCharacter::InitMainCharacter()
 void APokeCollectionCharacter::SetPlayerMaxExp(int32 InMaxExp)
 {
 	PlayerMaxExp = InMaxExp;
+}
+
+void APokeCollectionCharacter::SetBerryAmount(int32 NewBerryAmount)
+{
+	BerryAmount = FMath::Clamp(NewBerryAmount, 0, INT32_MAX);
+
+	SavePlayerInfo(ESavePlayerInfo::Berry);
+}
+
+void APokeCollectionCharacter::SetStardustAmount(int32 NewStardustAmount)
+{
+	StardustAmount = FMath::Clamp(NewStardustAmount, 0, INT32_MAX);
+
+	SavePlayerInfo(ESavePlayerInfo::Stardust);
+}
+
+void APokeCollectionCharacter::SetBattleClearCount(int32 NewBattleClearCount)
+{
+	BattleClearCount = NewBattleClearCount;
+
+	SavePlayerInfo(ESavePlayerInfo::BattleClearCount);
+}
+
+void APokeCollectionCharacter::SetGetCharacterCount(int32 NewGetCharacterCount)
+{
+	GetCharacterCount = NewGetCharacterCount;
+
+	SavePlayerInfo(ESavePlayerInfo::GetCharacterCount);
 }
 
 void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
@@ -216,9 +272,39 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 	}
 }
 
+void APokeCollectionCharacter::SetMaxOpenedChapterNum(int32 NewMaxOpenedChapterNum)
+{
+	MaxOpenedChapterNum = NewMaxOpenedChapterNum;
+
+	SavePlayerInfo(ESavePlayerInfo::MaxOpenedChapter);
+}
+
 void APokeCollectionCharacter::SetMaxClearBattleStage(battleStageKey InBattleStageKey)
 {
 	MaxClearBattleStageNum = FMath::Max(MaxClearBattleStageNum, InBattleStageKey);
+
+	SavePlayerInfo(ESavePlayerInfo::MaxClearBattleStage);
+}
+
+void APokeCollectionCharacter::SetCurrentSelectedPartyNum(int32 NewSelectedPartyNum)
+{
+	CurrentSelectedParty = NewSelectedPartyNum;
+
+	SavePlayerInfo(ESavePlayerInfo::LastSelectedParty);
+}
+
+void APokeCollectionCharacter::SetMaxHaveCharactersNum(int32 NewMaxHaveCharactersNum)
+{
+	MaxHaveCharactersNum = NewMaxHaveCharactersNum;
+
+	SavePlayerInfo(ESavePlayerInfo::MaxHaveCharactersNum);
+}
+
+void APokeCollectionCharacter::SetMaxHaveEquipmentsNum(int32 NewMaxHaveEquipmentsNum)
+{
+	MaxHaveEquipmentsNum = NewMaxHaveEquipmentsNum;
+
+	SavePlayerInfo(ESavePlayerInfo::MaxHaveEquipmentsNum);
 }
 
 void APokeCollectionCharacter::PutOnEquipment(int32 InCharacterID, int32 InEquipmentID)
@@ -260,6 +346,13 @@ void APokeCollectionCharacter::TakeOffEquipment(int32 InCharacterID)
 	PokeCharacter->TakeOffEquipment();
 }
 
+void APokeCollectionCharacter::SetPlayerNickName(FString& InNickname)
+{
+	PlayerNickName = FName(*InNickname);
+
+	SavePlayerInfo(ESavePlayerInfo::Nickname);
+}
+
 void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 {
 	PlayerLevel = NewLevel;
@@ -274,6 +367,7 @@ void APokeCollectionCharacter::SetPlayerLevel(int32 NewLevel)
 		SetPlayerMaxExp(99999);
 	}
 
+	SavePlayerInfo(ESavePlayerInfo::Level);
 }
 
 void APokeCollectionCharacter::SetMainCharacterID(int32 NewMainCharacterID)
@@ -297,6 +391,13 @@ void APokeCollectionCharacter::SetCurrentSelectedBattleStageKey(battleStageKey I
 	CurrentSelectedBattleStageKey = InBattleStageKey;
 }
 
+void APokeCollectionCharacter::SetCurrentSelectedChapterNum(int32 NewSelectedChapterNum)
+{
+	CurrentSelectedChapterNum = FMath::Clamp(NewSelectedChapterNum, 1, MaxOpenedChapterNum);
+
+	SavePlayerInfo(ESavePlayerInfo::LastSelectedChapter);
+}
+
 bool APokeCollectionCharacter::IsCompleteIndexCharacter(characterKey InCharacterKey)
 {
 	return (CharacterIndex.Contains(InCharacterKey) && *CharacterIndex.Find(InCharacterKey)); 
@@ -311,6 +412,8 @@ void APokeCollectionCharacter::ChangeBattleSpeedMultiplier()
 {
 	/** BattleSpeedMultiplier is 1 ~ 3 */
 	BattleSpeedMultiplier = (BattleSpeedMultiplier % CVarMaxBattleSpeedMultiplier.GetValueOnGameThread()) + 1;
+
+	SavePlayerInfo(ESavePlayerInfo::BattleSpeed);
 }
 
 const TArray<class APokeCharacter*>& APokeCollectionCharacter::GetHaveCharacters() const
@@ -421,6 +524,13 @@ void APokeCollectionCharacter::ConsumeBerry(int32 InConsumeBerryAmount)
 	SetBerryAmount(BerryAmount - InConsumeBerryAmount);
 }
 
+void APokeCollectionCharacter::SetMoneyAmount(int32 NewMoneyAmount)
+{
+	MoneyAmount = FMath::Clamp(NewMoneyAmount, 0, INT32_MAX);
+
+	SavePlayerInfo(ESavePlayerInfo::Money);
+}
+
 void APokeCollectionCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -460,7 +570,6 @@ void APokeCollectionCharacter::BeginPlay()
 	InitMainCharacter();
 	InitHaveEquipments();
 	InitHaveItems();
-	InitPlayerInfo();
 
 	// Temp slot setting
 	for (int32 i = 1; i < 5; i++)
@@ -487,6 +596,11 @@ void APokeCollectionCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 }
 
+void APokeCollectionCharacter::SetIndex(FString& NewIndex)
+{
+	//AddCharacterToIndex
+}
+
 void APokeCollectionCharacter::TickResourceCharge(float DeltaSeconds)
 {
 	BerryChargingIntervalAgeSeconds += DeltaSeconds;
@@ -495,13 +609,15 @@ void APokeCollectionCharacter::TickResourceCharge(float DeltaSeconds)
 	while (BerryChargingIntervalAgeSeconds >= BerryChargingIntervalSeconds)
 	{
 		BerryChargingIntervalAgeSeconds -= BerryChargingIntervalSeconds;
-		BerryAmount += BerryChargingAmount;
+		SetBerryAmount(BerryAmount + BerryChargingAmount);
+		//BerryAmount += BerryChargingAmount;
 	}
 
 	while (MoneyChargingIntervalAgeSeconds >= MoneyChargingIntervalSeconds)
 	{
 		MoneyChargingIntervalAgeSeconds -= MoneyChargingIntervalSeconds;
-		MoneyAmount += MoneyChargingAmount;
+		SetMoneyAmount(MoneyAmount + MoneyChargingAmount);
+		//MoneyAmount += MoneyChargingAmount;
 	}
 }
 
@@ -560,12 +676,31 @@ void APokeCollectionCharacter::OnLoginResponsed(FHttpRequestPtr Request, TShared
 	int32 recievedCode = ResponceJson->GetIntegerField("code");
 	if (recievedCode == 200)
 	{
-		TSharedPtr<FJsonObject> b = ResponceJson->GetObjectField("data");
+		TSharedPtr<FJsonObject> PlayerData = ResponceJson->GetObjectField("data");
 
-		int32 c = b->GetIntegerField("level");
+		FInitPlayerParams Params;
+		Params.PlayerNickname = PlayerData->GetStringField("nickname");
+		Params.PlayerLevel = PlayerData->GetIntegerField("level");
+		Params.PlayerCurrentExp = PlayerData->GetIntegerField("exp");
+		Params.PlayerMoney = PlayerData->GetIntegerField("money");
+		Params.PlayerBerry = PlayerData->GetIntegerField("berry");
+		Params.PlayerStardust = PlayerData->GetIntegerField("stardust");
+		Params.MaxClearBattleStage = PlayerData->GetIntegerField("maxClearBattleStage");
+		Params.LastSelectedChapter = PlayerData->GetIntegerField("lastSelectedChapter");
+		Params.MaxOpenedChapter = PlayerData->GetIntegerField("maxOpenedChapter");
+		Params.LastSelectedParty = PlayerData->GetIntegerField("lastSelectedParty");
+		Params.BattleClearCount = PlayerData->GetIntegerField("battleClearCount");
+		Params.GetCharacterCount = PlayerData->GetIntegerField("getCharacterCount");
+		Params.MaxHaveCharactersNum = PlayerData->GetIntegerField("maxHaveCharactersNum");
+		Params.MaxHaveEquipmentsNum = PlayerData->GetIntegerField("maxHaveEquipmentsNum");
+		Params.Index = PlayerData->GetStringField("index");
+		Params.BattleSpeed = PlayerData->GetIntegerField("battleSpeed");
+
+		InitPlayerInfo(Params);
 	}
 	else
 	{
+		// 로그인 실패
 		ensure(0);
 	}
 }
@@ -585,4 +720,33 @@ void APokeCollectionCharacter::OnHaveCharactersResponsed(FHttpRequestPtr Request
 void APokeCollectionCharacter::OnHaveEquipmentsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
 {
 
+}
+
+void APokeCollectionCharacter::SavePlayerInfo(ESavePlayerInfo InSaveInfo)
+{
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	FInitPlayerParams Params;
+	Params.PlayerNickname = PlayerNickName.ToString();
+	Params.PlayerLevel = PlayerLevel;
+	Params.PlayerCurrentExp = PlayerCurrentExp;
+	Params.PlayerMoney = MoneyAmount;
+	Params.PlayerBerry = BerryAmount;
+	Params.PlayerStardust = StardustAmount;
+	Params.MaxClearBattleStage = MaxClearBattleStageNum;
+	Params.LastSelectedChapter = CurrentSelectedChapterNum;
+	Params.MaxOpenedChapter = MaxOpenedChapterNum;
+	Params.LastSelectedParty = CurrentSelectedParty;
+	Params.BattleClearCount = BattleClearCount;
+	Params.GetCharacterCount = GetCharacterCount;
+	Params.MaxHaveCharactersNum = MaxHaveCharactersNum;
+	Params.MaxHaveEquipmentsNum = MaxHaveEquipmentsNum;
+	Params.Index = GetIndex();
+	Params.BattleSpeed = BattleSpeedMultiplier;
+
+	HttpActor->RequestSavePlayerInfo(PokeCore::DeviceId, InSaveInfo, Params);
 }

@@ -1,4 +1,4 @@
-// Copyright Me. All Rights Reserved.
+﻿// Copyright Me. All Rights Reserved.
 
 
 #include "HttpActor.h"
@@ -71,8 +71,9 @@ void AHttpActor::RequestRegist(const FString& InRegistId)
 	JsonObject->SetNumberField(TEXT("battleClearCount"), 0);
 	JsonObject->SetNumberField(TEXT("getCharacterCount"), 0);
 	JsonObject->SetNumberField(TEXT("maxHaveCharactersNum"), 100);
-	JsonObject->SetNumberField(TEXT("maxHaveEquipmentNum"), 100);
+	JsonObject->SetNumberField(TEXT("maxHaveEquipmentsNum"), 100);
 	JsonObject->SetStringField(TEXT("index"), *FString(TEXT("")));
+	JsonObject->SetNumberField(TEXT("battleSpeed"), 1);
 
 	FString OutputString;
 
@@ -127,6 +128,87 @@ void AHttpActor::RequestHaveEquipments(const FString& InUserId)
 	Request->ProcessRequest();
 }
 
+void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params)
+{
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	JsonObject->SetStringField(TEXT("id"), *FString::Printf(TEXT("%s"), *InUserId));
+
+	switch (InColumnName)
+	{
+	case ESavePlayerInfo::Nickname:
+		JsonObject->SetStringField(TEXT("nickname"), *Params.PlayerNickname);
+		break;
+	case ESavePlayerInfo::Level:
+		JsonObject->SetNumberField(TEXT("level"), Params.PlayerLevel);
+		break;
+	case ESavePlayerInfo::Exp:
+		JsonObject->SetNumberField(TEXT("exp"), Params.PlayerCurrentExp);
+		break;
+	case ESavePlayerInfo::Money:
+		JsonObject->SetNumberField(TEXT("money"), Params.PlayerMoney);
+		break;
+	case ESavePlayerInfo::Berry:
+		JsonObject->SetNumberField(TEXT("berry"), Params.PlayerBerry);
+		break;
+	case ESavePlayerInfo::Stardust:
+		JsonObject->SetNumberField(TEXT("stardust"), Params.PlayerStardust);
+		break;
+	case ESavePlayerInfo::MaxClearBattleStage:
+		JsonObject->SetNumberField(TEXT("maxClearBattleStage"), Params.MaxClearBattleStage);
+		break;
+	case ESavePlayerInfo::LastSelectedChapter:
+		JsonObject->SetNumberField(TEXT("lastSelectedChapter"), Params.LastSelectedChapter);
+		break;
+	case ESavePlayerInfo::MaxOpenedChapter:
+		JsonObject->SetNumberField(TEXT("maxOpenedChapter"), Params.MaxOpenedChapter);
+		break;
+	case ESavePlayerInfo::LastSelectedParty:
+		JsonObject->SetNumberField(TEXT("lastSelectedParty"), Params.LastSelectedParty);
+		break;
+	case ESavePlayerInfo::BattleClearCount:
+		JsonObject->SetNumberField(TEXT("battleClearCount"), Params.BattleClearCount);
+		break;
+	case ESavePlayerInfo::GetCharacterCount:
+		JsonObject->SetNumberField(TEXT("getCharacterCount"), Params.GetCharacterCount);
+		break;
+	case ESavePlayerInfo::MaxHaveCharactersNum:
+		JsonObject->SetNumberField(TEXT("maxHaveCharactersNum"), Params.MaxHaveCharactersNum);
+		break;
+	case ESavePlayerInfo::MaxHaveEquipmentsNum:
+		JsonObject->SetNumberField(TEXT("maxHaveEquipmentsNum"), Params.MaxHaveEquipmentsNum);
+		break;
+	case ESavePlayerInfo::Index:
+		JsonObject->SetStringField(TEXT("index"), *Params.Index);
+		break;
+	case ESavePlayerInfo::BattleSpeed:
+		JsonObject->SetNumberField(TEXT("battleSpeed"), Params.BattleSpeed);
+		break;
+	default:
+		break;
+	}
+	
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnSavePlayerInfoResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId;
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::PUT);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+
+	Request->ProcessRequest();
+}
+
 void AHttpActor::OnLoginResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	//Create a pointer to hold the json serialized data
@@ -166,6 +248,8 @@ void AHttpActor::OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponse
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
 	}
+
+	OnHttpRegistResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
 }
 
 void AHttpActor::OnHaveCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
@@ -193,6 +277,22 @@ void AHttpActor::OnHaveEquipmentsResponseReceived(FHttpRequestPtr Request, FHttp
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		OnHttpHaveEquipmentsResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnSavePlayerInfoResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("유저 데이터 저장")));
 	}
 	else
 	{

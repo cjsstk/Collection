@@ -39,7 +39,7 @@ void UInGameAdventureWidget::NativeConstruct()
 		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 		if (ensure(Player))
 		{
-			StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedStageNum() - 1);
+			StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedChapterNum() - 1);
 		}
 	}
 
@@ -67,8 +67,8 @@ void UInGameAdventureWidget::OnPrevStageButtonClicked()
 		return;
 	}
 
-	Player->SetCurrentSelectedStageNum(Player->GetCurrentSelectedStageNum() - 1);
-	StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedStageNum() - 1);
+	Player->SetCurrentSelectedChapterNum(Player->GetCurrentSelectedChapterNum() - 1);
+	StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedChapterNum() - 1);
 }
 
 void UInGameAdventureWidget::OnNextStageButtonClicked()
@@ -79,6 +79,6 @@ void UInGameAdventureWidget::OnNextStageButtonClicked()
 		return;
 	}
 
-	Player->SetCurrentSelectedStageNum(Player->GetCurrentSelectedStageNum() + 1);
-	StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedStageNum() - 1);
+	Player->SetCurrentSelectedChapterNum(Player->GetCurrentSelectedChapterNum() + 1);
+	StageWidgets->SetActiveWidgetIndex(Player->GetCurrentSelectedChapterNum() - 1);
 }

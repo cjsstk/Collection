@@ -37,7 +37,6 @@ public:
 	void AddNewItem(FInitItemParams& InInitItemParams);
 
 	void GetReward(FBattleReward InBattleReward);
-	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
 
 	void PutOnEquipment(int32 InCharacterID, int32 InEquipmentID);
 	void TakeOffEquipment(int32 InCharacterID);
@@ -45,6 +44,7 @@ public:
 	/** 
 	 * Player Info
 	 */
+	void SetPlayerNickName(FString& InNickname);
 	FName GetPlayerNickName() const { return PlayerNickName; }
 	
 	int32 GetPlayerLevel() const { return PlayerLevel; }
@@ -56,14 +56,21 @@ public:
 	void SetCurrentSelectedBattleStageKey(battleStageKey InBattleStageKey);
 	battleStageKey GetCurrentSelectedBattleStageKey() const { return CurrentSelectedBattleStageKey; }
 
-	void SetCurrentSelectedStageNum(int32 NewSelectedStageNum) { CurrentSelectedStageNum = FMath::Clamp(NewSelectedStageNum, 1, MaxOpenedStageNum); }
-	int32 GetCurrentSelectedStageNum() const { return CurrentSelectedStageNum; }
+	void SetCurrentSelectedChapterNum(int32 NewSelectedChapterNum);
+	int32 GetCurrentSelectedChapterNum() const { return CurrentSelectedChapterNum; }
 
-	void SetCurrentSelectedPartyNum(int32 NewSelectedPartyNum) { CurrentSelectedParty = NewSelectedPartyNum; }
+	void SetMaxOpenedChapterNum(int32 NewMaxOpenedChapterNum);
+
+	void SetMaxClearBattleStage(battleStageKey InBattleStageKey);
+
+	void SetCurrentSelectedPartyNum(int32 NewSelectedPartyNum);
 	int32 GetCurrentSelectedPartyNum() const { return CurrentSelectedParty; }
 
+	void SetMaxHaveCharactersNum(int32 NewMaxHaveCharactersNum);
 	int32 GetMaxHaveCharactersNum() const { return MaxHaveCharactersNum; }
-	int32 GetMaxHaveEquipmentNum() const { return MaxHaveEquipmentsNum; }
+
+	void SetMaxHaveEquipmentsNum(int32 NewMaxHaveEquipmentsNum);
+	int32 GetMaxHaveEquipmentsNum() const { return MaxHaveEquipmentsNum; }
 
 	void SetMainCharacterID(int32 NewMainCharacterID);
 	int32 GetMainCharacterID() const { return MainCharacterID; }
@@ -95,7 +102,7 @@ public:
 	int32 GetMoneyChargingIntervalMinutes() const { return MoneyChargingIntervalSeconds / 60; }
 
 	void ConsumeBerry(int32 InConsumeBerryAmount);
-	void SetMoneyAmount(int32 NewMoneyAmount) { MoneyAmount = FMath::Clamp(NewMoneyAmount, 0, INT32_MAX); }
+	void SetMoneyAmount(int32 NewMoneyAmount);
 
 	FOnAddedNewCharacter OnAddedNewCharacter;
 
@@ -109,11 +116,18 @@ private:
 	void InitHaveEquipments();
 	void InitHaveItems();
 
-	void InitPlayerInfo();
+	void InitPlayerInfo(FInitPlayerParams& Params);
 	void InitMainCharacter();
 
+	void SetPlayerExp(int32 InExp) { PlayerCurrentExp = InExp; SavePlayerInfo(ESavePlayerInfo::Exp); }
 	void SetPlayerMaxExp(int32 InMaxExp);
-	void SetBerryAmount(int32 NewBerryAmount) { BerryAmount = FMath::Clamp(NewBerryAmount, 0, INT32_MAX); }
+	void SetBerryAmount(int32 NewBerryAmount);
+	void SetStardustAmount(int32 NewStardustAmount);
+	void SetBattleClearCount(int32 NewBattleClearCount);
+	void SetGetCharacterCount(int32 NewGetCharacterCount);
+	void SetIndex(FString& NewIndex);
+
+	FString GetIndex() { return FString(); /** Map to String */ }
 
 	void TickResourceCharge(float DeltaSeconds);
 	void AddCharacterToIndex(characterKey InCharacterKey);
@@ -128,6 +142,8 @@ private:
 	void OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 	void OnHaveCharactersResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 	void OnHaveEquipmentsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
+
+	void SavePlayerInfo(ESavePlayerInfo InSaveInfo);
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;
@@ -144,8 +160,8 @@ private:
 	battleStageKey CurrentSelectedBattleStageKey = 0;
 	int32 MaxClearBattleStageNum = 0;
 
-	int32 CurrentSelectedStageNum = 1;
-	int32 MaxOpenedStageNum = 2;
+	int32 CurrentSelectedChapterNum = 1;
+	int32 MaxOpenedChapterNum = 2;
 
 	int32 CurrentSelectedParty = 1;	// 선택한 파티 번호
 
@@ -217,6 +233,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 MoneyChargingAmount = 10;
-
+	
+	/** Loaded */
+	bool bPlayerLoaded = false;
 };
 

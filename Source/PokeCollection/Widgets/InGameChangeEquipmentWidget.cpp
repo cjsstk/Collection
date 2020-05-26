@@ -148,7 +148,7 @@ void UInGameChangeEquipmentWidget::NativeConstruct()
 		}
 	}
 
-	const int32 MaxHaveEquipmentsNum = Player->GetMaxHaveEquipmentNum() + NeedExcludeSlot;
+	const int32 MaxHaveEquipmentsNum = Player->GetMaxHaveEquipmentsNum() + NeedExcludeSlot;
 	for (int32 Index = NeedExcludeSlot; Index < MaxHaveEquipmentsNum; ++Index)
 	{
 		UChangeEquipmentSlot* EquipmentSlot = CreateWidget<UChangeEquipmentSlot>(GetWorld(), EquipmentBoxSlotClass.Get());
