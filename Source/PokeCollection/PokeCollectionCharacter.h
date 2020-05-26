@@ -127,7 +127,7 @@ private:
 	void SetGetCharacterCount(int32 NewGetCharacterCount);
 	void SetIndex(FString& NewIndex);
 
-	FString GetIndex() { return FString(); /** Map to String */ }
+	FString GetIndex();
 
 	void TickResourceCharge(float DeltaSeconds);
 	void AddCharacterToIndex(characterKey InCharacterKey);

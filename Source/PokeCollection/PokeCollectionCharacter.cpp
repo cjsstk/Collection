@@ -566,17 +566,9 @@ void APokeCollectionCharacter::BeginPlay()
 	HttpActor->RequestLogin(PokeCore::DeviceId);
 	//HttpActor->RequestHaveCharacters(PokeCore::DeviceId);
 
-	InitHaveCharacters();
 	InitMainCharacter();
 	InitHaveEquipments();
 	InitHaveItems();
-
-	// Temp slot setting
-	for (int32 i = 1; i < 5; i++)
-	{
-		HaveCharacters[i * 2]->SetJoinedPartyNum(1);
-		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
-	}
 
 	//PutOnEquipment(1, 1);
 }
@@ -598,7 +590,28 @@ void APokeCollectionCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void APokeCollectionCharacter::SetIndex(FString& NewIndex)
 {
-	//AddCharacterToIndex
+	for (int32 StringIndex = 0; StringIndex < NewIndex.Len(); ++StringIndex)
+	{
+		if (NewIndex[StringIndex] == '1')
+		{
+			if (CharacterIndex.Contains(StringIndex + 1))
+			{
+				CharacterIndex[StringIndex + 1] = true;
+			}
+		}
+	}
+}
+
+FString APokeCollectionCharacter::GetIndex()
+{
+	FString PlayerIndex;
+
+	for (auto&& Index : CharacterIndex)
+	{
+		PlayerIndex += (Index.Value) ? TEXT("1") : TEXT("0");
+	}
+
+	return PlayerIndex;
 }
 
 void APokeCollectionCharacter::TickResourceCharge(float DeltaSeconds)
@@ -628,6 +641,8 @@ void APokeCollectionCharacter::AddCharacterToIndex(characterKey InCharacterKey)
 	{
 		*IndexCharacter = true;
 	}
+
+	SavePlayerInfo(ESavePlayerInfo::Index);
 }
 
 int32 APokeCollectionCharacter::GetUsableCharacterID()
@@ -702,6 +717,15 @@ void APokeCollectionCharacter::OnLoginResponsed(FHttpRequestPtr Request, TShared
 	{
 		// 로그인 실패
 		ensure(0);
+	}
+
+	InitHaveCharacters();
+
+	// Temp slot setting
+	for (int32 i = 1; i < 5; i++)
+	{
+		HaveCharacters[i * 2]->SetJoinedPartyNum(1);
+		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
 	}
 }
 
