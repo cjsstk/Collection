@@ -119,7 +119,7 @@ private:
 	void InitPlayerInfo(FInitPlayerParams& Params);
 	void InitMainCharacter();
 
-	void SetPlayerExp(int32 InExp) { PlayerCurrentExp = InExp; SavePlayerInfo(ESavePlayerInfo::Exp); }
+	void SetPlayerExp(int32 InExp);
 	void SetPlayerMaxExp(int32 InMaxExp);
 	void SetBerryAmount(int32 NewBerryAmount);
 	void SetStardustAmount(int32 NewStardustAmount);

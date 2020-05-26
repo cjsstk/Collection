@@ -107,6 +107,25 @@ void APokeCollectionCharacter::InitMainCharacter()
 		MainCharacterID = SavedCharacterKeys[0];
 }
 
+void APokeCollectionCharacter::SetPlayerExp(int32 InExp)
+{
+	if (PlayerMaxExp < 0)
+	{
+		return;
+	}
+
+	PlayerCurrentExp = InExp;
+	
+	while (PlayerCurrentExp >= PlayerMaxExp)
+	{
+		PlayerCurrentExp -= PlayerMaxExp;
+
+		SetPlayerLevel(PlayerLevel + 1);
+	}
+
+	SavePlayerInfo(ESavePlayerInfo::Exp);
+}
+
 void APokeCollectionCharacter::SetPlayerMaxExp(int32 InMaxExp)
 {
 	PlayerMaxExp = InMaxExp;
@@ -270,6 +289,8 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 
 		AddNewCharacter(Params);
 	}
+
+	SetPlayerExp(GetPlayerCurrentExp() + InBattleReward.ExperienceAmount);
 }
 
 void APokeCollectionCharacter::SetMaxOpenedChapterNum(int32 NewMaxOpenedChapterNum)
