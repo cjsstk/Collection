@@ -81,6 +81,7 @@ void UInGameMainWidget::NativeConstruct()
 
 	ShopButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnShopButtonClicked);
 	CharacterBoxButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnCharacterBoxButtonClicked);
+	SummonButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnSummonButtonClicked);
 	PokedexButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnIndexButtonClicked);
 	//InventoryButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
 	//SecretBaseButton->OnClicked.AddUniqueDynamic(this, &UInGameMainWidget::OnStartButtonClicked);
@@ -124,6 +125,15 @@ void UInGameMainWidget::OnCharacterBoxButtonClicked()
 	}
 }
 
+void UInGameMainWidget::OnSummonButtonClicked()
+{
+	APokeCollectionHUD* Hud = GetPokeHud();
+	if (Hud)
+	{
+		Hud->OpenInGameSummonWidget();
+	}
+}
+
 void UInGameMainWidget::OnIndexButtonClicked()
 {
 	APokeCollectionHUD* Hud = GetPokeHud();
@@ -148,6 +158,8 @@ bool UInGameMainWidget::CheckAllButtonsExist()
 
 	bIsExist = bIsExist && ShopButton;
 	bIsExist = bIsExist && CharacterBoxButton;
+	bIsExist = bIsExist && SummonButton;
+	bIsExist = bIsExist && PokedexButton;
 	//bIsExist = bIsExist && InventoryButton;
 	//bIsExist = bIsExist && SecretBaseButton;
 	//bIsExist = bIsExist && WalkButton;

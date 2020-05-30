@@ -62,6 +62,9 @@ private:
 	void OnCharacterBoxButtonClicked();
 
 	UFUNCTION()
+	void OnSummonButtonClicked();
+
+	UFUNCTION()
 	void OnIndexButtonClicked();
 
 	UFUNCTION()
@@ -81,6 +84,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* CharacterBoxButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SummonButton = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PokedexButton = nullptr;

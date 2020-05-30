@@ -33,6 +33,7 @@ public:
 	void OpenBattleLosePopUp();
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 	void OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID);
+	void OpenInGameSummonWidget();
 
 	void OpenDialogWidget(int32 InDialogKey);
 
@@ -57,6 +58,7 @@ public:
 	class UInGameCharacterBoxWidget* GetInGameCharacterBoxWidget() const { return InGameCharacterBoxWidget; }
 	class UInGameCharacterInfoWidget* GetInGameCharacterInfoWidget() const { return InGameCharacterInfoWidget; }
 	class UInGameChangeEquipmentWidget* GetInGameChangeEquipmentWidget() const { return InGameChangeEquipmentWidget; }
+	class UInGameSummonWidget* GetInGameSummonWidget() const { return InGameSummonWidget; }
 
 	FOnWidgetLoaded OnWidgetLoaded;
 
@@ -128,6 +130,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameDialogWidget> InGameDialogWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameSummonWidget> InGameSummonWidgetClass;
+
 	//
 	UPROPERTY(Transient)
 	class ULoginWidget* LoginWidget = nullptr;
@@ -179,4 +184,7 @@ private:
 
 	UPROPERTY(Transient)
 	class UChangeEquipmentInfoPopUp* ChangeEquipmentInfoPopUp = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameSummonWidget* InGameSummonWidget = nullptr;
 };

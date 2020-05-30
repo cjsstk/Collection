@@ -23,6 +23,7 @@
 #include "Widgets/InGameMakePartyWidget.h"
 #include "Widgets/InGameProfileWidget.h"
 #include "Widgets/InGameShopWidget.h"
+#include "Widgets/InGameSummonWidget.h"
 #include "Widgets/LoginWidget.h"
 
 #include "Blueprint/UserWidget.h"
@@ -179,6 +180,15 @@ void APokeCollectionHUD::BeginPlay()
 		if (InGameBattleWidgetClass.Get())
 		{
 			InGameBattleWidget = CreateWidget<UInGameBattleWidget>(GetWorld(), InGameBattleWidgetClass, FName("InGameBattleWidget"));
+		}
+
+		if (InGameSummonWidgetClass.Get())
+		{
+			InGameSummonWidget = CreateWidget<UInGameSummonWidget>(GetWorld(), InGameSummonWidgetClass, FName("InGameSummonWidget"));
+			if (ensure(InGameSummonWidget))
+			{
+				InGameSummonWidget->SetPrevWidget(InGameMainWidget);
+			}
 		}
 	}
 
@@ -410,6 +420,20 @@ void APokeCollectionHUD::OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID)
 	{
 		ChangeEquipmentInfoPopUp->AddToViewport(2);
 		ChangeEquipmentInfoPopUp->InitInfo(InNextEquipmentID);
+	}
+}
+
+void APokeCollectionHUD::OpenInGameSummonWidget()
+{
+	if (ensure(InGameMainWidget))
+	{
+		InGameMainWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameSummonWidget))
+	{
+		InGameSummonWidget->AddToViewport();
+		InGameSummonWidget->OnOpen();
 	}
 }
 
