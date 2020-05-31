@@ -41,9 +41,9 @@ void USummonContentWidget::NativeConstruct()
 		SummonButton->OnClicked.AddUniqueDynamic(this, &USummonContentWidget::OnSummonButtonClicked);
 	}
 
-	if (SummonPriceText && AllShopData.IsValidIndex(SelectedSummonTypeIndex))
+	if (SummonPriceText && AllShopData.IsValidIndex(0))
 	{
-		SummonPriceText->SetText(AllShopData[SelectedSummonTypeIndex]->EggPrice);
+		SummonPriceText->SetText(AllShopData[0]->EggPrice);
 	}
 }
 

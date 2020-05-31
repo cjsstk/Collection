@@ -10,7 +10,7 @@
 #include "PokeCollectionCharacter.h"
 
 #define LOCTEXT_NAMESPACE "BuyConfirm"
-#define LOCTEXT_NAMESPACE "ItemBuyConfirm"
+//#define LOCTEXT_NAMESPACE "ItemBuyConfirm"
 
 void UBuyConfirmPopUp::NativeConstruct()
 {

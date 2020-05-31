@@ -9,9 +9,12 @@
 class APokeCollectionCharacter;
 class ABattleManager;
 class AHttpActor;
+class ISortObjectInterface;
 
 enum class EType;
 enum class EStatus;
+
+struct FPokeSortInfo;
 
 namespace PokeCore
 {
@@ -24,6 +27,8 @@ namespace PokeCore
 	const static FString DeviceId = FGenericPlatformMisc::GetDeviceId();
 
 	FString GetStatusString(EStatus InStat);
+
+	void QuickSort(int32 Start, int32 End, TArray<class ISortObjectInterface*>& InObjects, FPokeSortInfo& CurrentSortInfo);
 
 	/*static TArray<float> TypeCharts = {
 		1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, 0.5f,    0,    1,    1, 0.5f,    1,

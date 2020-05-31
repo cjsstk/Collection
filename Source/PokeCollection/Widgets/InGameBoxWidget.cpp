@@ -81,7 +81,9 @@ void UBoxContentWidget::SortContent(FPokeSortInfo InSortInfo)
 
 TArray<class ISortObjectInterface*> UBoxContentWidget::SortObject(TArray<class ISortObjectInterface*> InObjects)
 {
-	QuickSort(0, InObjects.Num() - 1, InObjects);
+	//QuickSort(0, InObjects.Num() - 1, InObjects);
+
+	PokeCore::QuickSort(0, InObjects.Num() - 1, InObjects, CurrentSortInfo);
 
 	return InObjects;
 }

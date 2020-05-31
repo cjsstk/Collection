@@ -8,7 +8,9 @@
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionGameMode.h"
+#include "PokeSortInfo.h"
 #include "Level/InGameLevelScriptActor.h"
+#include "SortObjectInterface.h"
 #include "TypeChart.h"
 
 #include "Engine/World.h"
@@ -102,6 +104,58 @@ FString PokeCore::GetStatusString(EStatus InStat)
 	}
 
 	return FString();
+}
+
+void PokeCore::QuickSort(int32 Start, int32 End, TArray<class ISortObjectInterface*>& InObjects, FPokeSortInfo& CurrentSortInfo)
+{
+	if (Start >= End)
+	{
+		return;
+	}
+
+	ISortObjectInterface* Pivot = InObjects[(Start + End) / 2];
+	int Left = Start;
+	int Right = End;
+
+	bool bAscending = CurrentSortInfo.SortAscending == ESortAscending::Ascending;
+
+	while (Left <= Right)
+	{
+		if (bAscending)
+		{
+			while (InObjects[Left]->GetObjectSortValue(CurrentSortInfo.SortCategory) < Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
+			{
+				Left++;
+			}
+
+			while (InObjects[Right]->GetObjectSortValue(CurrentSortInfo.SortCategory) > Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
+			{
+				Right--;
+			}
+		}
+		else
+		{
+			while (InObjects[Left]->GetObjectSortValue(CurrentSortInfo.SortCategory) > Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
+			{
+				Left++;
+			}
+
+			while (InObjects[Right]->GetObjectSortValue(CurrentSortInfo.SortCategory) < Pivot->GetObjectSortValue(CurrentSortInfo.SortCategory))
+			{
+				Right--;
+			}
+		}
+
+		if (Left <= Right)
+		{
+			InObjects.Swap(Left, Right);
+			Left++;
+			Right--;
+		}
+	}
+
+	QuickSort(Start, Right, InObjects, CurrentSortInfo);
+	QuickSort(Left, End, InObjects, CurrentSortInfo);
 }
 
 //float PokeCore::GetTypeEffective(EType InAttackType, EType InDefenseType)
