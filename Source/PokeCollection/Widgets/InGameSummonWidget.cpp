@@ -9,6 +9,7 @@
 #include "WidgetSwitcher.h"
 
 #include "PokeCollectionHUD.h"
+#include "Widgets/InGameBoxWidget.h"
 
 void UInGameSummonWidget::NativeConstruct()
 {
@@ -75,11 +76,25 @@ void UInGameSummonWidget::SwitchContentWidget(int32 InContentIndex)
 		SummonContentsBox->SetActiveWidgetIndex(InContentIndex);
 		SelectedContentWidgetIndex = InContentIndex;
 	}
+
+	if (SummonContents.IsValidIndex(InContentIndex))
+	{
+		UBoxContentWidget* BoxWidget = Cast<UBoxContentWidget>(SummonContents[InContentIndex]);
+		if (BoxWidget)
+		{
+			BoxWidget->OnOpen();
+		}
+	}
 }
 
 void USummonCategoryButtonWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (CategoryButton)
+	{
+		CategoryButton->OnClicked.AddUniqueDynamic(this, &USummonCategoryButtonWidget::OnCategoryButtonClicked);
+	}
 }
 
 void USummonCategoryButtonWidget::SetCategoryName(const FText& InCategoryName)
