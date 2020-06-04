@@ -122,7 +122,7 @@ void UTopStatusPlayerInfo::Show(bool bInShow)
 	}
 	else
 	{
-		SetVisibility(ESlateVisibility::Collapsed);
+		SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	bShowing = bInShow;

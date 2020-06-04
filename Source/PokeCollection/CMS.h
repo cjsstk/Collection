@@ -241,6 +241,12 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FEnemyInfo> FirstEnemyKeys;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FEnemyInfo> SecondEnemyKeys;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FEnemyInfo> ThirdEnemyKeys;
 };
 
 USTRUCT(BlueprintType)
