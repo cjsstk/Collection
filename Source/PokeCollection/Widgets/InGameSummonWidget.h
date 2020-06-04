@@ -59,6 +59,8 @@ public:
 
 	void SwitchContentWidget(int32 InContentIndex);
 
+	int32 GetSelectedContentWidgetIndex() const { return SelectedContentWidgetIndex; }
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* CatergoryScrollBox = nullptr;

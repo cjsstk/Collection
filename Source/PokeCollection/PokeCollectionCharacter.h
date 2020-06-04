@@ -36,6 +36,8 @@ public:
 	void AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams);
 	void AddNewItem(FInitItemParams& InInitItemParams);
 
+	void DeleteCharacters(TArray<int32>& InCharacterIDs);
+
 	void GetReward(FBattleReward InBattleReward);
 
 	void PutOnEquipment(int32 InCharacterID, int32 InEquipmentID);
@@ -105,6 +107,8 @@ public:
 	void SetMoneyAmount(int32 NewMoneyAmount);
 
 	FOnAddedNewCharacter OnAddedNewCharacter;
+
+	TArray<int32> SeletedDestroyCharacterIDs;
 
 protected:
 	virtual void BeginPlay() override;

@@ -44,6 +44,14 @@ enum class EShopSlotType
 	Item,
 };
 
+UENUM()
+enum class EBasicPopUpType : int32
+{
+	Invalid,
+	DestroyCharacter,
+	DestroyEquipment,
+};
+
 struct FBattleReward
 {
 public:

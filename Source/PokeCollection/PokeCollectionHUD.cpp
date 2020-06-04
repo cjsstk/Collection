@@ -6,6 +6,7 @@
 #include "BattleManager.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCore.h"
+#include "Widgets/BasicPopUp.h"
 #include "Widgets/BattleResultPopUp.h"
 #include "Widgets/BattleStageInfoPopUp.h"
 #include "Widgets/BuyConfirmPopUp.h"
@@ -453,6 +454,29 @@ void APokeCollectionHUD::OpenDialogWidget(int32 InDialogKey)
 	{
 		InGameTopStatusBar->RemoveFromViewport();
 	}
+}
+
+void APokeCollectionHUD::OpenBasicPopUp(EBasicPopUpType InPopUpType)
+{
+	const FBasicPopUpInfo* PopUpInfo = CMS::GetBasicPopUpDataTable(InPopUpType);
+	if (!PopUpInfo)
+	{
+		return;
+	}
+
+	if (!PopUpInfo->PopUpClass.Get())
+	{
+		return;
+	}
+
+	UBasicPopUp* BasicPopUp = CreateWidget<UBasicPopUp>(GetWorld(), PopUpInfo->PopUpClass.Get());
+	if (!BasicPopUp)
+	{
+		return;
+	}
+
+	BasicPopUp->SetConfirmText(PopUpInfo->ConfirmText);
+	BasicPopUp->AddToViewport(2);
 }
 
 void APokeCollectionHUD::OnStartBattle()

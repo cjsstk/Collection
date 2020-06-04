@@ -37,6 +37,8 @@ public:
 
 	void OpenDialogWidget(int32 InDialogKey);
 
+	void OpenBasicPopUp(EBasicPopUpType InPopUpType);
+
 	UFUNCTION()
 	void OnStartBattle();
 

@@ -79,6 +79,12 @@ void CMS::LoadCMS()
 	{
 		SkillDataTable = SkillDT.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> BasicPopUpDT(TEXT("/Game/CMS/BasicPopUpInfo"));
+	if (ensure(BasicPopUpDT.Succeeded()))
+	{
+		BasicPopUpDataTable = BasicPopUpDT.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -240,6 +246,22 @@ const FSkillInfo* CMS::GetSkillDataTable(int32 InSkillKey)
 	FSkillInfo* SkillInfo = SkillDataTable->FindRow<FSkillInfo>(FName(*(FString::FormatAsNumber(InSkillKey))), FString(""));
 
 	return SkillInfo;
+}
+
+const FBasicPopUpInfo* CMS::GetBasicPopUpDataTable(EBasicPopUpType InPopUpType)
+{
+	TArray<FBasicPopUpInfo*> AllTable;
+	BasicPopUpDataTable->GetAllRows(FString(""), AllTable);
+
+	for (FBasicPopUpInfo* BT : AllTable)
+	{
+		if (BT && BT->PopUpType == InPopUpType)
+		{
+			return BT;
+		}
+	}
+
+	return nullptr;
 }
 
 const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()

@@ -7,7 +7,7 @@
 #include "Widgets/CharacterBoxWidget.h"
 #include "DestoryContentWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDestroySlotClicked, int32, CharacterID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDestroySlotClicked, bool, bSelected, int32, CharacterID);
 
 /** 분해 할 때 나타나는 캐릭터 슬롯 */
 UCLASS()
@@ -18,6 +18,7 @@ class POKECOLLECTION_API UDestoryCharacterSlot : public UCharacterSlot
 public:
 	virtual void NativeConstruct() override;
 	virtual void OnSelectButtonClicked() override;
+	virtual void InitByKey(int32 InContentKey) override;
 
 	FOnDestroySlotClicked OnDestroySlotClicked;
 
@@ -44,6 +45,9 @@ public:
 
 	UFUNCTION()
 	void OnDestroyButtonClicked();
+
+	UFUNCTION()
+	void OnDestroySlotSelected(bool bSelected, int32 InCharacterID);
 
 private:
 	UPROPERTY(meta = (BindWidget))

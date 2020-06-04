@@ -267,6 +267,23 @@ void APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 	}
 }
 
+void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
+{
+	for (int32 CharacterID : InCharacterIDs)
+	{
+		APokeCharacter* PokeCharacter = *HaveCharacters.FindByPredicate([CharacterID](APokeCharacter* PC) { return PC->GetCharacterID() == CharacterID; });
+
+		if (!PokeCharacter)
+		{
+			return;
+		}
+
+		HaveCharacters.Remove(PokeCharacter);
+	}
+
+	InCharacterIDs.Empty();
+}
+
 void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 {
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);

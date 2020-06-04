@@ -326,6 +326,22 @@ public:
 
 };
 
+USTRUCT(BlueprintType)
+struct FBasicPopUpInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	EBasicPopUpType PopUpType = EBasicPopUpType::Invalid;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UBasicPopUp> PopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	FText ConfirmText;
+};
+
 namespace CMS
 {
 	void LoadCMS();
@@ -343,6 +359,7 @@ namespace CMS
 	const FCharacterExperienceTable* GetCharacterExperienceTable(int32 InCurrentLevel);
 	const FDialogInfoTable* GetDialogDataTable(int32 InDialogKey);
 	const FSkillInfo* GetSkillDataTable(int32 InSkillKey);
+	const FBasicPopUpInfo* GetBasicPopUpDataTable(EBasicPopUpType InPopUpType);
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
@@ -364,6 +381,7 @@ namespace CMS
 	static UDataTable* CharacterExperienceDataTable = nullptr;
 	static UDataTable* DialogDataTable = nullptr;
 	static UDataTable* SkillDataTable = nullptr;
+	static UDataTable* BasicPopUpDataTable = nullptr;
 };
 
 /**

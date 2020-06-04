@@ -9,11 +9,16 @@
 
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 
 void UDestoryCharacterSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	if (SelectedImage)
+	{
+		SelectedImage->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UDestoryCharacterSlot::OnSelectButtonClicked()
@@ -35,6 +40,17 @@ void UDestoryCharacterSlot::OnSelectButtonClicked()
 		}
 	}
 
+	OnDestroySlotClicked.Broadcast(bSelected, ContentID);
+}
+
+void UDestoryCharacterSlot::InitByKey(int32 InContentKey)
+{
+	Super::InitByKey(InContentKey);
+
+	if (SelectedImage)
+	{
+		SelectedImage->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UDestoryContentWidget::NativeConstruct()
@@ -78,6 +94,8 @@ void UDestoryContentWidget::RefreshSlot()
 		return;
 	}
 
+	Player->SeletedDestroyCharacterIDs.Empty();
+
 	const TArray<APokeCharacter*>& HaveCharacters = Player->GetHaveCharacters();
 	//
 
@@ -108,6 +126,7 @@ void UDestoryContentWidget::RefreshSlot()
 
 				BoxSlot->InitByID(CurrentCharacter->GetCharacterID());
 				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				BoxSlot->OnDestroySlotClicked.AddUniqueDynamic(this, &UDestoryContentWidget::OnDestroySlotSelected);
 			}
 			else
 			{
@@ -127,4 +146,29 @@ void UDestoryContentWidget::RefreshSlot()
 
 void UDestoryContentWidget::OnDestroyButtonClicked()
 {
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	PokeHud->OpenBasicPopUp(EBasicPopUpType::DestroyCharacter);
+}
+
+void UDestoryContentWidget::OnDestroySlotSelected(bool bSelected, int32 InCharacterID)
+{
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	if (bSelected)
+	{
+		Player->SeletedDestroyCharacterIDs.AddUnique(InCharacterID);
+	}
+	else
+	{
+		Player->SeletedDestroyCharacterIDs.Remove(InCharacterID);
+	}
 }

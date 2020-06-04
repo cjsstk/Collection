@@ -155,11 +155,17 @@ bool UEquipmentSlot::SetOwnerCharacterImage(int32 InContentID)
 	if (Equipment->GetOwnerCharacterID() >= 0)
 	{
 		APokeCharacter* Character = Player->GetCharacterByID(Equipment->GetOwnerCharacterID());
-		if (ensure(Character))
+		if (Character)
 		{
 			OwnerCharacterImage->SetBrushFromTexture(Character->GetCharacterProfileImage());
 			OwnerCharacterImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			return true;
+		}
+		else
+		{
+			// Character destroyed?
+			Equipment->SetOwnerCharacterID(-1);
+			OwnerCharacterImage->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 	else
