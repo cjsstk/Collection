@@ -8,6 +8,28 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBackButtonClicked);
 
+UCLASS(Blueprintable)
+class POKECOLLECTION_API UTopStatusPlayerInfo : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	void Show(bool bInShow);
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* NicknameText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* LevelText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* ExpBar = nullptr;
+
+	bool bShowing = false;
+};
+
+
 /**
  * 게임 상단에서 유저 정보를 나타내는 위젯
  */
@@ -46,6 +68,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackButtonImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTopStatusPlayerInfo* TopPlayerInfo = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
 	class UTexture2D* BackButtonTexture = nullptr;

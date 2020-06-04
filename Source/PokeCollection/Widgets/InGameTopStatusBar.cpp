@@ -4,6 +4,7 @@
 #include "InGameTopStatusBar.h"
 
 #include "Button.h"
+#include "ProgressBar.h"
 #include "Image.h"
 #include "TextBlock.h"
 
@@ -69,6 +70,8 @@ void UInGameTopStatusBar::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 		if (MainWidget && MainWidget->IsInViewport())
 		{
 			BackButtonImage->SetBrushFromTexture(nullptr);
+
+			TopPlayerInfo->Show(true);
 		}
 		else
 		{
@@ -76,6 +79,8 @@ void UInGameTopStatusBar::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 			{
 				BackButtonImage->SetBrushFromTexture(BackButtonTexture);
 			}
+
+			TopPlayerInfo->Show(false);
 		}
 	}
 }
@@ -83,4 +88,42 @@ void UInGameTopStatusBar::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 void UInGameTopStatusBar::OnBack()
 {
 	OnBackButtonClicked.Broadcast();
+}
+
+void UTopStatusPlayerInfo::Show(bool bInShow)
+{
+	if (bInShow)
+	{
+		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+		if (!ensure(Player))
+		{
+			return;
+		}
+
+		if (NicknameText)
+		{
+			NicknameText->SetText(FText::AsCultureInvariant(Player->GetPlayerNickName().ToString()));
+		}
+
+		if (LevelText)
+		{
+			LevelText->SetText(FText::AsNumber(Player->GetPlayerLevel()));
+		}
+
+		if (ExpBar)
+		{
+			float MaxExp = Player->GetPlayerMaxExp();
+			float CurrExp = Player->GetPlayerCurrentExp();
+
+			ExpBar->SetPercent(CurrExp/MaxExp);
+		}
+
+		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	bShowing = bInShow;
 }
