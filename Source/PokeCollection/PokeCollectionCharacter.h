@@ -37,6 +37,7 @@ public:
 	void AddNewItem(FInitItemParams& InInitItemParams);
 
 	void DeleteCharacters(TArray<int32>& InCharacterIDs);
+	void DeleteEquipments(TArray<int32>& InEquipmentIDs);
 
 	void GetReward(FBattleReward InBattleReward);
 
@@ -109,6 +110,7 @@ public:
 	FOnAddedNewCharacter OnAddedNewCharacter;
 
 	TArray<int32> SeletedDestroyCharacterIDs;
+	TArray<int32> SeletedDestroyEquipmentIDs;
 
 protected:
 	virtual void BeginPlay() override;

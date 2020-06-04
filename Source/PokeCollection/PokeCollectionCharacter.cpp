@@ -284,6 +284,23 @@ void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
 	InCharacterIDs.Empty();
 }
 
+void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
+{
+	for (int32 EquipmentID : InEquipmentIDs)
+	{
+		UPokeEquipment* PokeEquipment = *HaveEquipments.FindByPredicate([EquipmentID](UPokeEquipment* PE) { return PE->GetEquipmentID() == EquipmentID; });
+
+		if (!PokeEquipment)
+		{
+			return;
+		}
+
+		HaveEquipments.Remove(PokeEquipment);
+	}
+
+	InEquipmentIDs.Empty();
+}
+
 void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 {
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);

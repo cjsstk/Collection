@@ -35,3 +35,30 @@ void UDestroyCharacterConfirmPopUp::OnConfirmed()
 
 	RemoveFromViewport();
 }
+
+void UDestroyEquipmentConfirmPopUp::OnConfirmed()
+{
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	UInGameSummonWidget* SummonWidget = PokeHud->GetInGameSummonWidget();
+	if (!SummonWidget)
+	{
+		return;
+	}
+
+	Player->DeleteEquipments(Player->SeletedDestroyEquipmentIDs);
+
+	SummonWidget->SwitchContentWidget(SummonWidget->GetSelectedContentWidgetIndex());
+
+	RemoveFromViewport();
+}

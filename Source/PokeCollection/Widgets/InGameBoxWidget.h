@@ -78,6 +78,8 @@ protected:
 	TArray<class ISortObjectInterface*> SortObject(TArray<class ISortObjectInterface*> InObjects);
 	void QuickSort(int32 Left, int32 Right, TArray<class ISortObjectInterface*>& InObjects);
 
+	void InitSlot();
+
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackgroundImage = nullptr;
 

@@ -25,51 +25,7 @@ void UBoxContentWidget::NativeConstruct()
 
 	bIsFocusable = true;
 
-	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
-	if (!ensure(Player))
-	{
-		return;
-	}
-
-	if (!GridPanel)
-	{
-		return;
-	}
-
-	GridPanel->ClearChildren();
-
-	int32 MaxHaveNum = 0;
-	switch (BoxContentType)
-	{
-	case EBoxContentType::Character:
-		MaxHaveNum = Player->GetMaxHaveCharactersNum();
-		break;
-	case EBoxContentType::Equipment:
-		MaxHaveNum = Player->GetMaxHaveCharactersNum();
-		break;
-	case EBoxContentType::Item:
-		MaxHaveNum = CMS::GetItemDataNum();
-		break;
-	default:
-		break;
-	}
-
-	for (int32 Index = 0; Index < MaxHaveNum; ++Index)
-	{
-		UBoxSlot* BoxSlot = CreateWidget<UBoxSlot>(GetWorld(), BoxSlotClass.Get());
-		if (!ensure(BoxSlot))
-		{
-			return;
-		}
-
-		UUniformGridSlot* GridSlot = GridPanel->AddChildToUniformGrid(BoxSlot, Index / ColumnNum, Index % ColumnNum);
-		if (GridSlot)
-		{
-			GridSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
-			//GridSlot->SetVerticalAlignment(VAlign_Fill);
-		}
-	}
-
+	InitSlot();
 }
 
 void UBoxContentWidget::SortContent(FPokeSortInfo InSortInfo)
@@ -138,6 +94,54 @@ void UBoxContentWidget::QuickSort(int32 Start, int32 End, TArray<class ISortObje
 
 	QuickSort(Start, Right, InObjects);
 	QuickSort(Left, End, InObjects);
+}
+
+void UBoxContentWidget::InitSlot()
+{
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	if (!GridPanel)
+	{
+		return;
+	}
+
+	GridPanel->ClearChildren();
+
+	int32 MaxHaveNum = 0;
+	switch (BoxContentType)
+	{
+	case EBoxContentType::Character:
+		MaxHaveNum = Player->GetMaxHaveCharactersNum();
+		break;
+	case EBoxContentType::Equipment:
+		MaxHaveNum = Player->GetMaxHaveEquipmentsNum();
+		break;
+	case EBoxContentType::Item:
+		MaxHaveNum = CMS::GetItemDataNum();
+		break;
+	default:
+		break;
+	}
+
+	for (int32 Index = 0; Index < MaxHaveNum; ++Index)
+	{
+		UBoxSlot* BoxSlot = CreateWidget<UBoxSlot>(GetWorld(), BoxSlotClass.Get());
+		if (!ensure(BoxSlot))
+		{
+			return;
+		}
+
+		UUniformGridSlot* GridSlot = GridPanel->AddChildToUniformGrid(BoxSlot, Index / ColumnNum, Index % ColumnNum);
+		if (GridSlot)
+		{
+			GridSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+			//GridSlot->SetVerticalAlignment(VAlign_Fill);
+		}
+	}
 }
 
 //FReply UBoxContentWidget::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

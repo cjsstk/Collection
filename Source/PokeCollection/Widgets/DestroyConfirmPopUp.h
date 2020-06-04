@@ -28,4 +28,6 @@ class POKECOLLECTION_API UDestroyEquipmentConfirmPopUp : public UBasicPopUp
 {
 	GENERATED_BODY()
 
+public:
+	virtual void OnConfirmed() override;
 };
