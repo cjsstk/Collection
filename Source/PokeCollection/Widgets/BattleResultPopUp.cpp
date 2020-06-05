@@ -28,22 +28,31 @@ void UBattleResultPopUp::OnBackgroundButtonClicked()
 {
 	RemoveFromViewport();
 
-	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
-	if (PokeHud)
+	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
+	if (!ensure(BattleManager))
 	{
-		PokeHud->OpenInGameMakePartyWidget(true);
-
-		UInGameTopStatusBar* TopStatusBar = PokeHud->GetInGameTopStatusBar();
-		if (ensure(TopStatusBar))
-		{
-			TopStatusBar->AddToViewport(1);
-		}
+		return;
 	}
 
-	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
-	if (ensure(BattleManager))
+	if (BattleManager->IsLastBattle())
 	{
+		APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+		if (PokeHud)
+		{
+			PokeHud->OpenInGameMakePartyWidget(true);
+
+			UInGameTopStatusBar* TopStatusBar = PokeHud->GetInGameTopStatusBar();
+			if (ensure(TopStatusBar))
+			{
+				TopStatusBar->AddToViewport(1);
+			}
+		}
+
 		BattleManager->BattleShutdown();
+	}
+	else
+	{
+		BattleManager->StartNextBattle();
 	}
 }
 

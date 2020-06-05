@@ -55,7 +55,7 @@ enum class EBasicPopUpType : int32
 struct FBattleReward
 {
 public:
-	int32 ExperienceAmount;
+	int32 ExperienceAmount = 0;
 
 	TArray<int32> GetCharacters;
 };

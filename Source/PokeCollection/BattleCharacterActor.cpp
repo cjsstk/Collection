@@ -68,6 +68,8 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	AttackRange = InPokeCharacter.GetAttackRange();
 
+	JoinedSlotNum = InPokeCharacter.GetJoinedSlotNum();
+
 	const TArray<int32> SkillKeys = CharacterInfo->SkillKeys;
 	for (int32 SkillIndex = 0; SkillIndex < 4; ++SkillIndex)
 	{
@@ -165,9 +167,20 @@ bool ABattleCharacterActor::IsAttacking() const
 	return (RenderComponent->GetFlipbook() == CharacterSprite_Attack || CharacterSprite_Skills.Contains(RenderComponent->GetFlipbook()));
 }
 
+void ABattleCharacterActor::OnBattleStarted()
+{
+	if (MovementComponent)
+	{
+		MovementComponent->SetComponentTickEnabled(true);
+	}
+}
+
 void ABattleCharacterActor::OnBattleEnded()
 {
-	MovementComponent->SetComponentTickEnabled(false);
+	if (MovementComponent)
+	{
+		MovementComponent->SetComponentTickEnabled(false);
+	}
 }
 
 void ABattleCharacterActor::OnFlipbookPlayingEnd()
@@ -204,6 +217,7 @@ void ABattleCharacterActor::BeginPlay()
 	ABattleManager* BattleManager = PokeCore::GetBattleManager(GetWorld());
 	if (ensure(BattleManager))
 	{
+		BattleManager->OnBattleStart.AddUniqueDynamic(this, &ABattleCharacterActor::OnBattleStarted);
 		BattleManager->OnBattleEnd.AddUniqueDynamic(this, &ABattleCharacterActor::OnBattleEnded);
 	}
 

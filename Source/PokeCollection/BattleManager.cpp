@@ -34,6 +34,8 @@ void ABattleManager::BattleStart()
 		return;
 	}
 
+	CurrentBattlePhase = EBattlePhase::One;
+
 	PlayerCharacter->SetPlayerMode(EPlayerMode::BattleMode);
 
 	int32 SumConsumeBerryAmount = 0;
@@ -60,21 +62,24 @@ void ABattleManager::BattleStart()
 	const FBattleStageInfo* BattleStageInfo = CMS::GetBattleStageDataTable(CurrentBattleStageKey);
 	if (ensure(BattleStageInfo))
 	{
-		TArray<FEnemyInfo> EnemyInfos = BattleStageInfo->FirstEnemyKeys;
-
-		for (auto&& EnemyInfo : EnemyInfos)
+		if (BattleStageInfo->EnemyKeys.Contains((int32)CurrentBattlePhase))
 		{
-			APokeCharacter* EnemyCharacter = NewObject<APokeCharacter>();
-			if (ensure(EnemyCharacter))
-			{
-				FInitCharacterParams Params;
-				Params.CharacterKey = EnemyInfo.EnemyCharacterKey;
-				Params.CharacterLevel = EnemyInfo.EnemyCharacterLevel;
-				Params.JoinedSlotNum = EnemyInfo.EnemySlotNum;
-				Params.bIsEnemy = true;
+			TArray<FEnemyInfo> EnemyInfos = BattleStageInfo->EnemyKeys[(int32)CurrentBattlePhase].EnemyInfos;
 
-				EnemyCharacter->Init(Params);
-				BattleMembers.AddUnique(EnemyCharacter);
+			for (auto&& EnemyInfo : EnemyInfos)
+			{
+				APokeCharacter* EnemyCharacter = NewObject<APokeCharacter>();
+				if (ensure(EnemyCharacter))
+				{
+					FInitCharacterParams Params;
+					Params.CharacterKey = EnemyInfo.EnemyCharacterKey;
+					Params.CharacterLevel = EnemyInfo.EnemyCharacterLevel;
+					Params.JoinedSlotNum = EnemyInfo.EnemySlotNum;
+					Params.bIsEnemy = true;
+
+					EnemyCharacter->Init(Params);
+					BattleMembers.AddUnique(EnemyCharacter);
+				}
 			}
 		}
 	}
@@ -138,6 +143,130 @@ void ABattleManager::BattleShutdown()
 	OnBattleShutdown.Broadcast();
 }
 
+void ABattleManager::StartNextBattle()
+{
+	if (!ensure(PlayerCharacter))
+	{
+		return;
+	}
+
+	UWorld* World = GetWorld();
+	if (!ensure(World))
+	{
+		return;
+	}
+
+	CurrentBattlePhase = (EBattlePhase)((int32)CurrentBattlePhase + 1);
+
+	BattleMembers.RemoveAll([](APokeCharacter* PC)
+		{
+			if (!PC)
+			{
+				return true;
+			}
+
+			if (PC && PC->IsEnemy())
+			{
+				PC->Destroy();
+				return true;
+			}
+
+			return false;
+		});
+
+	CreatedBattleCharacters.RemoveAll([](ABattleCharacterActor* BC)
+		{
+			if (!BC)
+			{
+				return true;
+			}
+
+			if (BC && (BC->IsEnemy() || BC->IsDead()))
+			{
+				BC->Destroy();
+				return true;
+			}
+
+			return false;
+		});
+
+	/** Set enemy characters */
+	const FBattleStageInfo* BattleStageInfo = CMS::GetBattleStageDataTable(CurrentBattleStageKey);
+	if (ensure(BattleStageInfo))
+	{
+		if (BattleStageInfo->EnemyKeys.Contains((int32)CurrentBattlePhase))
+		{
+			TArray<FEnemyInfo> EnemyInfos = BattleStageInfo->EnemyKeys[(int32)CurrentBattlePhase].EnemyInfos;
+
+			for (auto&& EnemyInfo : EnemyInfos)
+			{
+				APokeCharacter* EnemyCharacter = NewObject<APokeCharacter>();
+				if (ensure(EnemyCharacter))
+				{
+					FInitCharacterParams Params;
+					Params.CharacterKey = EnemyInfo.EnemyCharacterKey;
+					Params.CharacterLevel = EnemyInfo.EnemyCharacterLevel;
+					Params.JoinedSlotNum = EnemyInfo.EnemySlotNum;
+					Params.bIsEnemy = true;
+
+					EnemyCharacter->Init(Params);
+					BattleMembers.AddUnique(EnemyCharacter);
+
+					AInBattleCharacterPanel* BattlePanel = GetBattlePanel(EnemyCharacter->GetJoinedSlotNum(), true);
+					if (ensure(BattlePanel) && BattleCharacterActorClass.Get())
+					{
+						FHitResult HitResult;
+						const FVector EndLocation = BattlePanel->GetActorLocation() + FVector(0, 0, -1000);
+
+						bool bTraced = GetWorld()->LineTraceSingleByChannel(HitResult, BattlePanel->GetActorLocation(), EndLocation, ECollisionChannel::ECC_WorldStatic);
+						if (ensure(bTraced))
+						{
+							FVector SpawnedActorLocation = HitResult.Location - FVector(EnemyCharacter->GetJoinedSlotNum(), 0, 0);
+							FRotator SpawnedActorRotator = FRotator(0, 180, 0);
+							ABattleCharacterActor* BattleCharacter = World->SpawnActor<ABattleCharacterActor>(BattleCharacterActorClass.Get(), SpawnedActorLocation, SpawnedActorRotator, FActorSpawnParameters());
+
+							if (BattleCharacter)
+							{
+								BattleCharacter->InitBattleCharacter(*EnemyCharacter);
+								CreatedBattleCharacters.Add(BattleCharacter);
+								EnemyCharacter->SetBattleCharacterActor(BattleCharacter);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	for (ABattleCharacterActor* BattleMember : CreatedBattleCharacters)
+	{
+		bool bIsEnemy = BattleMember->IsEnemy();
+		if (bIsEnemy)
+		{
+			continue;	
+		}
+
+		int32 SlotNum = BattleMember->GetJoinedSlotNum();
+
+		AInBattleCharacterPanel* BattlePanel = GetBattlePanel(SlotNum, false);
+		if (ensure(BattlePanel))
+		{
+			FHitResult HitResult;
+			const FVector EndLocation = BattlePanel->GetActorLocation() + FVector(0, 0, -1000);
+
+			bool bTraced = GetWorld()->LineTraceSingleByChannel(HitResult, BattlePanel->GetActorLocation(), EndLocation, ECollisionChannel::ECC_WorldStatic);
+			if (ensure(bTraced))
+			{
+				FVector SpawnedActorLocation = HitResult.Location - FVector(SlotNum, 0, 0);
+				BattleMember->SetActorLocation(SpawnedActorLocation);
+			}
+		}
+	}
+
+	bIsBattlePlaying = true;
+	OnBattleStart.Broadcast();
+}
+
 void ABattleManager::OpenResult(bool bIsWin)
 {
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
@@ -151,12 +280,16 @@ void ABattleManager::OpenResult(bool bIsWin)
 	if (bIsWin)
 	{
 		FBattleReward Reward;
-		GetBattleReward(CurrentBattleStageKey, Reward);
 
-		if (ensure(PlayerCharacter))
-		{
-			PlayerCharacter->GetReward(Reward);
-			PlayerCharacter->SetMaxClearBattleStage(CurrentBattleStageKey);
+		if (IsLastBattle())
+		{	
+			GetBattleReward(CurrentBattleStageKey, Reward);
+
+			if (ensure(PlayerCharacter))
+			{
+				PlayerCharacter->GetReward(Reward);
+				PlayerCharacter->SetMaxClearBattleStage(CurrentBattleStageKey);
+			}
 		}
 
 		PokeHud->OpenBattleResultPopUp(Reward);

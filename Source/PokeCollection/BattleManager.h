@@ -13,6 +13,14 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleEnd);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBattleShutdown);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBattleLogAdded, FString&, NewBattleLog);
 
+enum class EBattlePhase
+{
+	One = 1,
+	Two,
+	Three,
+};
+
+
 /**
  * 
  */
@@ -27,6 +35,9 @@ public:
 	void BattleStart();
 	void BattleEnd(bool bIsWin);
 	void BattleShutdown();
+	
+	void StartNextBattle();
+
 	void OpenResult(bool bIsWin);
 
 	void AddBattleLog(FString& InBattleLog);
@@ -39,6 +50,8 @@ public:
 	class AInBattleCharacterPanel* GetBattlePanel(int32 PanelNum, bool bIsEnemyPanel);
 
 	float GetTypeEffective(EType InAttackType, EType InDefenseType);
+
+	bool IsLastBattle() const { return CurrentBattlePhase == EBattlePhase::Three; }
 
 	FOnBattleStart OnBattleStart;
 	FOnBattleEnd OnBattleEnd;
@@ -82,4 +95,6 @@ private:
 	FTimerHandle BattleEndTimerHandle;
 
 	float BattleEndDelaySeconds = 2.0f;
+
+	EBattlePhase CurrentBattlePhase = EBattlePhase::One;
 };

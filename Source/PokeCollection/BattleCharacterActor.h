@@ -37,6 +37,10 @@ public:
 	bool IsDead() const;
 	bool IsAttacking() const;
 	int32 GetCurrentBattleSpeedMultiplier() const { return CurrentBattleSpeed; }
+	int32 GetJoinedSlotNum() const { return JoinedSlotNum; }
+
+	UFUNCTION()
+	void OnBattleStarted();
 
 	UFUNCTION()
 	void OnBattleEnded();
@@ -108,4 +112,6 @@ private:
 
 	FName CharacterName;
 	FString DebugString;
+
+	int32 JoinedSlotNum = 0;
 };

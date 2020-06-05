@@ -28,6 +28,16 @@ public:
 	int32 EnemySlotNum;
 };
 
+USTRUCT()
+struct FEnemyInfos
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	TArray<FEnemyInfo> EnemyInfos;
+};
+
 
 USTRUCT(BlueprintType)
 struct FCharacterInfo : public FTableRowBase
@@ -239,14 +249,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TMap<int32, float> DropCharacterInfos;
 
+	/** Key: phase, Value: enemies */
 	UPROPERTY(EditDefaultsOnly)
-	TArray<FEnemyInfo> FirstEnemyKeys;
-
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FEnemyInfo> SecondEnemyKeys;
-
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FEnemyInfo> ThirdEnemyKeys;
+	TMap<int32, FEnemyInfos> EnemyKeys;
 };
 
 USTRUCT(BlueprintType)
