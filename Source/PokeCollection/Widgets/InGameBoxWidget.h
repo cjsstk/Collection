@@ -32,6 +32,7 @@ public:
 	UFUNCTION()
 	void OnSelectContentButtonClicked();
 
+	void SetContentImageByMaterial(UMaterialInstanceDynamic* InContentMaterial);
 	void SetContentImage(UTexture2D* InContentTexture);
 	void SetContentID(int32 InContentID);
 	void SetContentName(const FText& InName);

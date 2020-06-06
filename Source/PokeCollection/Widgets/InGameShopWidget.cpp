@@ -8,10 +8,12 @@
 #include "ScrollBox.h"
 #include "WidgetSwitcher.h"
 #include "Image.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 #include "CMS.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
+#include "PokeCore.h"
 #include "Widgets/BuyConfirmPopUp.h"
 
 void UInGameShopWidget::NativeConstruct()
@@ -154,7 +156,7 @@ void UShopSlot::InitSlot(int32 InSlotKey, EShopSlotType InSlotType)
 			break;
 		}
 
-		SetSlotImage(ItemInfo->ItemIcon.LoadSynchronous());
+		SetSlotImageByMaterial(PokeCore::GetItemIcon(ItemInfo->ItemIconIndex, this));
 		SetSlotName(FText::FromName(ItemInfo->ItemName));
 		SetSlotPrice(FText::FromString(FString::FromInt(ItemInfo->ItemPrice)));
 	}
@@ -162,6 +164,16 @@ void UShopSlot::InitSlot(int32 InSlotKey, EShopSlotType InSlotType)
 	default:
 		break;
 	}
+}
+
+void UShopSlot::SetSlotImageByMaterial(UMaterialInstanceDynamic* InContentMaterial)
+{
+	if (!InContentMaterial)
+	{
+		return;
+	}
+
+	SlotImage->SetBrushFromMaterial(InContentMaterial);
 }
 
 void UShopSlot::SetSlotImage(UTexture2D* InContentTexture)

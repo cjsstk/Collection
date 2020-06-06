@@ -43,6 +43,7 @@ public:
 
 	void InitSlot(int32 InSlotKey, EShopSlotType InSlotType);
 
+	void SetSlotImageByMaterial(UMaterialInstanceDynamic* InContentMaterial);
 	void SetSlotImage(UTexture2D* InContentTexture);
 	void SetSlotName(const FText& InName);
 	void SetSlotPrice(const FText& InPrice);

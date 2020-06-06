@@ -172,8 +172,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName ItemName;
 
+	/** Icon index is 0 ~ */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<UTexture2D> ItemIcon;
+	int32 ItemIconIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText ItemDesc;
@@ -380,6 +381,8 @@ namespace CMS
 
 	int32 GetItemDataNum();
 
+	class UMaterialInterface* GetItemIconMaterial();
+
 	static UDataTable* CharacterDataTable = nullptr;
 	static UDataTable* EquipmentDataTable = nullptr;
 	static UDataTable* ItemDataTable = nullptr;
@@ -393,6 +396,8 @@ namespace CMS
 	static UDataTable* DialogDataTable = nullptr;
 	static UDataTable* SkillDataTable = nullptr;
 	static UDataTable* BasicPopUpDataTable = nullptr;
+
+	class UMaterialInterface* ItemIconMaterial = nullptr;
 };
 
 /**

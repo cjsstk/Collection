@@ -4,6 +4,7 @@
 #include "PokeCore.h"
 
 #include "BattleManager.h"
+#include "CMS.h"
 #include "Net/HttpActor.h"
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
@@ -15,6 +16,7 @@
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 class APokeCollectionCharacter* PokeCore::GetPokePlayer(const UWorld* WorldContext)
 {
@@ -62,6 +64,41 @@ AHttpActor* PokeCore::GetHttpActor(const UWorld* WorldContext)
 	}
 
 	return PokeGameMode->GetHttpActor();
+}
+
+UMaterialInstanceDynamic* PokeCore::GetItemIcon(int32 InItemIconIndex, UObject* Outer)
+{
+	UMaterialInterface* ItemIconMaterial = CMS::GetItemIconMaterial();
+	UMaterialInstanceDynamic* ItemIconMaterialInstance = nullptr;
+
+	if (ItemIconMaterial)
+	{
+		ItemIconMaterialInstance = UMaterialInstanceDynamic::Create(ItemIconMaterial, Outer);
+	}
+
+	if (!ItemIconMaterialInstance)
+	{
+		ensure(0);
+		return nullptr;
+	}
+
+	if (InItemIconIndex < 0)
+	{
+		return nullptr;
+	}
+	else
+	{
+
+		int32 ItemColumnIndex = InItemIconIndex % ItemIconColumnNum;
+		int32 ItemRawIndex = InItemIconIndex / ItemIconColumnNum;
+
+		ItemIconMaterialInstance->SetScalarParameterValue("ColumnIndexParam", ItemColumnIndex);
+		ItemIconMaterialInstance->SetScalarParameterValue("RowIndexParam", ItemRawIndex);
+
+		return ItemIconMaterialInstance;
+	}
+
+	return nullptr;
 }
 
 void PokeCore::AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog)

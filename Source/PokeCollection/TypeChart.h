@@ -39,6 +39,7 @@ public:
 };
 
 const static int32 CharacterTypeColumnNum = 6;
+const static int32 ItemIconColumnNum = 28;
 
 //namespace TypeChart
 //{

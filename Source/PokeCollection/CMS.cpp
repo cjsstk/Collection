@@ -85,6 +85,12 @@ void CMS::LoadCMS()
 	{
 		BasicPopUpDataTable = BasicPopUpDT.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> ItemIconM(TEXT("/Game/UI/Texture/M_ItemIcon_Inst"));
+	if (ensure(ItemIconM.Succeeded()))
+	{
+		ItemIconMaterial = ItemIconM.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -309,4 +315,9 @@ int32 CMS::GetItemDataNum()
 	ItemDataTable->GetAllRows(FString(""), AllItems);
 
 	return AllItems.Num();
+}
+
+UMaterialInterface* CMS::GetItemIconMaterial() 
+{ 
+	return ItemIconMaterial; 
 }

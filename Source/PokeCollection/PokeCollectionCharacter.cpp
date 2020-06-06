@@ -269,6 +269,8 @@ void APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 
 void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
 {
+	TArray<int32> PutOnEquipments;
+
 	for (int32 CharacterID : InCharacterIDs)
 	{
 		APokeCharacter* PokeCharacter = *HaveCharacters.FindByPredicate([CharacterID](APokeCharacter* PC) { return PC->GetCharacterID() == CharacterID; });
@@ -277,11 +279,20 @@ void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
 		{
 			return;
 		}
+		
+		UPokeEquipment* PokeEquipment = PokeCharacter->GetCurrentEquipment();
+		if (PokeEquipment)
+		{
+			PokeCharacter->TakeOffEquipment();
+			PutOnEquipments.Add(PokeEquipment->GetEquipmentID());
+		}
 
 		HaveCharacters.Remove(PokeCharacter);
 	}
 
 	InCharacterIDs.Empty();
+
+	DeleteEquipments(PutOnEquipments);
 }
 
 void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
@@ -295,6 +306,7 @@ void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
 			return;
 		}
 
+		PokeEquipment->SetOwnerCharacterID(-1);
 		HaveEquipments.Remove(PokeEquipment);
 	}
 

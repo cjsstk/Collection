@@ -21,7 +21,8 @@ public:
 
 	int32 GetItemID() const { return ItemID; }
 	int32 GetItemKey() const { return ItemKey; }
-	
+	int32 GetItemIconIndex() const { return ItemIconIndex; }
+
 	int32 GetStackNum() const { return StackNum; }
 	void SetStackNum(int32 NewStackNum) { StackNum = NewStackNum; }
 
@@ -42,4 +43,5 @@ private:
 	ERank ItemRank = ERank::Normal;
 	int32 StackNum = 1;
 
+	int32 ItemIconIndex = 0;
 };

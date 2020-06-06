@@ -10,6 +10,7 @@ class APokeCollectionCharacter;
 class ABattleManager;
 class AHttpActor;
 class ISortObjectInterface;
+class UMaterialInstanceDynamic;
 
 enum class EType;
 enum class EStatus;
@@ -21,6 +22,8 @@ namespace PokeCore
 	class APokeCollectionCharacter* GetPokePlayer(const UWorld* WorldContext);
     class ABattleManager* GetBattleManager(const UWorld* WorldContext);
 	class AHttpActor* GetHttpActor(const UWorld* WorldContext);
+
+	class UMaterialInstanceDynamic* GetItemIcon(int32 InItemIconIndex, UObject* Outer);
 
 	void AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog);
 

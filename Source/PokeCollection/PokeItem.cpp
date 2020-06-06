@@ -22,6 +22,7 @@ void UPokeItem::Init(FInitItemParams& InInitItemParams)
 	}
 
 	ItemRank = ItemInfo->ItemRank;
+	ItemIconIndex = ItemInfo->ItemIconIndex;
 }
 
 int32 UPokeItem::GetObjectSortValue(ESortCategory InSortCategory) const

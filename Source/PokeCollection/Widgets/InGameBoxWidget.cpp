@@ -11,6 +11,7 @@
 #include "UniformGridSlot.h"
 #include "ScrollBox.h"
 #include "LogMacros.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
@@ -320,7 +321,7 @@ void UBoxSlot::InitByKey(int32 InContentKey)
 		const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InContentKey);
 		if (ensure(ItemInfo))
 		{
-			SetContentImage(ItemInfo->ItemIcon.LoadSynchronous());
+			SetContentImageByMaterial(PokeCore::GetItemIcon(ItemInfo->ItemIconIndex, this));
 			SetContentName(FText::FromName(ItemInfo->ItemName));
 			SetBackgroundColor(ItemInfo->ItemRank);
 		}
@@ -387,6 +388,16 @@ void UBoxSlot::InitByID(int32 InContentID)
 void UBoxSlot::OnSelectContentButtonClicked()
 {
 	OnSelectButtonClicked();
+}
+
+void UBoxSlot::SetContentImageByMaterial(UMaterialInstanceDynamic* InContentMaterial)
+{
+	if (!InContentMaterial)
+	{
+		return;
+	}
+
+	ProfileImage->SetBrushFromMaterial(InContentMaterial);
 }
 
 void UBoxSlot::SetContentImage(UTexture2D* InContentTexture)
