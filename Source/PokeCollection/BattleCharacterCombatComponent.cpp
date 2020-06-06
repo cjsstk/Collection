@@ -54,6 +54,7 @@ void UBattleCharacterCombatComponent::AttackTarget()
 
 				FPokeUseSkillParams Params;
 				Params.TargetCharacter = TargetCharacter;
+				Params.SkillLevel = 1;
 				Params.CharacterStat = Status.SpecialAttack;
 				Skill->UseSkill(Params);
 

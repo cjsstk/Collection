@@ -15,6 +15,9 @@ public:
 	UPROPERTY()
 	int32 CharacterStat = 0;
 
+	UPROPERTY()
+	int32 SkillLevel = 1;
+
 	UPROPERTY(Transient)
 	class ABattleCharacterActor* TargetCharacter = nullptr;
 };
