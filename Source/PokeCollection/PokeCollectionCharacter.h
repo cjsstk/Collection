@@ -216,7 +216,7 @@ private:
 	TArray<int32> SavedEquipmentKeys;
 
 	UPROPERTY(EditDefaultsOnly)
-	TArray<int32> SavedItemKeys;
+	TMap<int32, int32> SavedItemKeys;
 
 	/** 
 	 * Resource

@@ -14,6 +14,7 @@ void UPokeItem::Init(FInitItemParams& InInitItemParams)
 
 	ItemID = InInitItemParams.ItemID;
 	ItemKey = InInitItemParams.ItemKey;
+	StackNum = InInitItemParams.ItemStackNum;
 
 	const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(ItemKey);
 	if (!ensure(ItemInfo))

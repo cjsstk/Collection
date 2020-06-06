@@ -59,10 +59,11 @@ void APokeCollectionCharacter::InitHaveEquipments()
 
 void APokeCollectionCharacter::InitHaveItems()
 {
-	for (itemKey Key : SavedItemKeys)
+	for (auto&& Item : SavedItemKeys)
 	{
 		FInitItemParams Params;
-		Params.ItemKey = Key;
+		Params.ItemKey = Item.Key;
+		Params.ItemStackNum = Item.Value;
 
 		AddNewItem(Params);
 	}
