@@ -40,6 +40,7 @@ class POKECOLLECTION_API UDestoryEquipmentSlot : public UEquipmentSlot
 public:
 	virtual void NativeConstruct() override;
 	virtual void OnSelectButtonClicked() override;
+	virtual void InitByID(int32 InContentID) override;
 	virtual void InitByKey(int32 InContentKey) override;
 
 	FOnDestroySlotClicked OnDestroySlotClicked;
@@ -47,6 +48,9 @@ public:
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* SelectedImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* DisableImage = nullptr;
 
 	bool bSelected = false;
 

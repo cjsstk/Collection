@@ -66,7 +66,7 @@ void UInGameSummonWidget::OnOpen()
 
 	}
 
-	SummonContentsBox->SetActiveWidgetIndex(SelectedContentWidgetIndex);
+	SummonContentsBox->SetActiveWidgetIndex(0);
 }
 
 void UInGameSummonWidget::SwitchContentWidget(int32 InContentIndex)

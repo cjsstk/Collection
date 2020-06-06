@@ -63,10 +63,29 @@ void UDestoryEquipmentSlot::NativeConstruct()
 	{
 		SelectedImage->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	bUseOwnerCharacterImage = true;
 }
 
 void UDestoryEquipmentSlot::OnSelectButtonClicked()
 {
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	UPokeEquipment* Equipment = Player->GetEquipmentByID(ContentID);
+	if (!Equipment)
+	{
+		return;
+	}
+
+	if (Equipment->GetOwnerCharacterID() > -1)
+	{
+		return;
+	}
+
 	bSelected = !bSelected;
 
 	if (bSelected)
@@ -85,6 +104,35 @@ void UDestoryEquipmentSlot::OnSelectButtonClicked()
 	}
 
 	OnDestroySlotClicked.Broadcast(bSelected, ContentID);
+}
+
+void UDestoryEquipmentSlot::InitByID(int32 InContentID)
+{
+	Super::InitByID(InContentID);
+
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
+	UPokeEquipment* Equipment = Player->GetEquipmentByID(ContentID);
+	if (!Equipment)
+	{
+		return;
+	}
+
+	if (DisableImage)
+	{
+		if (Equipment->GetOwnerCharacterID() > -1)
+		{
+			DisableImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
+		else
+		{
+			DisableImage->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
 }
 
 
