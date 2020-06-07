@@ -46,11 +46,6 @@ void UEvStatusInfoWidget::OnOpen()
 
 	RemainStatPoint = SelectedCharacter->GetRemainEvStatPoint();
 
-	if (CharacterImage)
-	{
-		CharacterImage->SetBrushFromTexture(SelectedCharacter->GetCharacterImage());
-	}
-
 	if (RemainStatPointText)
 	{
 		FString RemainPointString = FString(TEXT("남은 포인트: "));

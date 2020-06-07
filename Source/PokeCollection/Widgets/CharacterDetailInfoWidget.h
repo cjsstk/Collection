@@ -18,14 +18,6 @@ public:
 	virtual void OnOpen() override;
 
 private:
-	void SetTypeImages(CharacterType InCharacterType);
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* CharacterImage = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* CharacterName = nullptr;
-
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CharacterLevel = nullptr;
 
@@ -63,20 +55,5 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ConsumeBerryAmount = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* Type1Image = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
-	class UImage* Type2Image = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
-	UMaterialInterface* TypeMaterial = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
 
 };

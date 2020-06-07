@@ -15,6 +15,6 @@ class POKECOLLECTION_API UCharacterSkillInfoWidget : public UCharacterInfoConten
 	GENERATED_BODY()
 	
 public:
-	virtual void NativeConstruct() override;
-	virtual void OnOpen() override;
+	//virtual void NativeConstruct() override;
+	//virtual void OnOpen() override;
 };

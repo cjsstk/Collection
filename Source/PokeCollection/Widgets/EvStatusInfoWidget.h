@@ -82,9 +82,6 @@ public:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UImage* CharacterImage = nullptr;
-
-	UPROPERTY(meta = (BindWidget))
 	class UVerticalBox* EvStatusBox = nullptr;
 
 	UPROPERTY(meta = (BindWidget))

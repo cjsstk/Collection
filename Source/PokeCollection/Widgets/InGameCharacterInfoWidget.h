@@ -42,7 +42,7 @@ class POKECOLLECTION_API UCharacterInfoContentWidget : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
-	virtual void OnOpen() {};
+	virtual void OnOpen();
 
 	void SetSelectedCharacter(class APokeCharacter* InSelectedCharacter);
 
@@ -86,6 +86,7 @@ public:
 	void SwitchContentWidget(int32 InContentIndex);
 
 private:
+	void SetTypeImages(CharacterType InCharacterType);
 	void SetBackgroundColor(ERank InRank);
 
 	UPROPERTY(meta = (BindWidget))
@@ -96,6 +97,27 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UWidgetSwitcher* InfoContentsBox = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* CharacterImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* CharacterName = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Type1Image = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Type2Image = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMaterialInterface* TypeMaterial = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
+
+	UPROPERTY(Transient)
+	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FInfoCategoryStruct> InfoContentWidgets;
