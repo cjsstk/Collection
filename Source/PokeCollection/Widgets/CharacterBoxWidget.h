@@ -38,15 +38,6 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* JoinedPartyText = nullptr;
-
-	UPROPERTY(EditDefaultsOnly)
-	UMaterialInterface* TypeMaterial = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
 };
 
 /**

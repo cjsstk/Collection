@@ -110,15 +110,6 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Type2Image = nullptr;
 
-	UPROPERTY(EditDefaultsOnly)
-	UMaterialInterface* TypeMaterial = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
-
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<FInfoCategoryStruct> InfoContentWidgets;
 

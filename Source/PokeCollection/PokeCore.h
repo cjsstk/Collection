@@ -16,6 +16,7 @@ enum class EType;
 enum class EStatus;
 
 struct FPokeSortInfo;
+struct CharacterType;
 
 namespace PokeCore
 {
@@ -24,6 +25,7 @@ namespace PokeCore
 	class AHttpActor* GetHttpActor(const UWorld* WorldContext);
 
 	class UMaterialInstanceDynamic* GetItemIcon(int32 InItemIconIndex, UObject* Outer);
+	TArray<UMaterialInstanceDynamic*> GetTypeIcon(CharacterType InType, UObject* Outer);
 
 	void AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog);
 

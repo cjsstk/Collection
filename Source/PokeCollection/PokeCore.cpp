@@ -101,6 +101,56 @@ UMaterialInstanceDynamic* PokeCore::GetItemIcon(int32 InItemIconIndex, UObject* 
 	return nullptr;
 }
 
+TArray<UMaterialInstanceDynamic*> PokeCore::GetTypeIcon(CharacterType InType, UObject* Outer)
+{
+	TArray<UMaterialInstanceDynamic*> TypeIcons;
+	TypeIcons.Init(nullptr, 2);
+
+	UMaterialInterface* TypeMaterial = CMS::GetTypeMaterial();
+
+	UMaterialInstanceDynamic* Type1MaterialInstance = nullptr;
+	UMaterialInstanceDynamic* Type2MaterialInstance = nullptr;
+
+	if (!ensure(TypeMaterial))
+	{
+		return TypeIcons;
+	}
+
+	const FTypeInfo* Type1Info = CMS::GetTypeDataTable(InType.Type1);
+	const FTypeInfo* Type2Info = CMS::GetTypeDataTable(InType.Type2);
+
+	int32 Type1TextureNum = Type1Info ? Type1Info->TextureNum : -1;
+	int32 Type2TextureNum = Type2Info ? Type2Info->TextureNum : -1;
+
+	if (Type1TextureNum >= 0)
+	{
+		Type1MaterialInstance = UMaterialInstanceDynamic::Create(TypeMaterial, Outer);
+
+		int32 Type1ColumnIndex = Type1TextureNum % CharacterTypeColumnNum;
+		int32 Type1RawIndex = Type1TextureNum / CharacterTypeColumnNum;
+
+		Type1MaterialInstance->SetScalarParameterValue("ColumnIndexParam", Type1ColumnIndex);
+		Type1MaterialInstance->SetScalarParameterValue("RowIndexParam", Type1RawIndex);
+
+		TypeIcons[0] = Type1MaterialInstance;
+	}
+
+	if (Type2TextureNum >= 0)
+	{
+		Type2MaterialInstance = UMaterialInstanceDynamic::Create(TypeMaterial, Outer);
+
+		int32 Type2ColumnIndex = Type2TextureNum % CharacterTypeColumnNum;
+		int32 Type2RawIndex = Type2TextureNum / CharacterTypeColumnNum;
+
+		Type2MaterialInstance->SetScalarParameterValue("ColumnIndexParam", Type2ColumnIndex);
+		Type2MaterialInstance->SetScalarParameterValue("RowIndexParam", Type2RawIndex);
+
+		TypeIcons[1] = Type2MaterialInstance;
+	}
+
+	return TypeIcons;
+}
+
 void PokeCore::AddBattleLog(const UWorld* WorldContext, FString& NewBattleLog)
 {
 	ABattleManager* BM = GetBattleManager(WorldContext);

@@ -13,7 +13,7 @@
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
-
+#include "PokeCore.h"
 
 void UInGameCharacterInfoWidget::NativeConstruct()
 {
@@ -87,18 +87,6 @@ void UInGameCharacterInfoWidget::OnOpen()
 	}
 
 	InfoContentsBox->SetActiveWidgetIndex(SelectedContentWidgetIndex);
-
-	if (TypeMaterial)
-	{
-		if (!Type1MaterialInstance)
-		{
-			Type1MaterialInstance = UMaterialInstanceDynamic::Create(TypeMaterial, this);
-		}
-		if (!Type2MaterialInstance)
-		{
-			Type2MaterialInstance = UMaterialInstanceDynamic::Create(TypeMaterial, this);
-		}
-	}
 
 	if (CharacterImage)
 	{
@@ -178,51 +166,36 @@ void UInGameCharacterInfoWidget::SwitchContentWidget(int32 InContentIndex)
 
 void UInGameCharacterInfoWidget::SetTypeImages(CharacterType InCharacterType)
 {
-	if (!Type1MaterialInstance || !Type2MaterialInstance || !Type1Image || !Type2Image)
+	TArray<UMaterialInstanceDynamic*> TypeIcons = PokeCore::GetTypeIcon(InCharacterType, this);
+
+	if (Type1Image)
 	{
-		ensure(0);
-		return;
+		UMaterialInstanceDynamic* Type1Mat = TypeIcons[0];
+		if (Type1Mat)
+		{
+			Type1Image->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			Type1Image->SetBrushFromMaterial(Type1Mat);
+		}
+		else
+		{
+			Type1Image->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 
-	const FTypeInfo* Type1Info = CMS::GetTypeDataTable(InCharacterType.Type1);
-	const FTypeInfo* Type2Info = CMS::GetTypeDataTable(InCharacterType.Type2);
-
-	int32 Type1TextureNum = Type1Info ? Type1Info->TextureNum : -1;
-	int32 Type2TextureNum = Type2Info ? Type2Info->TextureNum : -1;
-
-	if (Type1TextureNum < 0)
+	if (Type2Image)
 	{
-		Type1Image->SetVisibility(ESlateVisibility::Collapsed);
-	}
-	else
-	{
-		Type1Image->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-		int32 Type1ColumnIndex = Type1TextureNum % CharacterTypeColumnNum;
-		int32 Type1RawIndex = Type1TextureNum / CharacterTypeColumnNum;
-
-		Type1MaterialInstance->SetScalarParameterValue("ColumnIndexParam", Type1ColumnIndex);
-		Type1MaterialInstance->SetScalarParameterValue("RowIndexParam", Type1RawIndex);
-
-		Type1Image->SetBrushFromMaterial(Type1MaterialInstance);
+		UMaterialInstanceDynamic* Type2Mat = TypeIcons[1];
+		if (Type2Mat)
+		{
+			Type2Image->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			Type2Image->SetBrushFromMaterial(Type2Mat);
+		}
+		else
+		{
+			Type2Image->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 
-	if (Type2TextureNum < 0)
-	{
-		Type2Image->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else
-	{
-		Type2Image->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-		int32 Type2ColumnIndex = Type2TextureNum % CharacterTypeColumnNum;
-		int32 Type2RawIndex = Type2TextureNum / CharacterTypeColumnNum;
-
-		Type2MaterialInstance->SetScalarParameterValue("ColumnIndexParam", Type2ColumnIndex);
-		Type2MaterialInstance->SetScalarParameterValue("RowIndexParam", Type2RawIndex);
-
-		Type2Image->SetBrushFromMaterial(Type2MaterialInstance);
-	}
 }
 
 void UInGameCharacterInfoWidget::SetBackgroundColor(ERank InRank)

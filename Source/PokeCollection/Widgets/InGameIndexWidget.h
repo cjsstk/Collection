@@ -22,12 +22,6 @@ public:
 
 
 private:
-	/*UPROPERTY(EditDefaultsOnly)
-	UMaterialInterface* SlotMaterial = nullptr;
-
-	UPROPERTY(Transient)
-	UMaterialInstanceDynamic* SlotMaterialInstance = nullptr;*/
-
 	bool bEnabled = false;
 };
 

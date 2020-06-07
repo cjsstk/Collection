@@ -97,6 +97,12 @@ void CMS::LoadCMS()
 	{
 		ItemIconMaterial = ItemIconM.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> TypeM(TEXT("/Game/UI/Texture/M_Type_Inst"));
+	if (ensure(TypeM.Succeeded()))
+	{
+		TypeMaterial = TypeM.Object;
+	}
 }
 
 const FCharacterInfo* CMS::GetCharacterDataTable(characterKey CharacterKey)
@@ -341,4 +347,9 @@ int32 CMS::GetItemDataNum()
 UMaterialInterface* CMS::GetItemIconMaterial() 
 { 
 	return ItemIconMaterial; 
+}
+
+UMaterialInterface* CMS::GetTypeMaterial()
+{
+	return TypeMaterial;
 }

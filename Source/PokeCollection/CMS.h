@@ -414,6 +414,7 @@ namespace CMS
 	int32 GetItemDataNum();
 
 	class UMaterialInterface* GetItemIconMaterial();
+	class UMaterialInterface* GetTypeMaterial();
 
 	static UDataTable* CharacterDataTable = nullptr;
 	static UDataTable* EquipmentDataTable = nullptr;
@@ -431,6 +432,7 @@ namespace CMS
 	static UDataTable* BasicPopUpDataTable = nullptr;
 
 	class UMaterialInterface* ItemIconMaterial = nullptr;
+	class UMaterialInterface* TypeMaterial = nullptr;
 };
 
 /**
