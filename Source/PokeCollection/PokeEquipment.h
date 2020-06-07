@@ -55,6 +55,8 @@ class POKECOLLECTION_API UPokeEquipment : public UObject, public ISortObjectInte
 public:
 	void Init(FInitEquipmentParams& InInitEquipmentParams);
 
+	void SetUpgradeStatus(int32 InLevel);
+
 	void SetEquipmentID(int32 InID) { EquipmentID = InID; }
 	int32 GetEquipmentID() const { return EquipmentID; }
 
@@ -63,6 +65,7 @@ public:
 	void SetOwnerCharacterID(int32 InCharacterID) { OwnerCharacterID = InCharacterID; }
 	int32 GetOwnerCharacterID() const { return OwnerCharacterID; }
 
+	void SetLevel(int32 NewLevel);
 	int32 GetLevel() const { return Level; }
 	const FEquipmentStatus GetFinalEquipmentStatus();
 	TArray<int32> GetFinalEquipmentStatus2();
@@ -84,4 +87,5 @@ private:
 	int32 OwnerCharacterID = -1;
 
 	FEquipmentStatus EquipmentStatus;
+	TArray<int32> UpgradeStatus;
 };

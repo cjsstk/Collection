@@ -28,18 +28,74 @@ void UPokeEquipment::Init(FInitEquipmentParams& InInitEquipmentParams)
 	EquipmentStatus.SpecialDefense = EquipmentInfo->Equipment_SPDef;
 	EquipmentStatus.Speed = EquipmentInfo->Equipment_Speed;
 	EquipmentStatus.AttackRange = EquipmentInfo->Equipment_AttackRange;
+
+	SetUpgradeStatus(InInitEquipmentParams.EquipmentLevel);
+}
+
+void UPokeEquipment::SetUpgradeStatus(int32 InLevel)
+{
+	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(EquipmentKey);
+	if (!ensure(EquipmentInfo))
+	{
+		return;
+	}
+
+	UpgradeStatus.Init(0, (int32)EEquipmentStatus::Count);
+
+	UCurveFloat* AttackCurve = EquipmentInfo->AttackUpgradeCurve.LoadSynchronous();
+	if (AttackCurve)
+	{
+		UpgradeStatus[(int32)EEquipmentStatus::Attack] = AttackCurve->GetFloatValue(InLevel);
+	}
+
+	UCurveFloat* DefenseCurve = EquipmentInfo->DefenseUpgradeCurve.LoadSynchronous();
+	if (DefenseCurve)
+	{
+		UpgradeStatus[(int32)EEquipmentStatus::Defense] = DefenseCurve->GetFloatValue(InLevel);
+	}
+
+	UCurveFloat* SpAttackCurve = EquipmentInfo->SpAttackUpgradeCurve.LoadSynchronous();
+	if (SpAttackCurve)
+	{
+		UpgradeStatus[(int32)EEquipmentStatus::SpecialAttack] = SpAttackCurve->GetFloatValue(InLevel);
+	}
+
+	UCurveFloat* SpDefenseCurve = EquipmentInfo->SpDefenseUpgradeCurve.LoadSynchronous();
+	if (SpDefenseCurve)
+	{
+		UpgradeStatus[(int32)EEquipmentStatus::SpecialDefense] = SpDefenseCurve->GetFloatValue(InLevel);
+	}
+
+	UCurveFloat* SpeedCurve = EquipmentInfo->SpeedUpgradeCurve.LoadSynchronous();
+	if (SpeedCurve)
+	{
+		UpgradeStatus[(int32)EEquipmentStatus::Speed] = SpeedCurve->GetFloatValue(InLevel);
+	}
+
+	UCurveFloat* AttackRangeCurve = EquipmentInfo->AttackRangeUpgradeCurve.LoadSynchronous();
+	if (AttackRangeCurve)
+	{
+		UpgradeStatus[(int32)EEquipmentStatus::AttackRange] = AttackRangeCurve->GetFloatValue(InLevel);
+	}
+}
+
+void UPokeEquipment::SetLevel(int32 NewLevel)
+{
+	Level = NewLevel;
+
+	SetUpgradeStatus(Level);
 }
 
 const FEquipmentStatus UPokeEquipment::GetFinalEquipmentStatus()
 {
 	FEquipmentStatus FinalStatus;
 
-	FinalStatus.Attack = EquipmentStatus.Attack + Level;
-	FinalStatus.Defense = EquipmentStatus.Defense + Level;
-	FinalStatus.SpecialAttack = EquipmentStatus.SpecialAttack + Level;
-	FinalStatus.SpecialDefense = EquipmentStatus.SpecialDefense + Level;
-	FinalStatus.Speed = EquipmentStatus.Speed + Level;
-	FinalStatus.AttackRange = EquipmentStatus.AttackRange + Level;
+	FinalStatus.Attack = EquipmentStatus.Attack + Level + UpgradeStatus[(int32)EEquipmentStatus::Attack];
+	FinalStatus.Defense = EquipmentStatus.Defense + Level + UpgradeStatus[(int32)EEquipmentStatus::Defense];
+	FinalStatus.SpecialAttack = EquipmentStatus.SpecialAttack + Level + UpgradeStatus[(int32)EEquipmentStatus::SpecialAttack];
+	FinalStatus.SpecialDefense = EquipmentStatus.SpecialDefense + Level + UpgradeStatus[(int32)EEquipmentStatus::SpecialDefense];
+	FinalStatus.Speed = EquipmentStatus.Speed + Level + UpgradeStatus[(int32)EEquipmentStatus::Speed];
+	FinalStatus.AttackRange = EquipmentStatus.AttackRange + Level + UpgradeStatus[(int32)EEquipmentStatus::AttackRange];
 
 	return FinalStatus;
 }
@@ -49,12 +105,12 @@ TArray<int32> UPokeEquipment::GetFinalEquipmentStatus2()
 	TArray<int32> FinalStatus;
 	FinalStatus.Init(0, (int32)EEquipmentStatus::Count);
 
-	FinalStatus[(int32)EEquipmentStatus::Attack] = EquipmentStatus.Attack + Level;
-	FinalStatus[(int32)EEquipmentStatus::Defense] = EquipmentStatus.Defense + Level;
-	FinalStatus[(int32)EEquipmentStatus::SpecialAttack] = EquipmentStatus.SpecialAttack + Level;
-	FinalStatus[(int32)EEquipmentStatus::SpecialDefense] = EquipmentStatus.SpecialDefense + Level;
-	FinalStatus[(int32)EEquipmentStatus::Speed] = EquipmentStatus.Speed + Level;
-	FinalStatus[(int32)EEquipmentStatus::AttackRange] = EquipmentStatus.AttackRange + Level;
+	FinalStatus[(int32)EEquipmentStatus::Attack] = EquipmentStatus.Attack + Level + UpgradeStatus[(int32)EEquipmentStatus::Attack];
+	FinalStatus[(int32)EEquipmentStatus::Defense] = EquipmentStatus.Defense + Level + UpgradeStatus[(int32)EEquipmentStatus::Defense];
+	FinalStatus[(int32)EEquipmentStatus::SpecialAttack] = EquipmentStatus.SpecialAttack + Level + UpgradeStatus[(int32)EEquipmentStatus::SpecialAttack];
+	FinalStatus[(int32)EEquipmentStatus::SpecialDefense] = EquipmentStatus.SpecialDefense + Level + UpgradeStatus[(int32)EEquipmentStatus::SpecialDefense];
+	FinalStatus[(int32)EEquipmentStatus::Speed] = EquipmentStatus.Speed + Level + UpgradeStatus[(int32)EEquipmentStatus::Speed];
+	FinalStatus[(int32)EEquipmentStatus::AttackRange] = EquipmentStatus.AttackRange + Level + UpgradeStatus[(int32)EEquipmentStatus::AttackRange];
 
 	return FinalStatus;
 }

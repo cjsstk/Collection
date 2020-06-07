@@ -20,6 +20,12 @@ void CMS::LoadCMS()
         EquipmentDataTable = EquipmentDT.Object;
     }
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> EquipmentUpgradeDT(TEXT("/Game/CMS/EquipmentUpgradeInfo"));
+	if (ensure(EquipmentUpgradeDT.Succeeded()))
+	{
+		EquipmentUpgradeDataTable = EquipmentUpgradeDT.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> ItemDT(TEXT("/Game/CMS/ItemInfo"));
 	if (ensure(ItemDT.Succeeded()))
 	{
@@ -277,6 +283,21 @@ const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()
     CharacterShopDataTable->GetAllRows(FString(""), OutInfos);
  
     return OutInfos;
+}
+
+void CMS::GetEquipmentUpgradeInfo(int32 InEquipmentLevel, ERank InEquipmentRank, TMap<int32, int32>& OutItems)
+{
+	FEquipmentUpgradeInfo* UpgradeInfo = EquipmentUpgradeDataTable->FindRow<FEquipmentUpgradeInfo>(FName(*(FString::FormatAsNumber(InEquipmentLevel))), FString(""));
+
+	if (UpgradeInfo)
+	{
+		FUpgradeEquipmentInfo* NeedItems = UpgradeInfo->UpgradeInfos.Find(InEquipmentRank);
+
+		if (NeedItems)
+		{
+			OutItems = NeedItems->NeedItems;
+		}
+	}
 }
 
 void CMS::GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Curves/CurveFloat.h"
 #include "CMSType.h"
 #include "PaperFlipbook.h"
 #include "TypeChart.h"
@@ -148,19 +149,48 @@ public:
 	int32 Equipment_Attack = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> AttackUpgradeCurve;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Equipment_Defense = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> DefenseUpgradeCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Equipment_SPAtk = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> SpAttackUpgradeCurve;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Equipment_SPDef = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> SpDefenseUpgradeCurve;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Equipment_Speed = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> SpeedUpgradeCurve;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Equipment_AttackRange = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> AttackRangeUpgradeCurve;
+};
+
+USTRUCT(BlueprintType)
+struct FEquipmentUpgradeInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	TMap<ERank, FUpgradeEquipmentInfo> UpgradeInfos;
+
 };
 
 USTRUCT(BlueprintType)
@@ -375,6 +405,8 @@ namespace CMS
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
+	void GetEquipmentUpgradeInfo(int32 InEquipmentLevel, ERank InEquipmentRank, TMap<int32, int32>& OutItems);
+
 	void GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank);
 	void GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray);
 	void GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray);
@@ -385,6 +417,7 @@ namespace CMS
 
 	static UDataTable* CharacterDataTable = nullptr;
 	static UDataTable* EquipmentDataTable = nullptr;
+	static UDataTable* EquipmentUpgradeDataTable = nullptr;
 	static UDataTable* ItemDataTable = nullptr;
 	static UDataTable* CharacterShopDataTable = nullptr;
 	static UDataTable* ItemShopDataTable = nullptr;

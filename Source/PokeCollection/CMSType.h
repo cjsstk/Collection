@@ -213,6 +213,17 @@ public:
 
 };
 
+USTRUCT()
+struct FUpgradeEquipmentInfo
+{
+	GENERATED_BODY()
+
+public:
+	/** Key: itemKey, Value: itemAmount*/
+	UPROPERTY(EditAnywhere)
+	TMap<int32, int32> NeedItems;
+};
+
 static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));
 static FLinearColor SRareColor = FLinearColor::FromSRGBColor(FColor(204, 153, 255));
 static FLinearColor RareColor = FLinearColor::FromSRGBColor(FColor(153, 255, 255));
