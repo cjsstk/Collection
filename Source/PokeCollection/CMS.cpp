@@ -293,7 +293,7 @@ const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()
 
 void CMS::GetEquipmentUpgradeInfo(int32 InEquipmentLevel, ERank InEquipmentRank, TMap<int32, int32>& OutItems)
 {
-	FEquipmentUpgradeInfo* UpgradeInfo = EquipmentUpgradeDataTable->FindRow<FEquipmentUpgradeInfo>(FName(*(FString::FormatAsNumber(InEquipmentLevel))), FString(""));
+	FEquipmentUpgradeInfo* UpgradeInfo = EquipmentUpgradeDataTable->FindRow<FEquipmentUpgradeInfo>(FName(*(FString::FormatAsNumber(InEquipmentLevel + 1))), FString(""));
 
 	if (UpgradeInfo)
 	{

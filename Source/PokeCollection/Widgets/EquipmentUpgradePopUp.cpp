@@ -89,11 +89,12 @@ void UEquipmentUpgradePopUp::InitInfo(int32 InEquipmentID)
 		UNeedItemSlot* NeedItemSlot = CreateWidget<UNeedItemSlot>(GetWorld(), NeedItemSlotClass.Get());
 		if (NeedItemSlot)
 		{
+			NeedItemBox->AddChild(NeedItemSlot);
+
 			NeedItemSlot->InitByKey(NeedItem.Key);
 			NeedItemSlot->SetNeedAmount(NeedItem.Value);
 		}
 
-		NeedItemBox->AddChild(NeedItemSlot);
 		NeedItemSlots.AddUnique(NeedItemSlot);
 	}
 }
