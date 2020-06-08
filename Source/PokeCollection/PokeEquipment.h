@@ -72,6 +72,7 @@ public:
 	FName GetEquipmentName() const;
 	class UTexture2D* GetEquipmentProfileImage() const;
 	FText GetEquipmentDesc() const;
+	ERank GetEquipmentRank() const;
 
 	/**
 	 * ISortObjectInterface Interface
@@ -83,6 +84,7 @@ private:
 	int32 EquipmentKey = 1;
 
 	int32 Level = 0;
+	ERank EquipmentRank = ERank::Normal;
 
 	int32 OwnerCharacterID = -1;
 

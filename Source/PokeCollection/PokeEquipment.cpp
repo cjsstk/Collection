@@ -29,6 +29,8 @@ void UPokeEquipment::Init(FInitEquipmentParams& InInitEquipmentParams)
 	EquipmentStatus.Speed = EquipmentInfo->Equipment_Speed;
 	EquipmentStatus.AttackRange = EquipmentInfo->Equipment_AttackRange;
 
+	EquipmentRank = EquipmentInfo->EquipmentRank;
+
 	SetUpgradeStatus(InInitEquipmentParams.EquipmentLevel);
 }
 
@@ -117,7 +119,7 @@ TArray<int32> UPokeEquipment::GetFinalEquipmentStatus2()
 
 FName UPokeEquipment::GetEquipmentName() const
 {
-	if (EquipmentKey == INVALID_CHARACTERKEY)
+	if (EquipmentKey == INVALID_EQUIPMENTKEY)
 	{
 		ensure(0);
 		return FName("InvalidKey");
@@ -134,7 +136,7 @@ FName UPokeEquipment::GetEquipmentName() const
 
 UTexture2D* UPokeEquipment::GetEquipmentProfileImage() const
 {
-	if (EquipmentKey == INVALID_CHARACTERKEY)
+	if (EquipmentKey == INVALID_EQUIPMENTKEY)
 	{
 		ensure(0);
 		return nullptr;
@@ -151,7 +153,7 @@ UTexture2D* UPokeEquipment::GetEquipmentProfileImage() const
 
 FText UPokeEquipment::GetEquipmentDesc() const
 {
-	if (EquipmentKey == INVALID_CHARACTERKEY)
+	if (EquipmentKey == INVALID_EQUIPMENTKEY)
 	{
 		ensure(0);
 		return FText::FromString("InvalidKey");
@@ -166,6 +168,11 @@ FText UPokeEquipment::GetEquipmentDesc() const
 	return EquipmentInfo->EquipmentDesc;
 }
 
+ERank UPokeEquipment::GetEquipmentRank() const
+{
+	return EquipmentRank;
+}
+
 int32 UPokeEquipment::GetObjectSortValue(ESortCategory InSortCategory) const
 {
 	int32 SortValue = 0;
@@ -176,7 +183,7 @@ int32 UPokeEquipment::GetObjectSortValue(ESortCategory InSortCategory) const
 		SortValue = Level;
 		break;
 	case ESortCategory::Rank:
-		SortValue = 0;
+		SortValue = (int32)EquipmentRank;
 		break;
 	case ESortCategory::Index:
 		SortValue = EquipmentKey;

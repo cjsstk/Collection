@@ -22,6 +22,15 @@ public:
 	UFUNCTION()
 	void OnBackgroundClicked();
 
+	UFUNCTION()
+	void OnExcludeButtonClicked();
+
+	UFUNCTION()
+	void OnChangeButtonClicked();
+
+	UFUNCTION()
+	void OnUpgradeButtonClicked();
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BackgroundButton = nullptr;
@@ -35,4 +44,15 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* EquipmentDesc = nullptr;
 
+	//
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ExcludeButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ChangeButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* UpgradeButton = nullptr;
+
+	int32 EquipmentID = -1;
 };

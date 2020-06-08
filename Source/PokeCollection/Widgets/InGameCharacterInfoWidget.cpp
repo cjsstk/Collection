@@ -101,6 +101,13 @@ void UInGameCharacterInfoWidget::OnOpen()
 	SetTypeImages(SelectedCharacter->GetCharacterType());
 }
 
+void UInGameCharacterInfoWidget::OnBack()
+{
+	Super::OnBack();
+
+	SelectedCharacterID = -1;
+}
+
 void UCharacterInfoContentWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

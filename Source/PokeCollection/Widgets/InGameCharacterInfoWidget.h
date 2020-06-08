@@ -79,6 +79,8 @@ class POKECOLLECTION_API UInGameCharacterInfoWidget : public UInGameWidget
 public:
 	virtual void NativeConstruct() override;
 	virtual void OnOpen() override;
+	
+	virtual void OnBack() override;
 
 	int32 GetSelectedCharacterID() const { return SelectedCharacterID; }
 	void SetSelectedCharacterID(int32 InSelectedCharacterID) { SelectedCharacterID = InSelectedCharacterID; }

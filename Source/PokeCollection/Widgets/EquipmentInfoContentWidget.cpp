@@ -139,7 +139,21 @@ void UEquipmentInfoContentWidget::OnSlotButtonClicked()
 		return;
 	}
 
-	PokeHud->OpenInGameChangeEquipmentWidget();
+	APokeCharacter* SelectedCharacter = GetSelectedCharacter();
+	if (!ensure(SelectedCharacter))
+	{
+		return;
+	}
+
+	UPokeEquipment* Equipment = SelectedCharacter->GetCurrentEquipment();
+	if (Equipment)
+	{
+		PokeHud->OpenEquipmentInfoPopUp(Equipment->GetEquipmentID());
+	}
+	else
+	{
+		PokeHud->OpenInGameChangeEquipmentWidget();
+	}
 }
 
 void UStatusChangeByEquipmentWidget::SetChangeStatusText(FString InStatusName, int32 InExcludeStat, int32 InIncludeStat)

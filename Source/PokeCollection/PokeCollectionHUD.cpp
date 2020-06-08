@@ -13,6 +13,7 @@
 #include "Widgets/ChangeEquipmentInfoPopUp.h"
 #include "Widgets/EggHatchingWidget.h"
 #include "Widgets/EquipmentInfoPopUp.h"
+#include "Widgets/EquipmentUpgradePopUp.h"
 #include "Widgets/InGameAdventureWidget.h"
 #include "Widgets/InGameBattleWidget.h"
 #include "Widgets/InGameBoxWidget.h"
@@ -412,6 +413,21 @@ void APokeCollectionHUD::OpenEquipmentInfoPopUp(int32 InEquipmentID)
 	{
 		EquipmentInfoPopUp->AddToViewport(2);
 		EquipmentInfoPopUp->InitInfo(InEquipmentID);
+	}
+}
+
+void APokeCollectionHUD::OpenEquipmentUpgradePopUp(int32 InEquipmentID)
+{
+	if (!EquipmentUpgradePopUpClass.Get())
+	{
+		return;
+	}
+
+	UEquipmentUpgradePopUp* EquipmentUpgradePopUp = CreateWidget<UEquipmentUpgradePopUp>(GetWorld(), EquipmentUpgradePopUpClass, FName("EquipmentUpgradePopUp"));
+	if (ensure(EquipmentUpgradePopUp))
+	{
+		EquipmentUpgradePopUp->AddToViewport(2);
+		EquipmentUpgradePopUp->InitInfo(InEquipmentID);
 	}
 }
 
