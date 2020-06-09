@@ -84,12 +84,12 @@ void UEquipmentInfoPopUp::InitInfo(int32 InEquipmentID)
 	APokeCharacter* Character = Player->GetCharacterByID(InfoWidget->GetSelectedCharacterID());
 	if (ExcludeButton)
 	{
-		ExcludeButton->SetIsEnabled(Character);
+		ExcludeButton->SetIsEnabled(Character ? true : false);
 	}
 
 	if (ChangeButton)
 	{
-		ChangeButton->SetIsEnabled(Character);
+		ChangeButton->SetIsEnabled(Character ? true : false);
 	}
 }
 

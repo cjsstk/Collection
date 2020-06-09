@@ -114,6 +114,7 @@ void UShopSlot::NativeConstruct()
 
 	if (SelectButton)
 	{
+		SelectButton->SetTouchMethod(EButtonTouchMethod::PreciseTap);
 		SelectButton->OnClicked.AddUniqueDynamic(this, &UShopSlot::OnSlotSelected);
 	}
 
