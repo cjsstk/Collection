@@ -314,6 +314,28 @@ void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
 	InEquipmentIDs.Empty();
 }
 
+void APokeCollectionCharacter::DeleteItemsByKey(TMap<int32, int32>& InItemKeys)
+{
+	for (auto&& Item : InItemKeys)
+	{
+		UPokeItem* HaveItem = GetItemByKey(Item.Key);
+		if (HaveItem)
+		{
+			int32 NewStackNum = HaveItem->GetStackNum() - Item.Value;
+
+			if (NewStackNum <= 0)
+			{
+				int32 ItemKey = Item.Key;
+				HaveItems.RemoveAll([ItemKey](UPokeItem* PokeItem) { return PokeItem->GetItemKey() == ItemKey; });
+			}
+			else
+			{
+				HaveItem->SetStackNum(NewStackNum);
+			}
+		}
+	}
+}
+
 void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 {
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);

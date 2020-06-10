@@ -9,11 +9,19 @@
 #include "PokeCollectionHUD.h"
 #include "PokeEquipment.h"
 #include "PokeItem.h"
+#include "Widgets/InGameCharacterInfoWidget.h"
 
 #include "Image.h"
 #include "TextBlock.h"
 #include "Button.h"
 #include "ScrollBox.h"
+
+static TAutoConsoleVariable<int32> CVarEquipmentUpgradeMoneyMultiplier
+(
+	TEXT("poke.equipmentUpgradeMoneyMultiplier"),
+	10,
+	TEXT("Upgrade money is level * this value")
+);
 
 void UEquipmentUpgradePopUp::NativeConstruct()
 {
@@ -74,7 +82,7 @@ void UEquipmentUpgradePopUp::InitInfo(int32 InEquipmentID)
 	}
 
 	int32 EquipmentLevel = Equipment->GetLevel();
-	NeedMoney = (EquipmentLevel + 1) * 1000;
+	NeedMoney = (EquipmentLevel + 1) * CVarEquipmentUpgradeMoneyMultiplier.GetValueOnGameThread();
 
 	SetNeedMoneyText(NeedMoney);
 
@@ -106,7 +114,53 @@ void UEquipmentUpgradePopUp::OnBackgroundClicked()
 
 void UEquipmentUpgradePopUp::OnUpgradeButtonClicked()
 {
+	if (!bUpgradeEnable)
+	{
+		return;
+	}
 
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!Player)
+	{
+		return;
+	}
+
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	UPokeEquipment* Equipment = Player->GetEquipmentByID(EquipmentID);
+	if (!Equipment)
+	{
+		return;
+	}
+
+	/** Spend Items */
+	TMap<int32, int32> NeedItems;
+	CMS::GetEquipmentUpgradeInfo(Equipment->GetLevel(), Equipment->GetEquipmentRank(), NeedItems);
+
+	Player->DeleteItemsByKey(NeedItems);
+	Player->SetMoneyAmount(Player->GetMoneyAmount() - NeedMoney);
+	//
+
+	int32 NewLevel = Equipment->GetLevel() + 1;
+	Equipment->SetLevel(NewLevel);
+
+	InitInfo(EquipmentID);
+
+	UInGameBoxWidget* BoxWidget = PokeHud->GetInGameBoxWidget();
+	if (BoxWidget && BoxWidget->IsInViewport())
+	{
+		BoxWidget->OnOpen();
+	}
+
+	UInGameCharacterInfoWidget* InfoWidget = PokeHud->GetInGameCharacterInfoWidget();
+	if (InfoWidget && InfoWidget->IsInViewport())
+	{
+		InfoWidget->OnOpen();
+	}
 }
 
 void UEquipmentUpgradePopUp::SetNeedMoneyText(int32 InNeedMoney)

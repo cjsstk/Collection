@@ -103,6 +103,8 @@ public:
 	int32 GetEvStat(EStatus InEvStat);
 	int32 GetRemainEvStatPoint();
 
+	void GetSkillLevels(TArray<int32>& OutSkillLevels);
+
 	/** 
 	 * ISortObjectInterface Interface
 	 */
@@ -163,6 +165,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABattleCharacterActor> BattleCharacterActor;
+
+	TArray<int32> SkillLevels;
 
 	/**
 	 * Party

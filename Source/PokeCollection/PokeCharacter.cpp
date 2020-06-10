@@ -301,6 +301,11 @@ int32 APokeCharacter::GetRemainEvStatPoint()
 	return RemainPoint - SumEvPoint;
 }
 
+void APokeCharacter::GetSkillLevels(TArray<int32>& OutSkillLevels)
+{
+	OutSkillLevels = SkillLevels;
+}
+
 int32 APokeCharacter::GetObjectSortValue(ESortCategory InSortCategory) const
 {
 	int32 SortValue = 0;

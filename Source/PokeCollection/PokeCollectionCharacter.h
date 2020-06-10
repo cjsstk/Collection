@@ -38,6 +38,7 @@ public:
 
 	void DeleteCharacters(TArray<int32>& InCharacterIDs);
 	void DeleteEquipments(TArray<int32>& InEquipmentIDs);
+	void DeleteItemsByKey(TMap<int32, int32>& InItemKeys);
 
 	void GetReward(FBattleReward InBattleReward);
 
