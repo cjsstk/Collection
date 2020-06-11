@@ -372,6 +372,17 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FSkillUpgradeInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	/** Key: itemKey, Value: itemAmount*/
+	UPROPERTY(EditAnywhere)
+	TMap<int32, int32> NeedItems;
+};
+
+USTRUCT(BlueprintType)
 struct FBasicPopUpInfo : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -432,6 +443,7 @@ namespace CMS
 	static UDataTable* CharacterExperienceDataTable = nullptr;
 	static UDataTable* DialogDataTable = nullptr;
 	static UDataTable* SkillDataTable = nullptr;
+	static UDataTable* SkillUpdgradeDataTable = nullptr;
 	static UDataTable* BasicPopUpDataTable = nullptr;
 
 	class UMaterialInterface* ItemIconMaterial = nullptr;
