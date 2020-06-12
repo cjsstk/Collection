@@ -33,6 +33,7 @@ public:
 	void OpenBattleLosePopUp();
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 	void OpenEquipmentUpgradePopUp(int32 InEquipmentID);
+	void OpenSkillUpgradePopUp(int32 InSkillKey, int32 InSkillIndex);
 	void OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID);
 	void OpenInGameSummonWidget();
 
@@ -133,6 +134,8 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UChangeEquipmentInfoPopUp> ChangeEquipmentInfoPopUpClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class USkillUpgradePopUp> SkillUpgradePopUpClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameDialogWidget> InGameDialogWidgetClass;

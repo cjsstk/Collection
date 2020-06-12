@@ -419,6 +419,7 @@ namespace CMS
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
+	void GetSkillUpgradeInfo(int32 InSkillLevel, TMap<int32, int32>& OutItems);
 	void GetEquipmentUpgradeInfo(int32 InEquipmentLevel, ERank InEquipmentRank, TMap<int32, int32>& OutItems);
 
 	void GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank);

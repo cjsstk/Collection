@@ -10,6 +10,8 @@
 
 #include "CMS.h"
 #include "PokeCharacter.h"
+#include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 
 void UCharacterSkillInfoWidget::NativeConstruct()
 {
@@ -120,5 +122,17 @@ void USkillInfoSlot::InitSkillInfo(const InitSkillParams& Params)
 
 void USkillInfoSlot::OnSkillUpgradeButtonClicked()
 {
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!Player)
+	{
+		return;
+	}
 
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	PokeHud->OpenSkillUpgradePopUp(SkillKey, SkillIndex);
 }

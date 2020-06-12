@@ -86,6 +86,12 @@ void CMS::LoadCMS()
 		SkillDataTable = SkillDT.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> SkillUpgradeDT(TEXT("/Game/CMS/SkillUpgradeInfo"));
+	if (ensure(SkillUpgradeDT.Succeeded()))
+	{
+		SkillUpdgradeDataTable = SkillUpgradeDT.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> BasicPopUpDT(TEXT("/Game/CMS/BasicPopUpInfo"));
 	if (ensure(BasicPopUpDT.Succeeded()))
 	{
@@ -289,6 +295,16 @@ const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()
     CharacterShopDataTable->GetAllRows(FString(""), OutInfos);
  
     return OutInfos;
+}
+
+void CMS::GetSkillUpgradeInfo(int32 InSkillLevel, TMap<int32, int32>& OutItems)
+{
+	FSkillUpgradeInfo* SkillUpgradeInfo = SkillUpdgradeDataTable->FindRow<FSkillUpgradeInfo>(FName(*(FString::FormatAsNumber(InSkillLevel))), FString(""));
+
+	if (SkillUpgradeInfo)
+	{
+		OutItems = SkillUpgradeInfo->NeedItems;
+	}
 }
 
 void CMS::GetEquipmentUpgradeInfo(int32 InEquipmentLevel, ERank InEquipmentRank, TMap<int32, int32>& OutItems)

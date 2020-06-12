@@ -41,6 +41,8 @@ void APokeCharacter::Init(FInitCharacterParams& InInitCharacterParams)
 
 	SetEnemy(InInitCharacterParams.bIsEnemy);
 
+	SkillLevels.Init(1, 4);
+
 	/*const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InCharacterKey);
 	if (ensure(CharacterInfo))
 	{

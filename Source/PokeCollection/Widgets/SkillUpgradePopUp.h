@@ -7,7 +7,7 @@
 #include "SkillUpgradePopUp.generated.h"
 
 /**
- * 
+ * 스킬 업그레이드 팝업
  */
 UCLASS()
 class POKECOLLECTION_API USkillUpgradePopUp : public UUserWidget
@@ -18,7 +18,7 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void InitInfo(int32 InEquipmentID);
+	void InitInfo(int32 InSkillKey, int32 InSkillIndex);
 
 	UFUNCTION()
 	void OnBackgroundClicked();
