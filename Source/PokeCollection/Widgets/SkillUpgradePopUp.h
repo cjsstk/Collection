@@ -40,6 +40,9 @@ private:
 	class UTextBlock* SkillName = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SkillLevelText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* NeedItemBox = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
@@ -54,8 +57,12 @@ private:
 	UPROPERTY(Transient)
 	TArray<class UNeedItemSlot*> NeedItemSlots;
 
+	UPROPERTY(Transient)
+	class APokeCharacter* SelectedCharacter = nullptr;
+
 	int32 NeedMoney = 0;
 	int32 SkillIndex = -1;
+	int32 SkillKey = -1;
 
 	bool bUpgradeEnable = false;
 };

@@ -70,10 +70,18 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	JoinedSlotNum = InPokeCharacter.GetJoinedSlotNum();
 
+	TArray<int32> SkillLevels;
+	InPokeCharacter.GetSkillLevels(SkillLevels);
+
 	const TArray<int32> SkillKeys = CharacterInfo->SkillKeys;
 	for (int32 SkillIndex = 0; SkillIndex < 4; ++SkillIndex)
 	{
 		if (!SkillKeys.IsValidIndex(SkillIndex))
+		{
+			continue;
+		}
+
+		if (!SkillLevels.IsValidIndex(SkillIndex))
 		{
 			continue;
 		}
@@ -94,7 +102,11 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 		UPokeSkill* Skill = NewObject<UPokeSkill>(SkillInfo->SkillClass.Get());
 		if (ensure(Skill))
 		{
-			Skill->InitSkill(SkillKey);
+			InitSkillParams Params;
+			Params.SkillKey = SkillKey;
+			Params.SkillLevel = SkillLevels[SkillIndex];
+
+			Skill->InitSkill(Params);
 			Skill->SetSourceCharacter(this);
 			Skills.Add(Skill);
 		}

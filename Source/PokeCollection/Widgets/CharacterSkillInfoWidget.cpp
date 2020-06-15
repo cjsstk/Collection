@@ -69,6 +69,7 @@ void UCharacterSkillInfoWidget::OnOpen()
 		InitSkillParams Params;
 		Params.SkillKey = SkillKey;
 		Params.SkillIndex = SkillIndex;
+		Params.SkillLevel = SkillLevels[SkillIndex];
 
 		SkillSlot->InitSkillInfo(Params);
 		SkillSlotBox->AddChildToVerticalBox(SkillSlot);
@@ -104,9 +105,13 @@ void USkillInfoSlot::InitSkillInfo(const InitSkillParams& Params)
 
 	if (SkillDamageText)
 	{
-		FString DamageString = TEXT("위력: ") + FString::FromInt(SkillInfo->SkillDamage);
+		UCurveFloat* SkillDamage = SkillInfo->SkillDamageUpgradeCurve.LoadSynchronous();
+		if (SkillDamage)
+		{
+			FString DamageString = TEXT("위력: ") + FString::FromInt(SkillDamage->GetFloatValue(Params.SkillLevel));
 
-		SkillDamageText->SetText(FText::AsCultureInvariant(DamageString));
+			SkillDamageText->SetText(FText::AsCultureInvariant(DamageString));
+		}
 	}
 
 	if (SkillNameText)

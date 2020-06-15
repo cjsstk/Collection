@@ -308,6 +308,16 @@ void APokeCharacter::GetSkillLevels(TArray<int32>& OutSkillLevels)
 	OutSkillLevels = SkillLevels;
 }
 
+void APokeCharacter::SetSkillLevel(int32 InSkillIndex, int32 NewSkillLevel)
+{
+	if (!SkillLevels.IsValidIndex(InSkillIndex))
+	{
+		return;
+	}
+	
+	SkillLevels[InSkillIndex] = NewSkillLevel;
+}
+
 int32 APokeCharacter::GetObjectSortValue(ESortCategory InSortCategory) const
 {
 	int32 SortValue = 0;

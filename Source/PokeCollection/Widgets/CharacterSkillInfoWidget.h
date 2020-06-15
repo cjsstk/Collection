@@ -4,14 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
+#include "PokeSkill.h"
 #include "CharacterSkillInfoWidget.generated.h"
 
-struct InitSkillParams
-{
-public:
-	int32 SkillKey = 0;
-	int32 SkillIndex = 0;
-};
 
 UCLASS()
 class POKECOLLECTION_API USkillInfoSlot : public UUserWidget

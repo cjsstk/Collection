@@ -369,6 +369,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UPokeSkill> SkillClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UCurveFloat> SkillDamageUpgradeCurve;
 };
 
 USTRUCT(BlueprintType)

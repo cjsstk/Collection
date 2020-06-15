@@ -65,7 +65,7 @@ void USkillUpgradePopUp::InitInfo(int32 InSkillKey, int32 InSkillIndex)
 		return;
 	}
 
-	APokeCharacter* SelectedCharacter = Player->GetCharacterByID(InfoWidget->GetSelectedCharacterID());
+	SelectedCharacter = Player->GetCharacterByID(InfoWidget->GetSelectedCharacterID());
 	if (!SelectedCharacter)
 	{
 		return;
@@ -91,6 +91,7 @@ void USkillUpgradePopUp::InitInfo(int32 InSkillKey, int32 InSkillIndex)
 	}
 
 	SkillIndex = InSkillIndex;
+	SkillKey = InSkillKey;
 
 	if (!SkillLevels.IsValidIndex(SkillIndex))
 	{
@@ -108,6 +109,12 @@ void USkillUpgradePopUp::InitInfo(int32 InSkillKey, int32 InSkillIndex)
 	}
 
 	int32 SkillLevel = SkillLevels[SkillIndex];
+
+	if (SkillLevelText)
+	{
+		SkillLevelText->SetText(FText::AsCultureInvariant(FString::FromInt(SkillLevel)));
+	}
+
 	NeedMoney = (SkillLevel) * CVarSkillUpgradeMoneyMultiplier.GetValueOnGameThread();
 
 	SetNeedMoneyText(NeedMoney);
@@ -140,7 +147,57 @@ void USkillUpgradePopUp::OnBackgroundClicked()
 
 void USkillUpgradePopUp::OnUpgradeButtonClicked()
 {
+	if (!bUpgradeEnable)
+	{
+		return;
+	}
 
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!Player)
+	{
+		return;
+	}
+
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	if (!SelectedCharacter)
+	{
+		return;
+	}
+
+	TArray<int32> SkillLevels;
+	SelectedCharacter->GetSkillLevels(SkillLevels);
+
+	if (!SkillLevels.IsValidIndex(SkillIndex))
+	{
+		return;
+	}
+
+	int32 SkillLevel = SkillLevels[SkillIndex];
+	NeedMoney = (SkillLevel)* CVarSkillUpgradeMoneyMultiplier.GetValueOnGameThread();
+
+	/** Spend Items */
+	TMap<int32, int32> NeedItems;
+	CMS::GetSkillUpgradeInfo(SkillLevel, NeedItems);
+
+	Player->DeleteItemsByKey(NeedItems);
+	Player->SetMoneyAmount(Player->GetMoneyAmount() - NeedMoney);
+	//
+
+	int32 NewLevel = SkillLevel + 1;
+	SelectedCharacter->SetSkillLevel(SkillIndex, NewLevel);
+
+	InitInfo(SkillKey, SkillIndex);
+
+	UInGameCharacterInfoWidget* InfoWidget = PokeHud->GetInGameCharacterInfoWidget();
+	if (InfoWidget && InfoWidget->IsInViewport())
+	{
+		InfoWidget->OnOpen();
+	}
 }
 
 void USkillUpgradePopUp::SetNeedMoneyText(int32 InNeedMoney)

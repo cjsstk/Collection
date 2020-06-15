@@ -104,6 +104,7 @@ public:
 	int32 GetRemainEvStatPoint();
 
 	void GetSkillLevels(TArray<int32>& OutSkillLevels);
+	void SetSkillLevel(int32 InSkillIndex, int32 NewSkillLevel);
 
 	/** 
 	 * ISortObjectInterface Interface

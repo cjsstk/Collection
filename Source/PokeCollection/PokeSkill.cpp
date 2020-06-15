@@ -10,16 +10,21 @@
 #include "CMS.h"
 #include "SkillProjectileActor.h"
 
-void UPokeSkill::InitSkill(int32 InSkillKey)
+void UPokeSkill::InitSkill(InitSkillParams InSkillParams)
 {
-	const FSkillInfo* SkillInfo = CMS::GetSkillDataTable(InSkillKey);
+	const FSkillInfo* SkillInfo = CMS::GetSkillDataTable(InSkillParams.SkillKey);
 	if (!ensure(SkillInfo))
 	{
 		return;
 	}
 
+	UCurveFloat* SkillDamageCurve = SkillInfo->SkillDamageUpgradeCurve.LoadSynchronous();
+	if (SkillDamageCurve)
+	{
+		SkillDamage = SkillDamageCurve->GetFloatValue(InSkillParams.SkillLevel);
+	}
+
 	SkillName = SkillInfo->SkillName;
-	SkillDamage = SkillInfo->SkillDamage;
 	AttackCount = SkillInfo->AttackCount;
 	SpawnProjectileActor = SkillInfo->SpawnProjectileActor;
 }

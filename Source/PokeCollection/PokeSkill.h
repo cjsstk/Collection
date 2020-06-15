@@ -22,6 +22,13 @@ public:
 	class ABattleCharacterActor* TargetCharacter = nullptr;
 };
 
+struct InitSkillParams
+{
+public:
+	int32 SkillKey = 0;
+	int32 SkillIndex = 0;
+	int32 SkillLevel = 0;
+};
 
 /**
  * Skill
@@ -32,7 +39,7 @@ class POKECOLLECTION_API UPokeSkill : public UObject
 	GENERATED_BODY()
 
 public:
-	void InitSkill(int32 InSkillKey);
+	void InitSkill(InitSkillParams InSkillParams);
 	void SetSourceCharacter(class ABattleCharacterActor* InSourceCharacter);
 
 	void UseSkill(const FPokeUseSkillParams& Params);
