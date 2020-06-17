@@ -107,7 +107,8 @@ void UTopStatusPlayerInfo::Show(bool bInShow)
 
 		if (LevelText)
 		{
-			LevelText->SetText(FText::AsNumber(Player->GetPlayerLevel()));
+			FString LevelString = FString(TEXT("Lv.")) + FString::FromInt(Player->GetPlayerLevel());
+			LevelText->SetText(FText::AsCultureInvariant(LevelString));
 		}
 
 		if (ExpBar)
