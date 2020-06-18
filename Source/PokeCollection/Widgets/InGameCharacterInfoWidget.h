@@ -65,6 +65,9 @@ public:
 	FText CategoryName;
 
 	UPROPERTY(EditDefaultsOnly)
+	TSoftObjectPtr<UTexture2D> CategoryImage;
+
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UCharacterInfoContentWidget> ContentWidgetClass = nullptr;
 };
 
