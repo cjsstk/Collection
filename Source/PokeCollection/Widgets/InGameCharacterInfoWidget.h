@@ -18,6 +18,7 @@ public:
 
 	void SetSwitcherIndex(int32 InIndex) { SwitcherIndex = InIndex; }
 	void SetCategoryName(const FText& InCategoryName);
+	void SetCategoryImage(UTexture2D* InTexture);
 
 	UFUNCTION()
 	void OnCategoryButtonClicked();
@@ -25,6 +26,9 @@ public:
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* CategoryNameText = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* CategoryImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* CategoryButton = nullptr;

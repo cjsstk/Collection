@@ -70,6 +70,7 @@ void UInGameCharacterInfoWidget::OnOpen()
 		{
 			InfoCategoryButton->SetSwitcherIndex(ContextIndex);
 			InfoCategoryButton->SetCategoryName(InfoContentWidgets[ContextIndex].CategoryName);
+			InfoCategoryButton->SetCategoryImage(InfoContentWidgets[ContextIndex].CategoryImage.LoadSynchronous());
 			CatergoryScrollBox->AddChild(InfoCategoryButton);
 		}
 
@@ -142,6 +143,16 @@ void UInfoCategoryButtonWidget::SetCategoryName(const FText& InCategoryName)
 	}
 
 	CategoryNameText->SetText(InCategoryName);
+}
+
+void UInfoCategoryButtonWidget::SetCategoryImage(UTexture2D* InTexture)
+{
+	if (!CategoryImage)
+	{
+		return;
+	}
+
+	CategoryImage->SetBrushFromTexture(InTexture);
 }
 
 void UInfoCategoryButtonWidget::OnCategoryButtonClicked()
