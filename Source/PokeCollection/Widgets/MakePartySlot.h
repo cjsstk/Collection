@@ -14,16 +14,43 @@ class POKECOLLECTION_API UMakePartySlot : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	int32 GetSlotNum() const { return SlotNum; }
+	void RefreshSlot();
+
+	void SetSlotNum(int32 InSlotNum) { SlotNum = InSlotNum; }
 
 private:
-	UFUNCTION()
-	void OnChangeCharacterButtonClicked();
+	UPROPERTY(meta = (BindWidget))
+	class UImage* SlotImage = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* ChangeCharacterButton;
+	class UVerticalBox* SlotCharacterInfoBox = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UCharacterSlot* SlotCharacter = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterHealth = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterAttack = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterDefense = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterSpAttack = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterSpDefense = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterSpeed = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* SlotCharacterConsume = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int32 SlotNum = 0;
+	int32 SlotNum = -1;
 
+	bool bIsEmptySlot = false;
 };

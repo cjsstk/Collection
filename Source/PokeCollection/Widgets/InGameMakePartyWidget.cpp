@@ -4,6 +4,7 @@
 #include "InGameMakePartyWidget.h"
 
 #include "Button.h"
+#include "Blueprint/WidgetTree.h"
 #include "PanelWidget.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -13,6 +14,7 @@
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
 #include "MakePartyCharacterPanel.h"
+#include "Widgets/MakePartySlot.h"
 
 void UInGameMakePartyWidget::NativeConstruct()
 {
@@ -43,7 +45,7 @@ void UInGameMakePartyWidget::NativeConstruct()
 		Party4Button->OnClicked.AddUniqueDynamic(this, &UInGameMakePartyWidget::OnParty4ButtonClicked);
 	}
 
-	CharacterSlots.Empty();
+	/*CharacterSlots.Empty();
 
 	TArray<AActor*> OutPartySlots;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMakePartyCharacterPanel::StaticClass(), OutPartySlots);
@@ -54,8 +56,27 @@ void UInGameMakePartyWidget::NativeConstruct()
 		{
 			CharacterSlots.Add(Cast<AMakePartyCharacterPanel>(PartySlot));
 		}
+	}*/
+
+	UPanelWidget* RootPanel = Cast<UPanelWidget>(GetRootWidget());
+	if (!RootPanel)
+	{
+		return;
 	}
 
+	TArray<UWidget*> AllChildren = RootPanel->GetAllChildren();
+	WidgetTree->GetChildWidgets(RootPanel, AllChildren);
+
+	InfoSlots.Empty();
+	for (int32 ChildIndex = 0; ChildIndex < AllChildren.Num(); ++ChildIndex)
+	{
+		UMakePartySlot* InfoSlot = Cast<UMakePartySlot>(AllChildren[ChildIndex]);
+		if (InfoSlot)
+		{
+			InfoSlots.AddUnique(InfoSlot);
+		}
+	}
+	
 }
 
 void UInGameMakePartyWidget::OnOpen()
@@ -88,7 +109,7 @@ void UInGameMakePartyWidget::OnBack()
 
 void UInGameMakePartyWidget::RefreshSlots()
 {
-	APokeCollectionCharacter* Player = GetPlayer();
+	/*APokeCollectionCharacter* Player = GetPlayer();
 	if (!ensure(Player))
 	{
 		return;
@@ -115,8 +136,12 @@ void UInGameMakePartyWidget::RefreshSlots()
 			CharacterSlot->SetFlipbook(nullptr);
 			CharacterSlot->SetIsEmptySlot(true);
 		}
-	}
+	}*/
 
+	for (UMakePartySlot* InfoSlot : InfoSlots)
+	{
+		InfoSlot->RefreshSlot();
+	}
 }
 
 void UInGameMakePartyWidget::OnDecisionButtonClicked()

@@ -60,6 +60,9 @@ private:
 	UPROPERTY(Transient)
 	TArray<class AMakePartyCharacterPanel*> CharacterSlots;
 
+	UPROPERTY(Transient)
+	TArray<class UMakePartySlot*> InfoSlots;
+
 	bool bJustBeforeBattle = false;
 
 };

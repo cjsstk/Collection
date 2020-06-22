@@ -272,6 +272,34 @@ const FStatus APokeCharacter::GetFinalStatus(bool bIncludeEquipment)
 	return FinalStatus;
 }
 
+TArray<int32> APokeCharacter::GetFinalStatus2(bool bIncludeEquipment /*= true*/)
+{
+	TArray<int32> FinalStatus2;
+	FinalStatus2.Init(0, (int32)EStatus::Count);
+
+	FStatus FinalStatus;
+	FinalStatus = CalcFinalStatus(BaseStats, EvStats);
+
+	FinalStatus2[(int32)EStatus::Attack] = FinalStatus.Attack;
+	FinalStatus2[(int32)EStatus::Defense] = FinalStatus.Defense;
+	FinalStatus2[(int32)EStatus::SpAttack] = FinalStatus.SpecialAttack;
+	FinalStatus2[(int32)EStatus::SpDefense] = FinalStatus.SpecialDefense;
+	FinalStatus2[(int32)EStatus::Speed] = FinalStatus.Speed;
+
+	if (bIncludeEquipment && CurrentEquipment)
+	{
+		const FEquipmentStatus& EquipmentStatus = CurrentEquipment->GetFinalEquipmentStatus();
+
+		FinalStatus2[(int32)EStatus::Attack] += EquipmentStatus.Attack;
+		FinalStatus2[(int32)EStatus::Defense] += EquipmentStatus.Defense;
+		FinalStatus2[(int32)EStatus::SpAttack] += EquipmentStatus.SpecialAttack;
+		FinalStatus2[(int32)EStatus::SpDefense] += EquipmentStatus.SpecialDefense;
+		FinalStatus2[(int32)EStatus::Speed] += EquipmentStatus.Speed;
+	}
+
+	return FinalStatus2;
+}
+
 void APokeCharacter::AddEvStat(TArray<int32> InEvStatus)
 {
 	for (int32 Index = 0; Index < InEvStatus.Num(); ++Index)

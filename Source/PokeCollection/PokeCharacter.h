@@ -99,6 +99,8 @@ public:
 	int32 GetConsumeBerryAmount() const;
 
 	const FStatus GetFinalStatus(bool bIncludeEquipment = true);
+	TArray<int32> GetFinalStatus2(bool bIncludeEquipment = true);
+
 	void AddEvStat(TArray<int32> InEvStatus);
 	int32 GetEvStat(EStatus InEvStat);
 	int32 GetRemainEvStatPoint();
