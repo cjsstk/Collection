@@ -11,11 +11,17 @@
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
 #include "Widgets/CharacterBoxWidget.h"
+#include "Widgets/InGameCharacterBoxWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
 
 void UMakePartySlot::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	if (SlotButton)
+	{
+		SlotButton->OnClicked.AddUniqueDynamic(this, &UMakePartySlot::OnSlotButtonClicked);
+	}
 }
 
 void UMakePartySlot::RefreshSlot()
@@ -56,7 +62,13 @@ void UMakePartySlot::RefreshSlot()
 
 			const FStatus& CharacterStatus = CurrentSlotCharacter->GetFinalStatus();
 
-			SlotCharacterHealth->SetText(FText::AsCultureInvariant(CharacterStatus.HealthPoint));
+			SlotCharacterHealth->SetText(FText::AsCultureInvariant(FString::FromInt(CharacterStatus.HealthPoint)));
+			SlotCharacterAttack->SetText(FText::AsCultureInvariant(FString::FromInt(CharacterStatus.Attack)));
+			SlotCharacterDefense->SetText(FText::AsCultureInvariant(FString::FromInt(CharacterStatus.Defense)));
+			SlotCharacterSpAttack->SetText(FText::AsCultureInvariant(FString::FromInt(CharacterStatus.SpecialAttack)));
+			SlotCharacterSpDefense->SetText(FText::AsCultureInvariant(FString::FromInt(CharacterStatus.SpecialDefense)));
+			SlotCharacterSpeed->SetText(FText::AsCultureInvariant(FString::FromInt(CharacterStatus.Speed)));
+			SlotCharacterConsume->SetText(FText::AsCultureInvariant(FString::FromInt(CurrentSlotCharacter->GetConsumeBerryAmount())));
 
 			bIsEmptySlot = false;
 		}
@@ -67,4 +79,23 @@ void UMakePartySlot::RefreshSlot()
 		bIsEmptySlot = true;
 	}
 	
+}
+
+void UMakePartySlot::OnSlotButtonClicked()
+{
+	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
+	if (PokeHud)
+	{
+		if (PokeHud->GetInGameCharacterBoxWidget()->IsInViewport())
+		{
+			return;
+		}
+
+		PokeHud->OpenInGameCharacterBoxWidget(bIsEmptySlot);
+		UInGameCharacterBoxWidget* CharacterBoxWidget = PokeHud->GetInGameCharacterBoxWidget();
+		if (CharacterBoxWidget)
+		{
+			CharacterBoxWidget->SetSelectedPartySlotNum(SlotNum);
+		}
+	}
 }

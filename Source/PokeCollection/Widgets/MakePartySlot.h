@@ -16,6 +16,9 @@ public:
 
 	void RefreshSlot();
 
+	UFUNCTION()
+	void OnSlotButtonClicked();
+
 	void SetSlotNum(int32 InSlotNum) { SlotNum = InSlotNum; }
 
 private:
@@ -48,6 +51,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* SlotCharacterConsume = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* SlotButton = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	int32 SlotNum = -1;

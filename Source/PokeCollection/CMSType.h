@@ -224,7 +224,12 @@ public:
 	TMap<int32, int32> NeedItems;
 };
 
-static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 102));
-static FLinearColor SRareColor = FLinearColor::FromSRGBColor(FColor(204, 153, 255));
-static FLinearColor RareColor = FLinearColor::FromSRGBColor(FColor(153, 255, 255));
-static FLinearColor NormalColor = FLinearColor::FromSRGBColor(FColor(204, 204, 204));
+static FLinearColor SSRareColor = FLinearColor(1.0f, 1.0f, 0.2f);
+static FLinearColor SRareColor = FLinearColor(0.5f, 0.2f, 1.0f);
+static FLinearColor RareColor = FLinearColor(0.2f, 1.0, 1.0f);
+static FLinearColor NormalColor = FLinearColor(0.8f, 0.8f, 0.8f);
+
+//static FLinearColor SSRareColor = FLinearColor::FromSRGBColor(FColor(255, 255, 76));
+//static FLinearColor SRareColor = FLinearColor::FromSRGBColor(FColor(204, 153, 255));
+//static FLinearColor RareColor = FLinearColor::FromSRGBColor(FColor(0, 255, 255));
+//static FLinearColor NormalColor = FLinearColor::FromSRGBColor(FColor(204, 204, 204));
