@@ -57,6 +57,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Party4Button = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UMakePartySlotsStatusInfo* TotalStatusInfo = nullptr;
+
 	UPROPERTY(Transient)
 	TArray<class AMakePartyCharacterPanel*> CharacterSlots;
 

@@ -27,6 +27,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* MaxExp = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* ExpBar = nullptr;
+
 	/** Status */
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* HealthPoint = nullptr;

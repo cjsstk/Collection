@@ -218,6 +218,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsUsable = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 GetMaxNum = 1;
+
 	/** Key: equipmentKey, Value: percent */
 	UPROPERTY(EditDefaultsOnly)
 	TMap<int32, float> ComeOutEquipmentInfo;
@@ -276,9 +279,16 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	int32 DropExperience = 0;
 
+	UPROPERTY(EditDefaultsOnly)
+	int32 DropMoney = 0;
+
 	/** Key: characterKey, Value: Rate */
 	UPROPERTY(EditDefaultsOnly)
 	TMap<int32, float> DropCharacterInfos;
+
+	/** Key: itemKey, Value: Rate */
+	UPROPERTY(EditDefaultsOnly)
+	TMap<int32, float> DropItemInfos;
 
 	/** Key: phase, Value: enemies */
 	UPROPERTY(EditDefaultsOnly)

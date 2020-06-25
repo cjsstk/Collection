@@ -500,5 +500,22 @@ void ABattleManager::GetBattleReward(battleStageKey InBattleStageKey, FBattleRew
 		}
 	}
 
+	const TMap<int32, float> DropItems = BattleStageInfo->DropItemInfos;
+	for (auto&& DropItem : DropItems)
+	{
+		const int32 RandomInt = FMath::RandRange(0, 10000);
+
+		float GetRate = DropItem.Value * 100;
+		if (GetRate >= RandomInt)
+		{
+			const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(DropItem.Key);
+			if (ItemInfo)
+			{
+				OutBattleReward.GetItems.Add(DropItem.Key, FMath::RandRange(1, ItemInfo->GetMaxNum));
+			}
+		}
+	}
+
 	OutBattleReward.ExperienceAmount = BattleStageInfo->DropExperience;
+	OutBattleReward.MoneyAmount = BattleStageInfo->DropMoney;
 }

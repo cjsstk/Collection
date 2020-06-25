@@ -5,6 +5,7 @@
 
 #include "Image.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "ProgressBar.h"
 #include "TextBlock.h"
 
 #include "CMS.h"
@@ -36,6 +37,12 @@ void UCharacterDetailInfoWidget::OnOpen()
 		if (MaxExp)
 		{
 			MaxExp->SetText(FText::FromString(FString::FromInt(SelectedCharacter->GetMaxExp())));
+		}
+
+		if (ExpBar)
+		{
+			float ExpPercent = (SelectedCharacter->GetMaxExp() > 0) ? (float)SelectedCharacter->GetCurrentExp() / (float)SelectedCharacter->GetMaxExp() : 1.0f;
+			ExpBar->SetPercent(ExpPercent);
 		}
 
 		FStatus FinalStatus = SelectedCharacter->GetFinalStatus();

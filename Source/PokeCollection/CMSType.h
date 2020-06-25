@@ -57,7 +57,11 @@ struct FBattleReward
 public:
 	int32 ExperienceAmount = 0;
 
+	int32 MoneyAmount = 0;
+
 	TArray<int32> GetCharacters;
+	
+	TMap<int32, int32> GetItems;
 };
 
 USTRUCT()

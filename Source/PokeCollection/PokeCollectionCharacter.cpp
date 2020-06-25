@@ -336,7 +336,7 @@ void APokeCollectionCharacter::DeleteItemsByKey(TMap<int32, int32>& InItemKeys)
 	}
 }
 
-void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
+void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 {
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);
 
@@ -359,6 +359,16 @@ void APokeCollectionCharacter::GetReward(FBattleReward InBattleReward)
 		AddNewCharacter(Params);
 	}
 
+	for (auto&& NewItemInfo : InBattleReward.GetItems)
+	{
+		FInitItemParams Params;
+		Params.ItemKey = NewItemInfo.Key;
+		Params.ItemStackNum = NewItemInfo.Value;
+
+		AddNewItem(Params);
+	}
+
+	SetMoneyAmount(GetMoneyAmount() + InBattleReward.MoneyAmount);
 	SetPlayerExp(GetPlayerCurrentExp() + InBattleReward.ExperienceAmount);
 }
 

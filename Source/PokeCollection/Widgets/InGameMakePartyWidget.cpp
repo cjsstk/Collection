@@ -15,6 +15,7 @@
 #include "PokeCollectionHUD.h"
 #include "MakePartyCharacterPanel.h"
 #include "Widgets/MakePartySlot.h"
+#include "Widgets/MakePartySlotsStatusInfo.h"
 
 void UInGameMakePartyWidget::NativeConstruct()
 {
@@ -141,6 +142,11 @@ void UInGameMakePartyWidget::RefreshSlots()
 	for (UMakePartySlot* InfoSlot : InfoSlots)
 	{
 		InfoSlot->RefreshSlot();
+	}
+
+	if (TotalStatusInfo)
+	{
+		TotalStatusInfo->Refresh();
 	}
 }
 

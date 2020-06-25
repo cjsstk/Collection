@@ -13,6 +13,15 @@ void APokePlayerController::AddBattleLogString(const FString& InBattleLogString)
 void APokePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	bEnableTouchEvents = true;
 	bShowMouseCursor = true;
+
+	OnInputTouchBegin.AddUniqueDynamic(this, &APokePlayerController::OnInputTouch);
+
+}
+
+void APokePlayerController::OnInputTouch(ETouchIndex::Type FingerIndex, AActor* TouchedActor)
+{
+	UE_LOG(LogTemp, Warning,  TEXT("InputTouch"));
 }

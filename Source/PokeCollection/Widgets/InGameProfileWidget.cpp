@@ -41,4 +41,14 @@ void UInGameProfileWidget::OnOpen()
 		expDisplayStr.Append(FString::FromInt(Player->GetPlayerMaxExp()));
 		PlayerExp->SetText(FText::FromString(expDisplayStr));
 	}
+
+	if (BattleClearCount)
+	{
+		BattleClearCount->SetText(FText::AsNumber(Player->GetBattleClearCount()));
+	}
+
+	if (GetCharacterCount)
+	{
+		GetCharacterCount->SetText(FText::AsNumber(Player->GetTotalCharacterCount()));
+	}
 }

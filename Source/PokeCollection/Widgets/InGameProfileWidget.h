@@ -7,7 +7,7 @@
 #include "InGameProfileWidget.generated.h"
 
 /**
- * 
+ * 캐릭터 프로필 위젯
  */
 UCLASS()
 class POKECOLLECTION_API UInGameProfileWidget : public UInGameWidget
@@ -29,4 +29,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* PlayerExp = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* BattleClearCount = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* GetCharacterCount = nullptr;
 };

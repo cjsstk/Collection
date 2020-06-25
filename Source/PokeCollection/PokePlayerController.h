@@ -20,6 +20,9 @@ public:
 private:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnInputTouch(ETouchIndex::Type FingerIndex, AActor* TouchedActor);
+
 private:
 	FString BattleLogString;
 

@@ -40,7 +40,7 @@ public:
 	void DeleteEquipments(TArray<int32>& InEquipmentIDs);
 	void DeleteItemsByKey(TMap<int32, int32>& InItemKeys);
 
-	void GetReward(FBattleReward InBattleReward);
+	void GetReward(FBattleReward& InBattleReward);
 
 	void PutOnEquipment(int32 InCharacterID, int32 InEquipmentID);
 	void TakeOffEquipment(int32 InCharacterID);
@@ -81,6 +81,9 @@ public:
 
 	bool IsCompleteIndexCharacter(characterKey InCharacterKey);
 	bool IsClearBattleStage(int32 InBattleStageKey);
+
+	int32 GetBattleClearCount() { return BattleClearCount; }
+	int32 GetTotalCharacterCount() { return GetCharacterCount; }
 
 	void ChangeBattleSpeedMultiplier();
 	int32 GetBattleSpeedMultiplier() const { return BattleSpeedMultiplier; }
@@ -230,10 +233,10 @@ private:
 	float MoneyChargingIntervalAgeSeconds = 0.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float BerryChargingIntervalSeconds = 10.0f;
+	float BerryChargingIntervalSeconds = 60.0f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float MoneyChargingIntervalSeconds = 10.0f;
+	float MoneyChargingIntervalSeconds = 60.0f;
 	
 	UPROPERTY(EditDefaultsOnly)
 	int32 BerryChargingAmount = 10;
