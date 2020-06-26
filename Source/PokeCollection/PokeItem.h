@@ -23,8 +23,14 @@ public:
 	int32 GetItemKey() const { return ItemKey; }
 	int32 GetItemIconIndex() const { return ItemIconIndex; }
 
+	const FText& GetItemName() { return ItemName; }
+	const FText& GetItemDesc() { return ItemDesc; }
+	bool IsUsable() const { return bIsUsable; }
 	int32 GetStackNum() const { return StackNum; }
 	void SetStackNum(int32 NewStackNum) { StackNum = NewStackNum; }
+
+	// Return reward equipment key
+	int32 CalcComeOutEquipmentKey();
 
 	/*FString GetItemName() const;
 	class UTexture2D* GetItemImage() const;
@@ -44,4 +50,8 @@ private:
 	int32 StackNum = 1;
 
 	int32 ItemIconIndex = 0;
+
+	FText ItemName;
+	FText ItemDesc;
+	bool bIsUsable = false;
 };

@@ -74,7 +74,7 @@ void UBuyConfirmPopUp::InitText(int32 InSlotKey, EShopSlotType InSlotType)
 			SlotPrice = ItemInfo->ItemPrice;
 
 			FFormatNamedArguments Arguments;
-			Arguments.Add(TEXT("SlotName"), FText::FromName(ItemInfo->ItemName));
+			Arguments.Add(TEXT("SlotName"), ItemInfo->ItemName);
 			Arguments.Add(TEXT("SlotPrice"), FText::FromString(FString::FromInt(ItemInfo->ItemPrice)));
 
 			ConfirmText = FText::Format(NSLOCTEXT("ItemBuyConfirmText", "ItemBuyConfirm", "{SlotName}을 {SlotPrice}원에 구입하겠습니까?"), Arguments);

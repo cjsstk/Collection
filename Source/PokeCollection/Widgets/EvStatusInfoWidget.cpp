@@ -152,8 +152,9 @@ void UEvStatWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 
 	if (AddedStatText)
 	{
-		FString AddedStatString = FString(TEXT("+"));
+		FString AddedStatString = FString(TEXT("(+"));
 		AddedStatString += FString::FromInt(InfoWidget->GetUpAmount(EvStat));
+		AddedStatString += FString(TEXT(")"));
 
 		AddedStatText->SetText(FText::FromString(AddedStatString));
 	}

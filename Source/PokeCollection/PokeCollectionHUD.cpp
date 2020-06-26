@@ -27,6 +27,7 @@
 #include "Widgets/InGameShopWidget.h"
 #include "Widgets/InGameSummonWidget.h"
 #include "Widgets/SkillUpgradePopUp.h"
+#include "Widgets/UseItemPopUp.h"
 #include "Widgets/LoginWidget.h"
 
 #include "Blueprint/UserWidget.h"
@@ -444,6 +445,21 @@ void APokeCollectionHUD::OpenSkillUpgradePopUp(int32 InSkillKey, int32 InSkillIn
 	{
 		SkillUpgradePopUp->AddToViewport(2);
 		SkillUpgradePopUp->InitInfo(InSkillKey, InSkillIndex);
+	}
+}
+
+void APokeCollectionHUD::OpenUseItemPopUp(int32 InItemID)
+{
+	if (!UseItemPopUpClass.Get())
+	{
+		return;
+	}
+
+	UUseItemPopUp* UseItemPopUp = CreateWidget<UUseItemPopUp>(GetWorld(), UseItemPopUpClass, FName("UseItemPopUp"));
+	if (ensure(UseItemPopUp))
+	{
+		UseItemPopUp->AddToViewport(2);
+		UseItemPopUp->InitInfo(InItemID);
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "TextBlock.h"
 
 #include "PokeCollectionCharacter.h"
+#include "PokeCollectionHUD.h"
 #include "PokeItem.h"
 
 void UItemBoxWidget::NativeConstruct()
@@ -116,6 +117,17 @@ void UItemSlot::InitByID(int32 InContentID)
 	}
 
 	SetItemStack(Item->GetStackNum());
+}
+
+void UItemSlot::OnSelectButtonClicked()
+{
+	APokeCollectionHUD* PokeHud = GetOwningPlayer() ? Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD()) : nullptr;
+	if (!PokeHud)
+	{
+		return;
+	}
+
+	PokeHud->OpenUseItemPopUp(ContentID);
 }
 
 void UItemSlot::SetItemStack(int32 InStack)

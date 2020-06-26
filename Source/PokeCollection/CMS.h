@@ -200,7 +200,7 @@ struct FPokeItemInfo : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ItemName;
+	FText ItemName;
 
 	/** Icon index is 0 ~ */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -158,7 +158,7 @@ void UShopSlot::InitSlot(int32 InSlotKey, EShopSlotType InSlotType)
 		}
 
 		SetSlotImageByMaterial(PokeCore::GetItemIcon(ItemInfo->ItemIconIndex, this));
-		SetSlotName(FText::FromName(ItemInfo->ItemName));
+		SetSlotName(ItemInfo->ItemName);
 		SetSlotPrice(FText::FromString(FString::FromInt(ItemInfo->ItemPrice)));
 	}
 		break;

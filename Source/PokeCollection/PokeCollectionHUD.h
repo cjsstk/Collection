@@ -34,6 +34,7 @@ public:
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 	void OpenEquipmentUpgradePopUp(int32 InEquipmentID);
 	void OpenSkillUpgradePopUp(int32 InSkillKey, int32 InSkillIndex);
+	void OpenUseItemPopUp(int32 InItemID);
 	void OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID);
 	void OpenInGameSummonWidget();
 
@@ -127,6 +128,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UEquipmentInfoPopUp> EquipmentInfoPopUpClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUseItemPopUp> UseItemPopUpClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UEquipmentUpgradePopUp> EquipmentUpgradePopUpClass;

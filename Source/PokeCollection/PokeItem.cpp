@@ -24,6 +24,37 @@ void UPokeItem::Init(FInitItemParams& InInitItemParams)
 
 	ItemRank = ItemInfo->ItemRank;
 	ItemIconIndex = ItemInfo->ItemIconIndex;
+	ItemName = ItemInfo->ItemName;
+	ItemDesc = ItemInfo->ItemDesc;
+	bIsUsable = ItemInfo->bIsUsable;
+}
+
+int32 UPokeItem::CalcComeOutEquipmentKey()
+{
+	if (!bIsUsable)
+	{
+		return INVALID_EQUIPMENTKEY;
+	}
+
+	const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(ItemKey);
+	if (!ensure(ItemInfo))
+	{
+		return INVALID_EQUIPMENTKEY;
+	}
+
+	TMap<int32, float> ComeOutInfo = ItemInfo->ComeOutEquipmentInfo;
+	for (auto&& DropEquipment : ComeOutInfo)
+	{
+		const int32 RandomInt = FMath::RandRange(0, 10000);
+
+		float GetRate = DropEquipment.Value * 100;
+		if (GetRate >= RandomInt)
+		{
+			return DropEquipment.Key;
+		}
+	}
+
+	return 1;
 }
 
 int32 UPokeItem::GetObjectSortValue(ESortCategory InSortCategory) const

@@ -322,7 +322,7 @@ void UBoxSlot::InitByKey(int32 InContentKey)
 		if (ensure(ItemInfo))
 		{
 			SetContentImageByMaterial(PokeCore::GetItemIcon(ItemInfo->ItemIconIndex, this));
-			SetContentName(FText::FromName(ItemInfo->ItemName));
+			SetContentName(ItemInfo->ItemName);
 			SetBackgroundColor(ItemInfo->ItemRank);
 		}
 		break;

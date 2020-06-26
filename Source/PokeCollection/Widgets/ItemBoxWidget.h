@@ -18,6 +18,8 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void InitByID(int32 InContentID) override;
 
+	virtual void OnSelectButtonClicked() override;
+
 	void SetItemStack(int32 InStack);
 
 protected:
