@@ -112,6 +112,8 @@ public:
 	void ConsumeBerry(int32 InConsumeBerryAmount);
 	void SetMoneyAmount(int32 NewMoneyAmount);
 
+	class UPlayerQuestComponent* GetQuestComponent() const { return QuestComponent; }
+
 	FOnAddedNewCharacter OnAddedNewCharacter;
 
 	TArray<int32> SeletedDestroyCharacterIDs;
@@ -158,6 +160,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* CameraComponent = nullptr;
+
+	UPROPERTY()
+	class UPlayerQuestComponent* QuestComponent = nullptr;
 
 	/** 
 	 * Player Info

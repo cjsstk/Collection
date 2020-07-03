@@ -98,6 +98,18 @@ void CMS::LoadCMS()
 		BasicPopUpDataTable = BasicPopUpDT.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> QuestDT(TEXT("/Game/CMS/QuestInfo"));
+	if (ensure(QuestDT.Succeeded()))
+	{
+		QuestDataTable = QuestDT.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DailyMissionDT(TEXT("/Game/CMS/DailyMissionInfo"));
+	if (ensure(DailyMissionDT.Succeeded()))
+	{
+		DailyMissionDataTable = DailyMissionDT.Object;
+	}
+
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> ItemIconM(TEXT("/Game/UI/Texture/M_ItemIcon_Inst"));
 	if (ensure(ItemIconM.Succeeded()))
 	{
@@ -288,6 +300,18 @@ const FBasicPopUpInfo* CMS::GetBasicPopUpDataTable(EBasicPopUpType InPopUpType)
 	return nullptr;
 }
 
+const FQuestInfo* CMS::GetQuestDataTable(int32 InQuestKey)
+{
+	if (InQuestKey <= 0)
+	{
+		return nullptr;
+	}
+
+	FQuestInfo* QuestInfo = QuestDataTable->FindRow<FQuestInfo>(FName(*(FString::FormatAsNumber(InQuestKey))), FString(""));
+
+	return QuestInfo;
+}
+
 const TArray<FCharacterShopInfo*> CMS::GetAllCharacterShopData()
 {
     TArray<FCharacterShopInfo*> OutInfos;
@@ -350,6 +374,20 @@ void CMS::GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray)
 	OutArray.Empty();
 
 	TypeDataTable->GetAllRows(FString(""), OutArray);
+}
+
+void CMS::GetAllQuestDataTable(TArray<FQuestInfo*>& OutArray)
+{
+	OutArray.Empty();
+
+	QuestDataTable->GetAllRows(FString(""), OutArray);
+}
+
+void CMS::GetAllDailyMissionDataTable(TArray<FQuestInfo*>& OutArray)
+{
+	OutArray.Empty();
+
+	DailyMissionDataTable->GetAllRows(FString(""), OutArray);
 }
 
 int32 CMS::GetItemDataNum()

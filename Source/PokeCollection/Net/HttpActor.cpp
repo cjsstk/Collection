@@ -7,7 +7,7 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
-const static FString CollectionURL = FString("http://collection.nupa.moe/api/v1/");
+const static FString CollectionURL = FString("http://collection.nupa.moe/api/");
 
 using VerbType = FString;
 namespace HTTPVerb

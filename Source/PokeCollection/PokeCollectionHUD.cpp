@@ -24,6 +24,7 @@
 #include "Widgets/InGameIndexWidget.h"
 #include "Widgets/InGameMakePartyWidget.h"
 #include "Widgets/InGameProfileWidget.h"
+#include "Widgets/InGameQuestWidget.h"
 #include "Widgets/InGameShopWidget.h"
 #include "Widgets/InGameSummonWidget.h"
 #include "Widgets/SkillUpgradePopUp.h"
@@ -194,6 +195,15 @@ void APokeCollectionHUD::BeginPlay()
 				InGameSummonWidget->SetPrevWidget(InGameMainWidget);
 			}
 		}
+
+		if (InGameQuestWidgetClass.Get())
+		{
+			InGameQuestWidget = CreateWidget<UInGameQuestWidget>(GetWorld(), InGameQuestWidgetClass, FName("InGameQuestWidget"));
+			if (ensure(InGameQuestWidget))
+			{
+				InGameQuestWidget->SetPrevWidget(InGameMainWidget);
+			}
+		}
 	}
 
 	OnWidgetLoaded.Broadcast();
@@ -317,6 +327,20 @@ void APokeCollectionHUD::OpenInGameIndexWidget()
 	{
 		InGameIndexWidget->AddToViewport();
 		InGameIndexWidget->OnOpen();
+	}
+}
+
+void APokeCollectionHUD::OpenInGameQuestWidget()
+{
+	if (ensure(InGameMainWidget))
+	{
+		InGameMainWidget->RemoveFromViewport();
+	}
+
+	if (ensure(InGameQuestWidget))
+	{
+		InGameQuestWidget->AddToViewport();
+		InGameQuestWidget->OnOpen();
 	}
 }
 
@@ -568,4 +592,19 @@ void APokeCollectionHUD::OnBackButtonClicked(class UInGameWidget* CurrentWidget)
 
 	}
 
+}
+
+class UInGameCategoryWidget* APokeCollectionHUD::GetInGameCategoryWidget(const ECategoryWidgetType& InCategoryWidgetType)
+{
+	switch (InCategoryWidgetType)
+	{
+	case ECategoryWidgetType::Quest:
+		return Cast<UInGameCategoryWidget>(InGameQuestWidget);
+		break;
+	default:
+		return nullptr;
+		break;
+	}
+
+	return nullptr;
 }

@@ -24,6 +24,7 @@ public:
 	void OpenBuyConfirmPopUp(int32 InSlotKey, EShopSlotType InSlotType);
 	void OpenEggHatchingWidget(characterKey NewCharacterKey);
 	void OpenInGameIndexWidget();
+	void OpenInGameQuestWidget();
 	void OpenInGameAdventureWidget();
 	//void OpenInGameProfileWidget();
 	void OpenInGameMakePartyWidget(bool bJustBeforeBattle);
@@ -64,6 +65,8 @@ public:
 	class UInGameCharacterInfoWidget* GetInGameCharacterInfoWidget() const { return InGameCharacterInfoWidget; }
 	class UInGameChangeEquipmentWidget* GetInGameChangeEquipmentWidget() const { return InGameChangeEquipmentWidget; }
 	class UInGameSummonWidget* GetInGameSummonWidget() const { return InGameSummonWidget; }
+
+	class UInGameCategoryWidget* GetInGameCategoryWidget(const ECategoryWidgetType& InCategoryWidgetType);
 
 	FOnWidgetLoaded OnWidgetLoaded;
 
@@ -147,6 +150,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameSummonWidget> InGameSummonWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UInGameQuestWidget> InGameQuestWidgetClass;
+
 	//
 	UPROPERTY(Transient)
 	class ULoginWidget* LoginWidget = nullptr;
@@ -201,4 +207,7 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameSummonWidget* InGameSummonWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UInGameQuestWidget* InGameQuestWidget = nullptr;
 };

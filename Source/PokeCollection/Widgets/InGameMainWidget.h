@@ -68,6 +68,9 @@ private:
 	void OnIndexButtonClicked();
 
 	UFUNCTION()
+	void OnQuestButtonClicked();
+
+	UFUNCTION()
 	void OnAdventureButtonClicked();
 
 	bool CheckAllButtonsExist();
@@ -90,6 +93,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PokedexButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* QuestButton = nullptr;
 
 	/*UPROPERTY(meta = (BindWidget))
 	class UButton* InventoryButton = nullptr;*/

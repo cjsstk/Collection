@@ -410,6 +410,31 @@ public:
 	FText ConfirmText;
 };
 
+USTRUCT(BlueprintType)
+struct FQuestInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	EQuestObjectionType ObjectionType = EQuestObjectionType::ClearBattleCount;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 DestNum = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 ParentQuestKey = -1;
+
+	UPROPERTY(EditDefaultsOnly)
+	FText QuestDesc;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 RewardMoney = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<int32> RewardItemKeys;
+};
+
 namespace CMS
 {
 	void LoadCMS();
@@ -428,6 +453,7 @@ namespace CMS
 	const FDialogInfoTable* GetDialogDataTable(int32 InDialogKey);
 	const FSkillInfo* GetSkillDataTable(int32 InSkillKey);
 	const FBasicPopUpInfo* GetBasicPopUpDataTable(EBasicPopUpType InPopUpType);
+	const FQuestInfo* GetQuestDataTable(int32 InQuestKey);
 
 	const TArray<FCharacterShopInfo*> GetAllCharacterShopData();
 
@@ -437,6 +463,8 @@ namespace CMS
 	void GetAllCharacterDataTableByRank(TArray<FCharacterInfo*>& OutArray, ERank InRank);
 	void GetAllCharacterDataTable(TArray<FCharacterInfo*>& OutArray);
 	void GetAllTypeDataTable(TArray<FTypeInfo*>& OutArray);
+	void GetAllQuestDataTable(TArray<FQuestInfo*>& OutArray);
+	void GetAllDailyMissionDataTable(TArray<FQuestInfo*>& OutArray);
 
 	int32 GetItemDataNum();
 
@@ -458,6 +486,8 @@ namespace CMS
 	static UDataTable* SkillDataTable = nullptr;
 	static UDataTable* SkillUpdgradeDataTable = nullptr;
 	static UDataTable* BasicPopUpDataTable = nullptr;
+	static UDataTable* QuestDataTable = nullptr;
+	static UDataTable* DailyMissionDataTable = nullptr;
 
 	class UMaterialInterface* ItemIconMaterial = nullptr;
 	class UMaterialInterface* TypeMaterial = nullptr;

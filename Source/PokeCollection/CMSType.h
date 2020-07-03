@@ -52,6 +52,23 @@ enum class EBasicPopUpType : int32
 	DestroyEquipment,
 };
 
+UENUM()
+enum class EQuestObjectionType : int32
+{
+	ClearBattleStageNum,
+	ClearBattleCount,
+	GetCharacterCount,
+	SpendBerryAmount,
+	SpendMoneyAmount,
+};
+
+UENUM()
+enum class ECategoryWidgetType
+{
+	Invalid,
+	Quest,
+};
+
 struct FBattleReward
 {
 public:

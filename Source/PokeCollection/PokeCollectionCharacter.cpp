@@ -15,6 +15,7 @@
 #include "PokeEquipment.h"
 #include "PokeItem.h"
 #include "PokePlayerController.h"
+#include "PlayerQuestComponent.h"
 #include "CMS.h"
 
 static TAutoConsoleVariable<int32> CVarMaxBattleSpeedMultiplier
@@ -32,7 +33,7 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(RootComponent);
 
-
+	QuestComponent = CreateDefaultSubobject<UPlayerQuestComponent>(TEXT("QuestComponent"));
 }
 
 void APokeCollectionCharacter::InitHaveCharacters()
