@@ -951,7 +951,7 @@ void APokeCollectionCharacter::OnHaveEquipmentsResponsed(FHttpRequestPtr Request
 
 			HaveEquipments.AddUnique(PokeEquipment);
 
-			if (InitEquipmentParams.OwnerCharacterID > 0)
+			if (InitEquipmentParams.OwnerCharacterID >= 0)
 			{
 				PutOnEquipment(InitEquipmentParams.OwnerCharacterID, InitEquipmentParams.EquipmentID);
 			}
