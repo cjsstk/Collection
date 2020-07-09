@@ -38,24 +38,32 @@ APokeCollectionCharacter::APokeCollectionCharacter()
 
 void APokeCollectionCharacter::InitHaveCharacters()
 {
-	for (characterKey Key : SavedCharacterKeys)
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
 	{
-		FInitCharacterParams Params;
-		Params.CharacterKey = Key;
-
-		AddNewCharacter(Params);
+		return;
 	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::HaveCharacters;
+	Params.MemberID = PokeCore::DeviceId;
+
+	HttpActor->Request(Params);
 }
 
 void APokeCollectionCharacter::InitHaveEquipments()
 {
-	for (equipmentKey Key : SavedEquipmentKeys)
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
 	{
-		FInitEquipmentParams Params;
-		Params.EquipmentKey = Key;
-
-		AddNewEquipment(Params);
+		return;
 	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::HaveEquipments;
+	Params.MemberID = PokeCore::DeviceId;
+
+	HttpActor->Request(Params);
 }
 
 void APokeCollectionCharacter::InitHaveItems()
@@ -217,6 +225,29 @@ void APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitChara
 	OnAddedNewCharacter.Broadcast();
 }
 
+void APokeCollectionCharacter::AddNewCharacters(TArray<FInitCharacterParams>& InInitCharacterParams)
+{
+	for (auto&& InitParams : InInitCharacterParams)
+	{
+		AddNewCharacter(InitParams);
+	}
+
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	FHttpRequestParams RequestParams;
+	RequestParams.RequestType = EHttpRequestType::AddNewCharacters;
+	RequestParams.MemberID = PokeCore::DeviceId;
+	RequestParams.NewCharactersInfos = InInitCharacterParams;
+
+	HttpActor->Request(RequestParams);
+
+	SavePlayerInfo(ESavePlayerInfo::Index);
+}
+
 void APokeCollectionCharacter::AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams)
 {
 	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InInitEquipmentParams.EquipmentKey);
@@ -374,13 +405,17 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 		PartyCharacter->TakeExperience(InBattleReward.ExperienceAmount);
 	}
 
+	TArray<FInitCharacterParams> NewCharactersParams;
+
 	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
 	{
 		FInitCharacterParams Params;
 		Params.CharacterKey = NewCharacterKey;
 
-		AddNewCharacter(Params);
+		NewCharactersParams.Add(Params);
 	}
+
+	AddNewCharacters(NewCharactersParams);
 
 	for (auto&& NewItemInfo : InBattleReward.GetItems)
 	{
@@ -433,13 +468,22 @@ void APokeCollectionCharacter::SetMaxHaveEquipmentsNum(int32 NewMaxHaveEquipment
 void APokeCollectionCharacter::PutOnEquipment(int32 InCharacterID, int32 InEquipmentID)
 {
 	APokeCharacter* PokeCharacter = GetCharacterByID(InCharacterID);
-	if (!PokeCharacter)
+	UPokeEquipment* PokeEquipment = GetEquipmentByID(InEquipmentID);
+
+	if (PokeCharacter && !PokeEquipment)
 	{
+		PokeCharacter->TakeOffEquipment();
 		return;
 	}
 
-	UPokeEquipment* PokeEquipment = GetEquipmentByID(InEquipmentID);
-	if (!PokeEquipment)
+
+	if (PokeEquipment && !PokeCharacter)
+	{
+		PokeEquipment->SetOwnerCharacterID(-1);
+		return;
+	}
+
+	if (!PokeEquipment || !PokeCharacter)
 	{
 		return;
 	}
@@ -686,11 +730,14 @@ void APokeCollectionCharacter::BeginPlay()
 	HttpActor->OnHttpHaveCharactersResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveCharactersResponsed);
 	HttpActor->OnHttpHaveEquipmentsResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveEquipmentsResponsed);
 
-	HttpActor->RequestLogin(PokeCore::DeviceId);
-	//HttpActor->RequestHaveCharacters(PokeCore::DeviceId);
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::Login;
+	Params.MemberID = PokeCore::DeviceId;
+
+	HttpActor->Request(Params);
 
 	InitMainCharacter();
-	InitHaveEquipments();
+	//InitHaveEquipments();
 	InitHaveItems();
 
 	//PutOnEquipment(1, 1);
@@ -765,7 +812,6 @@ void APokeCollectionCharacter::AddCharacterToIndex(characterKey InCharacterKey)
 		*IndexCharacter = true;
 	}
 
-	SavePlayerInfo(ESavePlayerInfo::Index);
 }
 
 int32 APokeCollectionCharacter::GetUsableCharacterID()
@@ -843,30 +889,75 @@ void APokeCollectionCharacter::OnLoginResponsed(FHttpRequestPtr Request, TShared
 	}
 
 	InitHaveCharacters();
-
-	// Temp slot setting
-	for (int32 i = 1; i < 5; i++)
-	{
-		HaveCharacters[i * 2]->SetJoinedPartyNum(1);
-		HaveCharacters[i * 2]->SetJoinedSlotNum(i);
-	}
 }
 
 void APokeCollectionCharacter::OnHaveCharactersResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
 {
-	/*APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
-	if (PokeCharacter)
-	{
-		FInitCharacterParams Params;
+	TArray<TSharedPtr<FJsonValue>> Characters = ResponceJson->GetArrayField("data");
 
-		PokeCharacter->Init(Params);
-		HaveCharacters.AddUnique(PokeCharacter);
-	}*/
+	for (int32 Index = 0; Index < Characters.Num(); ++Index)
+	{
+		TSharedPtr<FJsonObject> CharacterJs = Characters[Index]->AsObject();
+
+		FString MemberId = CharacterJs->GetStringField("memberId");
+
+		FInitCharacterParams InitCharacterParams;
+		InitCharacterParams.CharacterID = CharacterJs->GetIntegerField("characterId");
+		InitCharacterParams.CharacterKey = CharacterJs->GetIntegerField("characterKey");
+		InitCharacterParams.CharacterLevel = CharacterJs->GetIntegerField("characterLevel");
+		InitCharacterParams.CurrentExp = CharacterJs->GetIntegerField("characterExp");
+		InitCharacterParams.EvHealth = CharacterJs->GetIntegerField("EvHealth");
+		InitCharacterParams.EvAttack = CharacterJs->GetIntegerField("EvAttack");
+		InitCharacterParams.EvDefence = CharacterJs->GetIntegerField("EvDefence");
+		InitCharacterParams.EvSpecialAttack = CharacterJs->GetIntegerField("EvSpAttack");
+		InitCharacterParams.EvSpecialDefence = CharacterJs->GetIntegerField("EvSpDefence");
+		InitCharacterParams.EvSpeed = CharacterJs->GetIntegerField("EvSpeed");
+		InitCharacterParams.JoinedPartyNum = CharacterJs->GetIntegerField("joinedParty");
+		InitCharacterParams.JoinedSlotNum = CharacterJs->GetIntegerField("joinedSlot");
+
+		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
+		if (PokeCharacter)
+		{
+			PokeCharacter->Init(InitCharacterParams);
+
+			HaveCharacters.AddUnique(PokeCharacter);
+		}
+
+	}
+
+	InitHaveEquipments();
 }
 
 void APokeCollectionCharacter::OnHaveEquipmentsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
 {
+	TArray<TSharedPtr<FJsonValue>> Equipments = ResponceJson->GetArrayField("data");
 
+	for (int32 Index = 0; Index < Equipments.Num(); ++Index)
+	{
+		TSharedPtr<FJsonObject> EquipmentJs = Equipments[Index]->AsObject();
+
+		FString MemberId = EquipmentJs->GetStringField("memberId");
+
+		FInitEquipmentParams InitEquipmentParams;
+		InitEquipmentParams.EquipmentID = EquipmentJs->GetIntegerField("equipmentId");
+		InitEquipmentParams.EquipmentKey = EquipmentJs->GetIntegerField("equipmentKey");
+		InitEquipmentParams.EquipmentLevel = EquipmentJs->GetIntegerField("equipmentLevel");
+		InitEquipmentParams.OwnerCharacterID = EquipmentJs->GetIntegerField("ownerCharacterId");
+
+		UPokeEquipment* PokeEquipment = NewObject<UPokeEquipment>();
+		if (PokeEquipment)
+		{
+			PokeEquipment->Init(InitEquipmentParams);
+
+			HaveEquipments.AddUnique(PokeEquipment);
+
+			if (InitEquipmentParams.OwnerCharacterID > 0)
+			{
+				PutOnEquipment(InitEquipmentParams.OwnerCharacterID, InitEquipmentParams.EquipmentID);
+			}
+		}
+
+	}
 }
 
 void APokeCollectionCharacter::SavePlayerInfo(ESavePlayerInfo InSaveInfo)
@@ -895,5 +986,11 @@ void APokeCollectionCharacter::SavePlayerInfo(ESavePlayerInfo InSaveInfo)
 	Params.Index = GetIndex();
 	Params.BattleSpeed = BattleSpeedMultiplier;
 
-	HttpActor->RequestSavePlayerInfo(PokeCore::DeviceId, InSaveInfo, Params);
+	FHttpRequestParams RequestParams;
+	RequestParams.RequestType = EHttpRequestType::SavePlayerInfo;
+	RequestParams.MemberID = PokeCore::DeviceId;
+	RequestParams.SaveColumn = InSaveInfo;
+	RequestParams.SavePlayerInfos = Params;
+
+	HttpActor->Request(RequestParams);
 }

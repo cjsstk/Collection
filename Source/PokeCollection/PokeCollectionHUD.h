@@ -75,6 +75,8 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 
 private:
+	void TickCheckHttpRequesting();
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ULoginWidget> LoginWidgetClass;
 
@@ -153,6 +155,9 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UInGameQuestWidget> InGameQuestWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UHttpRequestingWidget> HttpRequestingWidgetClass;
+
 	//
 	UPROPERTY(Transient)
 	class ULoginWidget* LoginWidget = nullptr;
@@ -210,4 +215,7 @@ private:
 
 	UPROPERTY(Transient)
 	class UInGameQuestWidget* InGameQuestWidget = nullptr;
+
+	UPROPERTY(Transient)
+	class UHttpRequestingWidget* HttpRequestingWidget = nullptr;
 };

@@ -211,9 +211,6 @@ public:
 	int32 EquipmentLevel = 0;
 
 	UPROPERTY()
-	int32 CurrentExp = 0;
-
-	UPROPERTY()
 	int32 OwnerCharacterID = -1;
 };
 

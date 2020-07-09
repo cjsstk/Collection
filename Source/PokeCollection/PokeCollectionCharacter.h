@@ -32,7 +32,8 @@ public:
 
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
-	void AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
+	void AddNewCharacters(TArray<FInitCharacterParams>& InInitCharacterParams);
+
 	void AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams);
 	void AddNewItem(FInitItemParams& InInitItemParams);
 
@@ -125,6 +126,8 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	void AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
+
 	void InitHaveCharacters();
 	void InitHaveEquipments();
 	void InitHaveItems();

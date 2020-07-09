@@ -37,11 +37,16 @@ AHttpActor::AHttpActor(const class FObjectInitializer& ObjectInitializer)
 	}
 }
 
+void AHttpActor::Request(const FHttpRequestParams& InRequestParams)
+{
+	Requests.Enqueue(InRequestParams);
+}
+
 void AHttpActor::RequestLogin(const FString& InLoginId)
 {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 
-	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnLoginResponseReceived);
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
 	FString RequestURL = CollectionURL + FString("members/") + InLoginId;
 	Request->SetURL(RequestURL);
@@ -49,6 +54,7 @@ void AHttpActor::RequestLogin(const FString& InLoginId)
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::Login));
 
 	Request->ProcessRequest();
 }
@@ -83,7 +89,7 @@ void AHttpActor::RequestRegist(const FString& InRegistId)
 
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 
-	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnRegistResponseReceived);
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
 	FString RequestURL = CollectionURL + FString("members/") + InRegistId;
 	Request->SetURL(RequestURL);
@@ -92,6 +98,7 @@ void AHttpActor::RequestRegist(const FString& InRegistId)
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::Regist));
 
 	Request->ProcessRequest();
 }
@@ -100,14 +107,15 @@ void AHttpActor::RequestHaveCharacters(const FString& InUserId)
 {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 
-	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnHaveCharactersResponseReceived);
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
-	FString RequestURL = CollectionURL + FString("haveCharacters/") + InUserId;
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveCharacters");
 	Request->SetURL(RequestURL);
 	Request->SetVerb(HTTPVerb::GET);
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::HaveCharacters));
 
 	Request->ProcessRequest();
 }
@@ -116,7 +124,7 @@ void AHttpActor::RequestHaveEquipments(const FString& InUserId)
 {
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 
-	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnHaveEquipmentsResponseReceived);
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
 	FString RequestURL = CollectionURL + FString("haveEquipments/") + InUserId;
 	Request->SetURL(RequestURL);
@@ -124,11 +132,63 @@ void AHttpActor::RequestHaveEquipments(const FString& InUserId)
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::HaveEquipments));
 
 	Request->ProcessRequest();
 }
 
-void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params)
+void AHttpActor::RequestAddNewCharacters(const FString& InUserId, const TArray<FInitCharacterParams>& NewCharactersInfos)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& InitParam : NewCharactersInfos)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
+		JsonObject->SetNumberField(TEXT("characterId"), InitParam.CharacterID);
+		JsonObject->SetNumberField(TEXT("characterKey"), InitParam.CharacterKey);
+		JsonObject->SetNumberField(TEXT("characterLevel"), InitParam.CharacterLevel);
+		JsonObject->SetNumberField(TEXT("characterExp"), InitParam.CurrentExp);
+		JsonObject->SetNumberField(TEXT("joinedParty"), InitParam.JoinedPartyNum);
+		JsonObject->SetNumberField(TEXT("joinedSlot"), InitParam.JoinedSlotNum);
+		JsonObject->SetNumberField(TEXT("EvHealth"), InitParam.EvHealth);
+		JsonObject->SetNumberField(TEXT("EvAttack"), InitParam.EvAttack);
+		JsonObject->SetNumberField(TEXT("EvDefense"), InitParam.EvDefence);
+		JsonObject->SetNumberField(TEXT("EvSpAttack"), InitParam.EvSpecialAttack);
+		JsonObject->SetNumberField(TEXT("EvSpDefense"), InitParam.EvSpecialDefence);
+		JsonObject->SetNumberField(TEXT("EvSpeed"), InitParam.EvSpeed);
+		
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("characters", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveCharacters");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::POST);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::AddNewCharacters));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, const ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params)
 {
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 
@@ -196,7 +256,7 @@ void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, ESavePlayerInfo&
 
 	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
 
-	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::OnSavePlayerInfoResponseReceived);
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
 	FString RequestURL = CollectionURL + FString("members/") + InUserId;
 	Request->SetURL(RequestURL);
@@ -205,6 +265,7 @@ void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, ESavePlayerInfo&
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::SavePlayerInfo));
 
 	Request->ProcessRequest();
 }
@@ -300,6 +361,22 @@ void AHttpActor::OnSavePlayerInfoResponseReceived(FHttpRequestPtr Request, FHttp
 	}
 }
 
+void AHttpActor::OnAddNewCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("새 캐릭터 추가")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
 void AHttpActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -309,5 +386,94 @@ void AHttpActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!bRequesting)
+	{
+		if (Requests.Peek())
+		{
+			const FHttpRequestParams& RequestParams = *Requests.Peek();
+
+			if (RequestParams.RequestType == EHttpRequestType::Invalid)
+			{
+				ensure(0);
+				Requests.Pop();
+				return;
+			}
+
+			HttpRequest(RequestParams);
+		}
+	}
+}
+
+void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
+{
+	bRequesting = true;
+
+	switch (InRequestParams.RequestType)
+	{
+	case EHttpRequestType::Login:
+		RequestLogin(InRequestParams.MemberID);
+		break;
+	case EHttpRequestType::Regist:
+		RequestRegist(InRequestParams.MemberID);
+		break;
+	case EHttpRequestType::HaveCharacters:
+		RequestHaveCharacters(InRequestParams.MemberID);
+		break;
+	case EHttpRequestType::HaveEquipments:
+		RequestHaveEquipments(InRequestParams.MemberID);
+		break;
+	case EHttpRequestType::SavePlayerInfo:
+		RequestSavePlayerInfo(InRequestParams.MemberID, InRequestParams.SaveColumn, InRequestParams.SavePlayerInfos);
+		break;
+	case EHttpRequestType::AddNewCharacters:
+		RequestAddNewCharacters(InRequestParams.MemberID, InRequestParams.NewCharactersInfos);
+		break;
+	case EHttpRequestType::Invalid:
+	default:
+		bRequesting = false;
+		break;
+	}
+}
+
+void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	FString RequestTypeStr = Request->GetHeader("X-Request-ID");
+
+	EHttpRequestType RequestType = (EHttpRequestType)FCString::Atoi(*RequestTypeStr);
+
+	if (RequestType == EHttpRequestType::Invalid)
+	{
+		ensure(0);
+		return;
+	}
+
+	switch (RequestType)
+	{
+	case EHttpRequestType::Login:
+		OnLoginResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::Regist:
+		OnRegistResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::HaveCharacters:
+		OnHaveCharactersResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::HaveEquipments:
+		OnHaveEquipmentsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::SavePlayerInfo:
+		OnSavePlayerInfoResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::AddNewCharacters:
+		OnAddNewCharactersResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::Invalid:
+	default:
+		ensure(0);
+		break;
+	}
+
+	bRequesting = false;
+	Requests.Pop();
 }
 

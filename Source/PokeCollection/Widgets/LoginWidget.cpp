@@ -22,7 +22,12 @@ void ULoginWidget::NativeConstruct()
 
 	HttpActor->OnHttpLoginResponseReceived.BindUObject(this, &ULoginWidget::OnLoginResponsed);
 	HttpActor->OnHttpRegistResponseReceived.BindUObject(this, &ULoginWidget::OnRegistResponsed);
-	HttpActor->RequestLogin(PokeCore::DeviceId);
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::Login;
+	Params.MemberID = PokeCore::DeviceId;
+
+	HttpActor->Request(Params);
 
 	if (GuestLoginButton)
 	{
@@ -100,7 +105,11 @@ void ULoginWidget::OnLoginButtonClick()
 			return;
 		}
 
-		HttpActor->RequestRegist(PokeCore::DeviceId);
+		FHttpRequestParams Params;
+		Params.RequestType = EHttpRequestType::Regist;
+		Params.MemberID = PokeCore::DeviceId;
+
+		HttpActor->Request(Params);
 		return;
 	}
 

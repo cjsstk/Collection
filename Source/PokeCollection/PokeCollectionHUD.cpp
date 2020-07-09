@@ -30,6 +30,7 @@
 #include "Widgets/SkillUpgradePopUp.h"
 #include "Widgets/UseItemPopUp.h"
 #include "Widgets/LoginWidget.h"
+#include "Widgets/HttpRequestingWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "WidgetLayoutLibrary.h"
@@ -206,12 +207,51 @@ void APokeCollectionHUD::BeginPlay()
 		}
 	}
 
+	if (HttpRequestingWidgetClass.Get())
+	{
+		HttpRequestingWidget = CreateWidget<UHttpRequestingWidget>(GetWorld(), HttpRequestingWidgetClass, FName("HttpRequestingWidget"));
+		ensure(HttpRequestingWidget);
+	}
+
 	OnWidgetLoaded.Broadcast();
 }
 
 void APokeCollectionHUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	TickCheckHttpRequesting();
+}
+
+void APokeCollectionHUD::TickCheckHttpRequesting()
+{
+	if (!HttpRequestingWidget)
+	{
+		return;
+	}
+
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!HttpActor)
+	{
+		return;
+	}
+
+	bool bShowRequestingWidget = (HttpActor->IsRequesting() || HttpActor->HasWaitingRequests());
+
+	if (bShowRequestingWidget)
+	{
+		if (!HttpRequestingWidget->IsInViewport())
+		{
+			HttpRequestingWidget->AddToViewport(5);
+		}
+	}
+	else
+	{
+		if (HttpRequestingWidget->IsInViewport())
+		{
+			HttpRequestingWidget->RemoveFromViewport();
+		}
+	}
 }
 
 void APokeCollectionHUD::OpenInGameBoxWidget()

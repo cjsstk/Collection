@@ -234,6 +234,12 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 		return;
 	}
 
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!ensure(Player))
+	{
+		return;
+	}
+
 	const FCharacterShopInfo* CurrentShopInfo = CMS::GetCharacterShopDataTable(SlotKey);
 	if (!ensure(CurrentShopInfo))
 	{
@@ -281,6 +287,8 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 		ComeOutRankResult = ERank::Rare;
 	}
 
+	TArray<FInitCharacterParams> NewCharactersParams;
+
 	TArray<FCharacterInfo*> OutCharacters;
 	CMS::GetAllCharacterDataTableByRank(OutCharacters, ComeOutRankResult);
 
@@ -290,20 +298,15 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 	{
 		characterKey OutCharacterKey = OutCharacters[OutCharacterIndex]->CharacterKey;
 
-		APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
-		if (!ensure(Player))
-		{
-			return;
-		}
-
 		FInitCharacterParams Params;
 		Params.CharacterKey = OutCharacterKey;
 
-		Player->AddNewCharacter(Params);
+		NewCharactersParams.Add(Params);
+		//Player->AddNewCharacter(Params);
 		PokeHud->OpenEggHatchingWidget(OutCharacterKey);
 	}
 
-	
+	Player->AddNewCharacters(NewCharactersParams);
 }
 
 void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
