@@ -328,11 +328,15 @@ void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
 		return;
 	}
 
+	TArray<FInitItemParams> AddItems;
+
 	FInitItemParams Params;
 	Params.ItemKey = InSlotKey;
 	Params.ItemStackNum = 1;
 
-	Player->AddNewItem(Params);
+	AddItems.Add(Params);
+
+	Player->AddNewItems(AddItems);
 }
 
 bool UShopSlot::PaySlotPrice(int32 InEggMoney)

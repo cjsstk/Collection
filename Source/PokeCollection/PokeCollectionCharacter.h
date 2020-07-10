@@ -33,9 +33,8 @@ public:
 	void SetPlayerMode(EPlayerMode NewPlayerMode);
 
 	void AddNewCharacters(TArray<FInitCharacterParams>& InInitCharacterParams);
-
-	void AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams);
-	void AddNewItem(FInitItemParams& InInitItemParams);
+	void AddNewEquipments(TArray<FInitEquipmentParams>& InInitEquipmentParams);
+	void AddNewItems(TArray<FInitItemParams>& InInitItemParams);
 
 	void DeleteCharacters(TArray<int32>& InCharacterIDs);
 	void DeleteEquipments(TArray<int32>& InEquipmentIDs);
@@ -126,7 +125,9 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-	void AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
+	bool AddNewCharacter(FInitCharacterParams& InInitCharacterParams);
+	bool AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams);
+	bool AddNewItem(FInitItemParams& InInitItemParams);
 
 	void InitHaveCharacters();
 	void InitHaveEquipments();
@@ -158,6 +159,7 @@ private:
 	void OnLoginResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 	void OnHaveCharactersResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 	void OnHaveEquipmentsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
+	void OnHaveItemsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 
 	void SavePlayerInfo(ESavePlayerInfo InSaveInfo);
 

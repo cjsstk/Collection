@@ -19,8 +19,11 @@ enum class EHttpRequestType
 	Regist,
 	HaveCharacters,
 	HaveEquipments,
+	HaveItems,
 	SavePlayerInfo,
 	AddNewCharacters,
+	AddNewEquipments,
+	AddNewItems,
 };
 
 enum class ESavePlayerInfo
@@ -55,6 +58,10 @@ public:
 	FInitPlayerParams SavePlayerInfos;
 
 	TArray<FInitCharacterParams> NewCharactersInfos;
+
+	TArray<FInitEquipmentParams> NewEquipmentsInfos;
+
+	TArray<FInitItemParams> NewItemsInfos;
 };
 
 UCLASS()
@@ -74,6 +81,7 @@ public:
 	FOnHttpResponseReceived OnHttpRegistResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveCharactersResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveEquipmentsResponseReceived;
+	FOnHttpResponseReceived OnHttpHaveItemsResponseReceived;
 
 protected:
 	virtual void BeginPlay() override;
@@ -87,15 +95,21 @@ private:
 	void RequestRegist(const FString& InRegistId);
 	void RequestHaveCharacters(const FString& InUserId);
 	void RequestHaveEquipments(const FString& InUserId);
+	void RequestHaveItems(const FString& InUserId);
 	void RequestSavePlayerInfo(const FString& InUserId, const ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params);
 	void RequestAddNewCharacters(const FString& InUserId, const TArray<FInitCharacterParams>& NewCharactersInfos);
+	void RequestAddNewEquipments(const FString& InUserId, const TArray<FInitEquipmentParams>& NewEquipmentsInfos);
+	void RequestAddNewItems(const FString& InUserId, const TArray<FInitItemParams>& NewItemsInfos);
 
 	void OnLoginResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHaveItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnSavePlayerInfoResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnAddNewCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnAddNewEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnAddNewItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	FHttpModule* Http;
 

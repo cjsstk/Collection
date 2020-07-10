@@ -140,13 +140,16 @@ void UUseItemPopUp::OnUseButtonClicked()
 
 	Player->DeleteItemsByID(UseItems);
 
+	TArray<FInitEquipmentParams> AddEquipemts;
 	for (int32 EquipKey : ComeOutEquipmentKeys)
 	{
 		FInitEquipmentParams Params;
 		Params.EquipmentKey = EquipKey;
 
-		Player->AddNewEquipment(Params);
+		AddEquipemts.Add(Params);
 	}
+
+	Player->AddNewEquipments(AddEquipemts);
 
 	UInGameBoxWidget* BoxWidget = PokeHud->GetInGameBoxWidget();
 	if (BoxWidget)

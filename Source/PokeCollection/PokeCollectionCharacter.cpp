@@ -68,14 +68,26 @@ void APokeCollectionCharacter::InitHaveEquipments()
 
 void APokeCollectionCharacter::InitHaveItems()
 {
-	for (auto&& Item : SavedItemKeys)
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::HaveItems;
+	Params.MemberID = PokeCore::DeviceId;
+
+	HttpActor->Request(Params);
+
+	/*for (auto&& Item : SavedItemKeys)
 	{
 		FInitItemParams Params;
 		Params.ItemKey = Item.Key;
 		Params.ItemStackNum = Item.Value;
 
 		AddNewItem(Params);
-	}
+	}*/
 }
 
 void APokeCollectionCharacter::InitPlayerInfo(FInitPlayerParams& Params)
@@ -197,13 +209,13 @@ void APokeCollectionCharacter::SetPlayerMode(EPlayerMode NewPlayerMode)
 	}
 }
 
-void APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitCharacterParams)
+bool APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitCharacterParams)
 {
 	const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InInitCharacterParams.CharacterKey);
 	if (!CharacterInfo)
 	{
 		ensure(0);
-		return;
+		return false;
 	}
 
 	if (InInitCharacterParams.CharacterID < 0)
@@ -212,48 +224,133 @@ void APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitChara
 	}
 
 	APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
-	if (PokeCharacter)
+	if (!PokeCharacter)
 	{
-		PokeCharacter->Init(InInitCharacterParams);
-		//PokeCharacter->SetCharacterID(InInitCharacterParams.CharacterID);
-		//++NextCharacterID;
+		return false;
 	}
 
+	PokeCharacter->Init(InInitCharacterParams);
 	HaveCharacters.AddUnique(PokeCharacter);
 	AddCharacterToIndex(InInitCharacterParams.CharacterKey);
 
 	OnAddedNewCharacter.Broadcast();
+
+	return true;
 }
 
 void APokeCollectionCharacter::AddNewCharacters(TArray<FInitCharacterParams>& InInitCharacterParams)
 {
-	for (auto&& InitParams : InInitCharacterParams)
-	{
-		AddNewCharacter(InitParams);
-	}
-
 	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
 	if (!ensure(HttpActor))
 	{
 		return;
 	}
 
-	FHttpRequestParams RequestParams;
-	RequestParams.RequestType = EHttpRequestType::AddNewCharacters;
-	RequestParams.MemberID = PokeCore::DeviceId;
-	RequestParams.NewCharactersInfos = InInitCharacterParams;
+	TArray<FInitCharacterParams> AddedCharacters;
 
-	HttpActor->Request(RequestParams);
+	for (auto&& InitParams : InInitCharacterParams)
+	{
+		const FCharacterInfo* CharacterInfo = CMS::GetCharacterDataTable(InitParams.CharacterKey);
+		if (!CharacterInfo)
+		{
+			continue;
+		}
 
-	SavePlayerInfo(ESavePlayerInfo::Index);
+		if (AddNewCharacter(InitParams))
+		{
+			AddedCharacters.Add(InitParams);
+		}
+	}
+
+	if (AddedCharacters.Num() > 0)
+	{
+		FHttpRequestParams RequestParams;
+		RequestParams.RequestType = EHttpRequestType::AddNewCharacters;
+		RequestParams.MemberID = PokeCore::DeviceId;
+		RequestParams.NewCharactersInfos = AddedCharacters;
+
+		HttpActor->Request(RequestParams);
+
+		SavePlayerInfo(ESavePlayerInfo::Index);
+	}
 }
 
-void APokeCollectionCharacter::AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams)
+void APokeCollectionCharacter::AddNewEquipments(TArray<FInitEquipmentParams>& InInitEquipmentParams)
+{
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	TArray<FInitEquipmentParams> AddedEquipments;
+
+	for (auto&& InitParams : InInitEquipmentParams)
+	{
+		const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InitParams.EquipmentKey);
+		if (!EquipmentInfo)
+		{
+			continue;;
+		}
+
+		if (AddNewEquipment(InitParams))
+		{
+			AddedEquipments.Add(InitParams);
+		}
+	}
+
+	if (AddedEquipments.Num() > 0)
+	{
+		FHttpRequestParams RequestParams;
+		RequestParams.RequestType = EHttpRequestType::AddNewEquipments;
+		RequestParams.MemberID = PokeCore::DeviceId;
+		RequestParams.NewEquipmentsInfos = AddedEquipments;
+
+		HttpActor->Request(RequestParams);
+	}
+}
+
+void APokeCollectionCharacter::AddNewItems(TArray<FInitItemParams>& InInitItemParams)
+{
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	TArray<FInitItemParams> AddedItems;
+
+	for (auto&& InitParams : InInitItemParams)
+	{
+		const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InitParams.ItemKey);
+		if (!ItemInfo)
+		{
+			continue;;
+		}
+
+		if (AddNewItem(InitParams))
+		{
+			AddedItems.Add(InitParams);
+		}
+	}
+
+	if (AddedItems.Num() > 0)
+	{
+		FHttpRequestParams RequestParams;
+		RequestParams.RequestType = EHttpRequestType::AddNewItems;
+		RequestParams.MemberID = PokeCore::DeviceId;
+		RequestParams.NewItemsInfos = AddedItems;
+
+		HttpActor->Request(RequestParams);
+	}
+}
+
+bool APokeCollectionCharacter::AddNewEquipment(FInitEquipmentParams& InInitEquipmentParams)
 {
 	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InInitEquipmentParams.EquipmentKey);
 	if (!ensure(EquipmentInfo))
 	{
-		return;
+		return false;
 	}
 
 	if (InInitEquipmentParams.EquipmentID < 0)
@@ -262,26 +359,30 @@ void APokeCollectionCharacter::AddNewEquipment(FInitEquipmentParams& InInitEquip
 	}
 
 	UPokeEquipment* PokeEquipment = NewObject<UPokeEquipment>();
-	if (PokeEquipment)
+	if (!PokeEquipment)
 	{
-		PokeEquipment->Init(InInitEquipmentParams);
+		return false;
 	}
 
+	PokeEquipment->Init(InInitEquipmentParams);
 	HaveEquipments.AddUnique(PokeEquipment);
+
+	return true;
 }
 
-void APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
+bool APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 {
 	const FPokeItemInfo* ItemInfo = CMS::GetItemDataTable(InInitItemParams.ItemKey);
 	if (!ensure(ItemInfo))
 	{
-		return;
+		return false;
 	}
 
 	UPokeItem* HaveItem = GetItemByKey(InInitItemParams.ItemKey);
 	if (HaveItem)
 	{
 		HaveItem->SetStackNum(HaveItem->GetStackNum() + InInitItemParams.ItemStackNum);
+		return true;
 	}
 	else
 	{
@@ -291,13 +392,18 @@ void APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 		}
 
 		UPokeItem* PokeItem = NewObject<UPokeItem>();
-		if (PokeItem)
+		if (!PokeItem)
 		{
-			PokeItem->Init(InInitItemParams);
+			return false;
 		}
 
+		PokeItem->Init(InInitItemParams);
 		HaveItems.AddUnique(PokeItem);
+		
+		return true;
 	}
+
+	return false;
 }
 
 void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
@@ -406,7 +512,6 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 	}
 
 	TArray<FInitCharacterParams> NewCharactersParams;
-
 	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
 	{
 		FInitCharacterParams Params;
@@ -414,17 +519,18 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 
 		NewCharactersParams.Add(Params);
 	}
-
 	AddNewCharacters(NewCharactersParams);
 
+	TArray<FInitItemParams> AddItems;
 	for (auto&& NewItemInfo : InBattleReward.GetItems)
 	{
 		FInitItemParams Params;
 		Params.ItemKey = NewItemInfo.Key;
 		Params.ItemStackNum = NewItemInfo.Value;
 
-		AddNewItem(Params);
+		AddItems.Add(Params);
 	}
+	AddNewItems(AddItems);
 
 	SetMoneyAmount(GetMoneyAmount() + InBattleReward.MoneyAmount);
 	SetPlayerExp(GetPlayerCurrentExp() + InBattleReward.ExperienceAmount);
@@ -729,6 +835,7 @@ void APokeCollectionCharacter::BeginPlay()
 	HttpActor->OnHttpLoginResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnLoginResponsed);
 	HttpActor->OnHttpHaveCharactersResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveCharactersResponsed);
 	HttpActor->OnHttpHaveEquipmentsResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveEquipmentsResponsed);
+	HttpActor->OnHttpHaveItemsResponseReceived.BindUObject(this, &APokeCollectionCharacter::OnHaveItemsResponsed);
 
 	FHttpRequestParams Params;
 	Params.RequestType = EHttpRequestType::Login;
@@ -738,7 +845,7 @@ void APokeCollectionCharacter::BeginPlay()
 
 	InitMainCharacter();
 	//InitHaveEquipments();
-	InitHaveItems();
+	//InitHaveItems();
 
 	//PutOnEquipment(1, 1);
 }
@@ -955,6 +1062,34 @@ void APokeCollectionCharacter::OnHaveEquipmentsResponsed(FHttpRequestPtr Request
 			{
 				PutOnEquipment(InitEquipmentParams.OwnerCharacterID, InitEquipmentParams.EquipmentID);
 			}
+		}
+
+	}
+
+	InitHaveItems();
+}
+
+void APokeCollectionCharacter::OnHaveItemsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+	TArray<TSharedPtr<FJsonValue>> Items = ResponceJson->GetArrayField("data");
+
+	for (int32 Index = 0; Index < Items.Num(); ++Index)
+	{
+		TSharedPtr<FJsonObject> ItemJs = Items[Index]->AsObject();
+
+		FString MemberId = ItemJs->GetStringField("memberId");
+
+		FInitItemParams InitItemParams;
+		InitItemParams.ItemID = ItemJs->GetIntegerField("itemId");
+		InitItemParams.ItemKey = ItemJs->GetIntegerField("itemKey");
+		InitItemParams.ItemStackNum = ItemJs->GetIntegerField("stackNum");
+		
+		UPokeItem* PokeItem = NewObject<UPokeItem>();
+		if (PokeItem)
+		{
+			PokeItem->Init(InitItemParams);
+
+			HaveItems.AddUnique(PokeItem);
 		}
 
 	}

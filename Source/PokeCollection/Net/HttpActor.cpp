@@ -126,13 +126,30 @@ void AHttpActor::RequestHaveEquipments(const FString& InUserId)
 
 	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
-	FString RequestURL = CollectionURL + FString("haveEquipments/") + InUserId;
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveEquipments");
 	Request->SetURL(RequestURL);
 	Request->SetVerb(HTTPVerb::GET);
 	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
 	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::HaveEquipments));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestHaveItems(const FString& InUserId)
+{
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveItems");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::GET);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::HaveItems));
 
 	Request->ProcessRequest();
 }
@@ -184,6 +201,91 @@ void AHttpActor::RequestAddNewCharacters(const FString& InUserId, const TArray<F
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
 	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::AddNewCharacters));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestAddNewEquipments(const FString& InUserId, const TArray<FInitEquipmentParams>& NewEquipmentsInfos)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& InitParam : NewEquipmentsInfos)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
+		JsonObject->SetNumberField(TEXT("equipmentId"), InitParam.EquipmentID);
+		JsonObject->SetNumberField(TEXT("equipmentKey"), InitParam.EquipmentKey);
+		JsonObject->SetNumberField(TEXT("equipmentLevel"), InitParam.EquipmentLevel);
+		JsonObject->SetNumberField(TEXT("ownerCharacterId"), InitParam.OwnerCharacterID);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("equipments", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveEquipments");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::POST);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::AddNewEquipments));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestAddNewItems(const FString& InUserId, const TArray<FInitItemParams>& NewItemsInfos)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& InitParam : NewItemsInfos)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
+		JsonObject->SetNumberField(TEXT("itemId"), InitParam.ItemID);
+		JsonObject->SetNumberField(TEXT("itemKey"), InitParam.ItemKey);
+		JsonObject->SetNumberField(TEXT("stackNum"), InitParam.ItemStackNum);
+		
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("items", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveItems");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::POST);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::AddNewItems));
 
 	Request->ProcessRequest();
 }
@@ -345,6 +447,22 @@ void AHttpActor::OnHaveEquipmentsResponseReceived(FHttpRequestPtr Request, FHttp
 	}
 }
 
+void AHttpActor::OnHaveItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		OnHttpHaveItemsResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
 void AHttpActor::OnSavePlayerInfoResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	TSharedPtr<FJsonObject> JsonObject;
@@ -370,6 +488,38 @@ void AHttpActor::OnAddNewCharactersResponseReceived(FHttpRequestPtr Request, FHt
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("새 캐릭터 추가")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnAddNewEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("새 장비 추가")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnAddNewItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("새 아이템 추가")));
 	}
 	else
 	{
@@ -422,11 +572,20 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 	case EHttpRequestType::HaveEquipments:
 		RequestHaveEquipments(InRequestParams.MemberID);
 		break;
+	case EHttpRequestType::HaveItems:
+		RequestHaveItems(InRequestParams.MemberID);
+		break;
 	case EHttpRequestType::SavePlayerInfo:
 		RequestSavePlayerInfo(InRequestParams.MemberID, InRequestParams.SaveColumn, InRequestParams.SavePlayerInfos);
 		break;
 	case EHttpRequestType::AddNewCharacters:
 		RequestAddNewCharacters(InRequestParams.MemberID, InRequestParams.NewCharactersInfos);
+		break;
+	case EHttpRequestType::AddNewEquipments:
+		RequestAddNewEquipments(InRequestParams.MemberID, InRequestParams.NewEquipmentsInfos);
+		break;
+	case EHttpRequestType::AddNewItems:
+		RequestAddNewItems(InRequestParams.MemberID, InRequestParams.NewItemsInfos);
 		break;
 	case EHttpRequestType::Invalid:
 	default:
@@ -461,11 +620,20 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 	case EHttpRequestType::HaveEquipments:
 		OnHaveEquipmentsResponseReceived(Request, Response, bWasSuccessful);
 		break;
+	case EHttpRequestType::HaveItems:
+		OnHaveItemsResponseReceived(Request, Response, bWasSuccessful);
+		break;
 	case EHttpRequestType::SavePlayerInfo:
 		OnSavePlayerInfoResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::AddNewCharacters:
 		OnAddNewCharactersResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::AddNewEquipments:
+		OnAddNewEquipmentsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::AddNewItems:
+		OnAddNewItemsResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::Invalid:
 	default:
