@@ -290,6 +290,89 @@ void AHttpActor::RequestAddNewItems(const FString& InUserId, const TArray<FInitI
 	Request->ProcessRequest();
 }
 
+void AHttpActor::RequestDestroyCharacters(const FString& InUserId, const TArray<int32>& DestroyCharacterIds)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& CharacterId : DestroyCharacterIds)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetNumberField(TEXT("characterId"), CharacterId);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("characterIds", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveCharacters");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::DELETE);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::DestroyCharacters));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestDestroyEquipments(const FString& InUserId, const TArray<int32>& DestroyEquipmentIds)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& EquipmentId : DestroyEquipmentIds)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetNumberField(TEXT("equipmentId"), EquipmentId);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("equipmentIds", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveEquipments");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::DELETE);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::DestroyEquipments));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestDestroyItems(const FString& InUserId, const TArray<int32>& DestroyItemKeys)
+{
+
+}
+
 void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, const ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params)
 {
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
@@ -527,6 +610,54 @@ void AHttpActor::OnAddNewItemsResponseReceived(FHttpRequestPtr Request, FHttpRes
 	}
 }
 
+void AHttpActor::OnDestroyCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("캐릭터 삭제")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnDestroyEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("장비 삭제")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnDestroyItemssResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("아이템 삭제")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
 void AHttpActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -587,6 +718,15 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 	case EHttpRequestType::AddNewItems:
 		RequestAddNewItems(InRequestParams.MemberID, InRequestParams.NewItemsInfos);
 		break;
+	case EHttpRequestType::DestroyCharacters:
+		RequestDestroyCharacters(InRequestParams.MemberID, InRequestParams.DestoryCharacterIds);
+		break;
+	case EHttpRequestType::DestroyEquipments:
+		RequestDestroyEquipments(InRequestParams.MemberID, InRequestParams.DestoryEquipmentIds);
+		break;
+	case EHttpRequestType::DestroyItems:
+		RequestDestroyItems(InRequestParams.MemberID, InRequestParams.DestoryItemKeys);
+		break;
 	case EHttpRequestType::Invalid:
 	default:
 		bRequesting = false;
@@ -634,6 +774,15 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 		break;
 	case EHttpRequestType::AddNewItems:
 		OnAddNewItemsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::DestroyCharacters:
+		OnDestroyCharactersResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::DestroyEquipments:
+		OnDestroyEquipmentsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::DestroyItems:
+		OnDestroyItemssResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::Invalid:
 	default:

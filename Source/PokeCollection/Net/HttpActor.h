@@ -24,6 +24,9 @@ enum class EHttpRequestType
 	AddNewCharacters,
 	AddNewEquipments,
 	AddNewItems,
+	DestroyCharacters,
+	DestroyEquipments,
+	DestroyItems,
 };
 
 enum class ESavePlayerInfo
@@ -62,6 +65,12 @@ public:
 	TArray<FInitEquipmentParams> NewEquipmentsInfos;
 
 	TArray<FInitItemParams> NewItemsInfos;
+
+	TArray<int32> DestoryCharacterIds;
+
+	TArray<int32> DestoryEquipmentIds;
+
+	TArray<int32> DestoryItemKeys;
 };
 
 UCLASS()
@@ -100,6 +109,9 @@ private:
 	void RequestAddNewCharacters(const FString& InUserId, const TArray<FInitCharacterParams>& NewCharactersInfos);
 	void RequestAddNewEquipments(const FString& InUserId, const TArray<FInitEquipmentParams>& NewEquipmentsInfos);
 	void RequestAddNewItems(const FString& InUserId, const TArray<FInitItemParams>& NewItemsInfos);
+	void RequestDestroyCharacters(const FString& InUserId, const TArray<int32>& DestroyCharacterIds);
+	void RequestDestroyEquipments(const FString& InUserId, const TArray<int32>& DestroyEquipmentIds);
+	void RequestDestroyItems(const FString& InUserId, const TArray<int32>& DestroyItemKeys);
 
 	void OnLoginResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
@@ -110,6 +122,9 @@ private:
 	void OnAddNewCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnAddNewEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnAddNewItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnDestroyCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnDestroyEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnDestroyItemssResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	FHttpModule* Http;
 
