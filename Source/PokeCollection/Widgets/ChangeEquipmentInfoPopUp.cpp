@@ -74,6 +74,12 @@ void UChangeEquipmentInfoPopUp::OnCancelButtonClicked()
 
 void UChangeEquipmentInfoPopUp::OnChangeButtonClicked()
 {
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!HttpActor)
+	{
+		return;
+	}
+
 	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 	if (!ensure(Player) || !GetOwningPlayer())
 	{
@@ -93,6 +99,25 @@ void UChangeEquipmentInfoPopUp::OnChangeButtonClicked()
 	}
 
 	Player->PutOnEquipment(InfoWidget->GetSelectedCharacterID(), NextEquipmentID);
+	
+	TArray<int32> UpdatedEquipIds;
+
+	if (Player->GetEquipmentByID(CurrentEquipmentID))
+	{
+		UpdatedEquipIds.Add(CurrentEquipmentID);
+	}
+
+	if (Player->GetEquipmentByID(NextEquipmentID))
+	{
+		UpdatedEquipIds.Add(NextEquipmentID);
+	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::UpdateEquipments;
+	Params.MemberID = PokeCore::DeviceId;
+	Params.UpdateEquipmentIds = UpdatedEquipIds;
+
+	HttpActor->Request(Params);
 
 	PokeHud->OnBackButtonClicked(PokeHud->GetInGameChangeEquipmentWidget());
 

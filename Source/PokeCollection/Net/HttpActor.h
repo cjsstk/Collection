@@ -72,7 +72,7 @@ public:
 
 	TArray<int32> DestoryEquipmentIds;
 
-	TArray<int32> DestoryItemKeys;
+	TMap<int32, int32> DestoryItemKeys;
 
 	TArray<int32> UpdateCharacterIds;
 
@@ -117,7 +117,7 @@ private:
 	void RequestAddNewItems(const FString& InUserId, const TArray<FInitItemParams>& NewItemsInfos);
 	void RequestDestroyCharacters(const FString& InUserId, const TArray<int32>& DestroyCharacterIds);
 	void RequestDestroyEquipments(const FString& InUserId, const TArray<int32>& DestroyEquipmentIds);
-	void RequestDestroyItems(const FString& InUserId, const TArray<int32>& DestroyItemKeys);
+	void RequestDestroyItems(const FString& InUserId, const TMap<int32, int32>& DestroyItemKeys);
 	void RequestUpdateCharacters(const FString& InUserId, const TArray<int32>& UpdateCharacterIds);
 	void RequestUpdateEquipments(const FString& InUserId, const TArray<int32>& UpdateEquipmentIds);
 

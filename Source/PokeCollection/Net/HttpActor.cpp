@@ -266,7 +266,6 @@ void AHttpActor::RequestAddNewItems(const FString& InUserId, const TArray<FInitI
 	{
 		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 
-		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
 		JsonObject->SetNumberField(TEXT("itemId"), InitParam.ItemID);
 		JsonObject->SetNumberField(TEXT("itemKey"), InitParam.ItemKey);
 		JsonObject->SetNumberField(TEXT("stackNum"), InitParam.ItemStackNum);
@@ -370,9 +369,58 @@ void AHttpActor::RequestDestroyEquipments(const FString& InUserId, const TArray<
 	Request->ProcessRequest();
 }
 
-void AHttpActor::RequestDestroyItems(const FString& InUserId, const TArray<int32>& DestroyItemKeys)
+void AHttpActor::RequestDestroyItems(const FString& InUserId, const TMap<int32, int32>& DestroyItemKeys)
 {
+	APokeCollectionCharacter* Player = PokeCore::GetPokePlayer(GetWorld());
+	if (!Player)
+	{
+		ensure(0);
+		return;
+	}
 
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& Item : DestroyItemKeys)
+	{
+		UPokeItem* PokeItem = Player->GetItemByKey(Item.Key);
+		if (!PokeItem)
+		{
+			continue;
+		}
+
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetNumberField(TEXT("itemId"), PokeItem->GetItemID());
+		JsonObject->SetNumberField(TEXT("itemKey"), Item.Key);
+		JsonObject->SetNumberField(TEXT("stackNum"), Item.Value);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("items", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveItems");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::DELETE);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::DestroyItems));
+
+	Request->ProcessRequest();
 }
 
 void AHttpActor::RequestUpdateCharacters(const FString& InUserId, const TArray<int32>& UpdateCharacterIds)

@@ -382,6 +382,7 @@ bool APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 	if (HaveItem)
 	{
 		HaveItem->SetStackNum(HaveItem->GetStackNum() + InInitItemParams.ItemStackNum);
+		InInitItemParams.ItemID = HaveItem->GetItemID();
 		return true;
 	}
 	else
@@ -499,30 +500,36 @@ void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
 	}
 }
 
-void APokeCollectionCharacter::DeleteItemsByID(TMap<int32, int32>& InItemIDs)
-{
-	for (auto&& Item : InItemIDs)
-	{
-		UPokeItem* HaveItem = GetItemByID(Item.Key);
-		if (HaveItem)
-		{
-			int32 NewStackNum = HaveItem->GetStackNum() - Item.Value;
-
-			if (NewStackNum <= 0)
-			{
-				int32 ItemID = Item.Key;
-				HaveItems.RemoveAll([ItemID](UPokeItem* PokeItem) { return PokeItem->GetItemID() == ItemID; });
-			}
-			else
-			{
-				HaveItem->SetStackNum(NewStackNum);
-			}
-		}
-	}
-}
+//void APokeCollectionCharacter::DeleteItemsByID(TMap<int32, int32>& InItemIDs)
+//{
+//	for (auto&& Item : InItemIDs)
+//	{
+//		UPokeItem* HaveItem = GetItemByID(Item.Key);
+//		if (HaveItem)
+//		{
+//			int32 NewStackNum = HaveItem->GetStackNum() - Item.Value;
+//
+//			if (NewStackNum <= 0)
+//			{
+//				int32 ItemID = Item.Key;
+//				HaveItems.RemoveAll([ItemID](UPokeItem* PokeItem) { return PokeItem->GetItemID() == ItemID; });
+//			}
+//			else
+//			{
+//				HaveItem->SetStackNum(NewStackNum);
+//			}
+//		}
+//	}
+//}
 
 void APokeCollectionCharacter::DeleteItemsByKey(TMap<int32, int32>& InItemKeys)
 {
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
 	for (auto&& Item : InItemKeys)
 	{
 		UPokeItem* HaveItem = GetItemByKey(Item.Key);
@@ -541,6 +548,13 @@ void APokeCollectionCharacter::DeleteItemsByKey(TMap<int32, int32>& InItemKeys)
 			}
 		}
 	}
+
+	FHttpRequestParams RequestParams;
+	RequestParams.RequestType = EHttpRequestType::DestroyItems;
+	RequestParams.MemberID = PokeCore::DeviceId;
+	RequestParams.DestoryItemKeys = InItemKeys;
+
+	HttpActor->Request(RequestParams);
 }
 
 void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)

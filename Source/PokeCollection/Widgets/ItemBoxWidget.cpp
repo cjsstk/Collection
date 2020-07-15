@@ -74,7 +74,7 @@ void UItemBoxWidget::RefreshSlot()
 					continue;
 				}
 
-				BoxSlot->InitByID(CurrentItem->GetItemID());
+				BoxSlot->InitByKey(CurrentItem->GetItemKey());
 				BoxSlot->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
 			else
@@ -100,9 +100,9 @@ void UItemSlot::NativeConstruct()
 	BoxContentType = EBoxContentType::Item;
 }
 
-void UItemSlot::InitByID(int32 InContentID)
+void UItemSlot::InitByKey(int32 InContentKey)
 {
-	Super::InitByID(InContentID);
+	Super::InitByKey(InContentKey);
 
 	APokeCollectionCharacter* Player = PokeCore::GetPokePlayer(GetWorld());
 	if (!ensure(Player))
@@ -110,7 +110,7 @@ void UItemSlot::InitByID(int32 InContentID)
 		return;
 	}
 
-	UPokeItem* Item = Player->GetItemByID(InContentID);
+	UPokeItem* Item = Player->GetItemByKey(InContentKey);
 	if (!Item)
 	{
 		return;
@@ -118,6 +118,25 @@ void UItemSlot::InitByID(int32 InContentID)
 
 	SetItemStack(Item->GetStackNum());
 }
+
+//void UItemSlot::InitByID(int32 InContentID)
+//{
+//	Super::InitByID(InContentID);
+//
+//	APokeCollectionCharacter* Player = PokeCore::GetPokePlayer(GetWorld());
+//	if (!ensure(Player))
+//	{
+//		return;
+//	}
+//
+//	UPokeItem* Item = Player->GetItemByID(InContentID);
+//	if (!Item)
+//	{
+//		return;
+//	}
+//
+//	SetItemStack(Item->GetStackNum());
+//}
 
 void UItemSlot::OnSelectButtonClicked()
 {
@@ -127,7 +146,7 @@ void UItemSlot::OnSelectButtonClicked()
 		return;
 	}
 
-	PokeHud->OpenUseItemPopUp(ContentID);
+	PokeHud->OpenUseItemPopUp(ContentKey);
 }
 
 void UItemSlot::SetItemStack(int32 InStack)

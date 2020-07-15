@@ -106,7 +106,7 @@ void UInGameCharacterInfoWidget::OnBack()
 {
 	Super::OnBack();
 
-	SelectedCharacterID = -1;
+	//SelectedCharacterID = -1;
 }
 
 void UCharacterInfoContentWidget::NativeConstruct()

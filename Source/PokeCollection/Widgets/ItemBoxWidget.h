@@ -16,7 +16,8 @@ class POKECOLLECTION_API UItemSlot : public UBoxSlot
 
 public:
 	virtual void NativeConstruct() override;
-	virtual void InitByID(int32 InContentID) override;
+	//virtual void InitByID(int32 InContentID) override;
+	virtual void InitByKey(int32 InContentKey) override;
 
 	virtual void OnSelectButtonClicked() override;
 
