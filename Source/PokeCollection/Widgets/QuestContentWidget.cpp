@@ -121,6 +121,11 @@ void UQuestSlot::InitQuest(TWeakObjectPtr<class UPokeQuest> InWeakQuest)
 	SetQuestKey(Quest->GetQuestKey());
 	SetQuestDesc(Quest->GetQuestDesc());
 	SetQuestCount(Quest->GetCurrentCount(), Quest->GetDestCount());
+
+	if (CompleteButton)
+	{
+		CompleteButton->SetIsEnabled(Quest->CanComplete());
+	}
 }
 
 void UQuestSlot::SetQuestDesc(const FText& InDesc)

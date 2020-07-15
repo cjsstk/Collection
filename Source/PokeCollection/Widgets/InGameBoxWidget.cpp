@@ -192,7 +192,7 @@ void UInGameBoxWidget::NativeConstruct()
 		BoxContents[(int32)ContentWidget.BoxContentType] = BoxContentWidget;
 	}
 
-	ContentsBox->SetActiveWidgetIndex((int32)CurrentBoxContentType);
+	ContentsBox->SetActiveWidgetIndex((int32)EBoxContentType::Character);
 	EquipmentSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 	ItemSortWidget->SetVisibility(ESlateVisibility::Collapsed);
 }

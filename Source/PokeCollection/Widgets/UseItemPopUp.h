@@ -17,7 +17,7 @@ class POKECOLLECTION_API UUseItemPopUp : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	void InitInfo(int32 InItemID);
+	void InitInfo(int32 InItemKey);
 
 	UFUNCTION()
 	void OnBackgroundButtonClicked();
@@ -55,5 +55,5 @@ private:
 	class UButton* UseButton = nullptr;
 
 	int32 UseNum = 1;
-	int32 SelectedItemID = -1;
+	int32 SelectedItemKey = -1;
 };

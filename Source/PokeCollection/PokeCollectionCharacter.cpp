@@ -408,6 +408,13 @@ bool APokeCollectionCharacter::AddNewItem(FInitItemParams& InInitItemParams)
 
 void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
 {
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	TArray<int32> DestroyCharacterIds;
 	TArray<int32> PutOnEquipments;
 
 	for (int32 CharacterID : InCharacterIDs)
@@ -426,16 +433,45 @@ void APokeCollectionCharacter::DeleteCharacters(TArray<int32>& InCharacterIDs)
 			PutOnEquipments.Add(PokeEquipment->GetEquipmentID());
 		}
 
+		DestroyCharacterIds.Add(CharacterID);
 		HaveCharacters.Remove(PokeCharacter);
 	}
 
 	InCharacterIDs.Empty();
 
-	DeleteEquipments(PutOnEquipments);
+	if (DestroyCharacterIds.Num() > 0)
+	{
+		FHttpRequestParams RequestParams;
+		RequestParams.RequestType = EHttpRequestType::DestroyCharacters;
+		RequestParams.MemberID = PokeCore::DeviceId;
+		RequestParams.DestoryCharacterIds = DestroyCharacterIds;
+
+		HttpActor->Request(RequestParams);
+	}
+
+	if (PutOnEquipments.Num() > 0)
+	{
+		FHttpRequestParams RequestParams;
+		RequestParams.RequestType = EHttpRequestType::DestroyEquipments;
+		RequestParams.MemberID = PokeCore::DeviceId;
+		RequestParams.DestoryCharacterIds = PutOnEquipments;
+
+		HttpActor->Request(RequestParams);
+
+		DeleteEquipments(PutOnEquipments);
+	}
 }
 
 void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
 {
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	TArray<int32> DestroyEquipmentIds;
+
 	for (int32 EquipmentID : InEquipmentIDs)
 	{
 		UPokeEquipment* PokeEquipment = *HaveEquipments.FindByPredicate([EquipmentID](UPokeEquipment* PE) { return PE->GetEquipmentID() == EquipmentID; });
@@ -446,10 +482,21 @@ void APokeCollectionCharacter::DeleteEquipments(TArray<int32>& InEquipmentIDs)
 		}
 
 		PokeEquipment->SetOwnerCharacterID(-1);
+		DestroyEquipmentIds.Add(EquipmentID);
 		HaveEquipments.Remove(PokeEquipment);
 	}
 
 	InEquipmentIDs.Empty();
+
+	if (DestroyEquipmentIds.Num() > 0)
+	{
+		FHttpRequestParams RequestParams;
+		RequestParams.RequestType = EHttpRequestType::DestroyEquipments;
+		RequestParams.MemberID = PokeCore::DeviceId;
+		RequestParams.DestoryEquipmentIds = DestroyEquipmentIds;
+
+		HttpActor->Request(RequestParams);
+	}
 }
 
 void APokeCollectionCharacter::DeleteItemsByID(TMap<int32, int32>& InItemIDs)
@@ -1015,12 +1062,16 @@ void APokeCollectionCharacter::OnHaveCharactersResponsed(FHttpRequestPtr Request
 		InitCharacterParams.CurrentExp = CharacterJs->GetIntegerField("characterExp");
 		InitCharacterParams.EvHealth = CharacterJs->GetIntegerField("EvHealth");
 		InitCharacterParams.EvAttack = CharacterJs->GetIntegerField("EvAttack");
-		InitCharacterParams.EvDefence = CharacterJs->GetIntegerField("EvDefence");
+		InitCharacterParams.EvDefence = CharacterJs->GetIntegerField("EvDefense");
 		InitCharacterParams.EvSpecialAttack = CharacterJs->GetIntegerField("EvSpAttack");
-		InitCharacterParams.EvSpecialDefence = CharacterJs->GetIntegerField("EvSpDefence");
+		InitCharacterParams.EvSpecialDefence = CharacterJs->GetIntegerField("EvSpDefense");
 		InitCharacterParams.EvSpeed = CharacterJs->GetIntegerField("EvSpeed");
 		InitCharacterParams.JoinedPartyNum = CharacterJs->GetIntegerField("joinedParty");
 		InitCharacterParams.JoinedSlotNum = CharacterJs->GetIntegerField("joinedSlot");
+		InitCharacterParams.Skill1Level = CharacterJs->GetIntegerField("skill1Level");
+		InitCharacterParams.Skill2Level = CharacterJs->GetIntegerField("skill2Level");
+		InitCharacterParams.Skill3Level = CharacterJs->GetIntegerField("skill3Level");
+		InitCharacterParams.Skill4Level = CharacterJs->GetIntegerField("skill4Level");
 
 		APokeCharacter* PokeCharacter = NewObject<APokeCharacter>();
 		if (PokeCharacter)

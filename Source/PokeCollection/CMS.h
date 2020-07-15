@@ -218,6 +218,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsUsable = false;
 
+	/** Can get items 1 ~ max by battle reward */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 GetMaxNum = 1;
 

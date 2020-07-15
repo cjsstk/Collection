@@ -7,6 +7,12 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
+#include "PokeCore.h"
+#include "PokeCollectionCharacter.h"
+#include "PokeCharacter.h"
+#include "PokeEquipment.h"
+#include "PokeItem.h"
+
 const static FString CollectionURL = FString("http://collection.nupa.moe/api/");
 
 using VerbType = FString;
@@ -175,7 +181,11 @@ void AHttpActor::RequestAddNewCharacters(const FString& InUserId, const TArray<F
 		JsonObject->SetNumberField(TEXT("EvSpAttack"), InitParam.EvSpecialAttack);
 		JsonObject->SetNumberField(TEXT("EvSpDefense"), InitParam.EvSpecialDefence);
 		JsonObject->SetNumberField(TEXT("EvSpeed"), InitParam.EvSpeed);
-		
+		JsonObject->SetNumberField(TEXT("skill1Level"), InitParam.Skill1Level);
+		JsonObject->SetNumberField(TEXT("skill2Level"), InitParam.Skill2Level);
+		JsonObject->SetNumberField(TEXT("skill3Level"), InitParam.Skill3Level);
+		JsonObject->SetNumberField(TEXT("skill4Level"), InitParam.Skill4Level);
+
 		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
 		ObjArray.Add(JsonValue);
 	}
@@ -296,11 +306,7 @@ void AHttpActor::RequestDestroyCharacters(const FString& InUserId, const TArray<
 
 	for (auto&& CharacterId : DestroyCharacterIds)
 	{
-		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
-
-		JsonObject->SetNumberField(TEXT("characterId"), CharacterId);
-
-		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		TSharedRef<FJsonValueNumber> JsonValue = MakeShareable(new FJsonValueNumber(CharacterId));
 		ObjArray.Add(JsonValue);
 	}
 
@@ -335,11 +341,7 @@ void AHttpActor::RequestDestroyEquipments(const FString& InUserId, const TArray<
 
 	for (auto&& EquipmentId : DestroyEquipmentIds)
 	{
-		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
-
-		JsonObject->SetNumberField(TEXT("equipmentId"), EquipmentId);
-
-		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		TSharedRef<FJsonValueNumber> JsonValue = MakeShareable(new FJsonValueNumber(EquipmentId));
 		ObjArray.Add(JsonValue);
 	}
 
@@ -371,6 +373,133 @@ void AHttpActor::RequestDestroyEquipments(const FString& InUserId, const TArray<
 void AHttpActor::RequestDestroyItems(const FString& InUserId, const TArray<int32>& DestroyItemKeys)
 {
 
+}
+
+void AHttpActor::RequestUpdateCharacters(const FString& InUserId, const TArray<int32>& UpdateCharacterIds)
+{
+	APokeCollectionCharacter* Player = PokeCore::GetPokePlayer(GetWorld());
+	if (!Player)
+	{
+		ensure(0);
+		return;
+	}
+
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& UpdateCharacterId : UpdateCharacterIds)
+	{
+		APokeCharacter* PokeCharacter = Player->GetCharacterByID(UpdateCharacterId);
+		if (!PokeCharacter)
+		{
+			continue;
+		}
+
+		TArray<int32> SkillLevels;
+		PokeCharacter->GetSkillLevels(SkillLevels);
+
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
+		JsonObject->SetNumberField(TEXT("characterId"), UpdateCharacterId);
+		JsonObject->SetNumberField(TEXT("characterKey"), PokeCharacter->GetCharacterKey());
+		JsonObject->SetNumberField(TEXT("characterLevel"), PokeCharacter->GetLevel());
+		JsonObject->SetNumberField(TEXT("characterExp"), PokeCharacter->GetCurrentExp());
+		JsonObject->SetNumberField(TEXT("joinedParty"), PokeCharacter->GetJoinedPartyNum());
+		JsonObject->SetNumberField(TEXT("joinedSlot"), PokeCharacter->GetJoinedSlotNum());
+		JsonObject->SetNumberField(TEXT("EvHealth"), PokeCharacter->GetEvStat(EStatus::HealthPoint));
+		JsonObject->SetNumberField(TEXT("EvAttack"), PokeCharacter->GetEvStat(EStatus::Attack));
+		JsonObject->SetNumberField(TEXT("EvDefense"), PokeCharacter->GetEvStat(EStatus::Defense));
+		JsonObject->SetNumberField(TEXT("EvSpAttack"), PokeCharacter->GetEvStat(EStatus::SpAttack));
+		JsonObject->SetNumberField(TEXT("EvSpDefense"), PokeCharacter->GetEvStat(EStatus::SpDefense));
+		JsonObject->SetNumberField(TEXT("EvSpeed"), PokeCharacter->GetEvStat(EStatus::Speed));
+		JsonObject->SetNumberField(TEXT("skill1Level"), SkillLevels[0]);
+		JsonObject->SetNumberField(TEXT("skill2Level"), SkillLevels[1]);
+		JsonObject->SetNumberField(TEXT("skill3Level"), SkillLevels[2]);
+		JsonObject->SetNumberField(TEXT("skill4Level"), SkillLevels[3]);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("characters", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveCharacters");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::PUT);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::UpdateCharacters));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestUpdateEquipments(const FString& InUserId, const TArray<int32>& UpdateEquipmentIds)
+{
+	APokeCollectionCharacter* Player = PokeCore::GetPokePlayer(GetWorld());
+	if (!Player)
+	{
+		ensure(0);
+		return;
+	}
+
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& UpdateEquipmentId : UpdateEquipmentIds)
+	{
+		UPokeEquipment* PokeEquipment = Player->GetEquipmentByID(UpdateEquipmentId);
+		if (!PokeEquipment)
+		{
+			continue;
+		}
+
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
+		JsonObject->SetNumberField(TEXT("equipmentId"), UpdateEquipmentId);
+		JsonObject->SetNumberField(TEXT("equipmentKey"), PokeEquipment->GetEquipmentKey());
+		JsonObject->SetNumberField(TEXT("equipmentLevel"), PokeEquipment->GetLevel());
+		JsonObject->SetNumberField(TEXT("ownerCharacterId"), PokeEquipment->GetOwnerCharacterID());
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("equipments", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/haveEquipments");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::PUT);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::UpdateEquipments));
+
+	Request->ProcessRequest();
 }
 
 void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, const ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params)
@@ -642,7 +771,7 @@ void AHttpActor::OnDestroyEquipmentsResponseReceived(FHttpRequestPtr Request, FH
 	}
 }
 
-void AHttpActor::OnDestroyItemssResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+void AHttpActor::OnDestroyItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	TSharedPtr<FJsonObject> JsonObject;
 
@@ -651,6 +780,38 @@ void AHttpActor::OnDestroyItemssResponseReceived(FHttpRequestPtr Request, FHttpR
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("아이템 삭제")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnUpdateCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("캐릭터 수정")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
+void AHttpActor::OnUpdateEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("장비 수정")));
 	}
 	else
 	{
@@ -727,6 +888,12 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 	case EHttpRequestType::DestroyItems:
 		RequestDestroyItems(InRequestParams.MemberID, InRequestParams.DestoryItemKeys);
 		break;
+	case EHttpRequestType::UpdateCharacters:
+		RequestUpdateCharacters(InRequestParams.MemberID, InRequestParams.UpdateCharacterIds);
+		break;
+	case EHttpRequestType::UpdateEquipments:
+		RequestUpdateEquipments(InRequestParams.MemberID, InRequestParams.UpdateEquipmentIds);
+		break;
 	case EHttpRequestType::Invalid:
 	default:
 		bRequesting = false;
@@ -736,6 +903,9 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 
 void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	bRequesting = false;
+	Requests.Pop();
+
 	FString RequestTypeStr = Request->GetHeader("X-Request-ID");
 
 	EHttpRequestType RequestType = (EHttpRequestType)FCString::Atoi(*RequestTypeStr);
@@ -782,7 +952,13 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 		OnDestroyEquipmentsResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::DestroyItems:
-		OnDestroyItemssResponseReceived(Request, Response, bWasSuccessful);
+		OnDestroyItemsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::UpdateCharacters:
+		OnUpdateCharactersResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::UpdateEquipments:
+		OnUpdateEquipmentsResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::Invalid:
 	default:
@@ -790,7 +966,5 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 		break;
 	}
 
-	bRequesting = false;
-	Requests.Pop();
 }
 

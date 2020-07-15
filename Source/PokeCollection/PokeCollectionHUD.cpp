@@ -512,7 +512,7 @@ void APokeCollectionHUD::OpenSkillUpgradePopUp(int32 InSkillKey, int32 InSkillIn
 	}
 }
 
-void APokeCollectionHUD::OpenUseItemPopUp(int32 InItemID)
+void APokeCollectionHUD::OpenUseItemPopUp(int32 InItemKey)
 {
 	if (!UseItemPopUpClass.Get())
 	{
@@ -523,7 +523,7 @@ void APokeCollectionHUD::OpenUseItemPopUp(int32 InItemID)
 	if (ensure(UseItemPopUp))
 	{
 		UseItemPopUp->AddToViewport(2);
-		UseItemPopUp->InitInfo(InItemID);
+		UseItemPopUp->InitInfo(InItemKey);
 	}
 }
 

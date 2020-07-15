@@ -9,6 +9,7 @@
 #include "VerticalBox.h"
 
 #include "PokeCore.h"
+#include "Net/HttpActor.h"
 
 void UEvStatusInfoWidget::NativeConstruct()
 {
@@ -103,6 +104,12 @@ void UEvStatusInfoWidget::SetUpAmount(EStatus InStatus, int32 InChangeAmount)
 
 void UEvStatusInfoWidget::OnConfirmButtonClicked()
 {
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!HttpActor)
+	{
+		return;
+	}
+
 	APokeCharacter* SelectedCharacter = GetSelectedCharacter();
 	if (!ensure(SelectedCharacter))
 	{
@@ -110,6 +117,16 @@ void UEvStatusInfoWidget::OnConfirmButtonClicked()
 	}
 
 	SelectedCharacter->AddEvStat(UpAmount);
+
+	TArray<int32> UpdateCharacters;
+	UpdateCharacters.Add(SelectedCharacter->GetCharacterID());
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::UpdateCharacters;
+	Params.MemberID = PokeCore::DeviceId;
+	Params.UpdateCharacterIds = UpdateCharacters;
+
+	HttpActor->Request(Params);
 
 	OnOpen();
 }

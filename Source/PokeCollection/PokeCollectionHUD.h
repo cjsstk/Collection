@@ -35,7 +35,7 @@ public:
 	void OpenEquipmentInfoPopUp(int32 InEquipmentID);
 	void OpenEquipmentUpgradePopUp(int32 InEquipmentID);
 	void OpenSkillUpgradePopUp(int32 InSkillKey, int32 InSkillIndex);
-	void OpenUseItemPopUp(int32 InItemID);
+	void OpenUseItemPopUp(int32 InItemKey);
 	void OpenChangeEquipmentInfoPopUp(int32 InNextEquipmentID);
 	void OpenInGameSummonWidget();
 

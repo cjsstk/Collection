@@ -36,7 +36,7 @@ void UUseItemPopUp::NativeConstruct()
 	}
 }
 
-void UUseItemPopUp::InitInfo(int32 InItemID)
+void UUseItemPopUp::InitInfo(int32 InItemKey)
 {
 	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
 	if (!Player)
@@ -44,13 +44,13 @@ void UUseItemPopUp::InitInfo(int32 InItemID)
 		return;
 	}
 
-	UPokeItem* Item = Player->GetItemByID(InItemID);
+	UPokeItem* Item = Player->GetItemByKey(InItemKey);
 	if (!Item)
 	{
 		return;
 	}
 
-	SelectedItemID = InItemID;
+	SelectedItemKey = InItemKey;
 
 	if (ItemImage)
 	{
@@ -119,7 +119,7 @@ void UUseItemPopUp::OnUseButtonClicked()
 		return;
 	}
 
-	UPokeItem* Item = Player->GetItemByID(SelectedItemID);
+	UPokeItem* Item = Player->GetItemByKey(SelectedItemKey);
 	if (!Item)
 	{
 		return;
@@ -136,9 +136,9 @@ void UUseItemPopUp::OnUseButtonClicked()
 	}
 
 	TMap<int32, int32> UseItems;
-	UseItems.Add(SelectedItemID, UseNum);
+	UseItems.Add(SelectedItemKey, UseNum);
 
-	Player->DeleteItemsByID(UseItems);
+	Player->DeleteItemsByKey(UseItems);
 
 	TArray<FInitEquipmentParams> AddEquipemts;
 	for (int32 EquipKey : ComeOutEquipmentKeys)

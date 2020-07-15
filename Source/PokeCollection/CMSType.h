@@ -192,6 +192,18 @@ public:
 	int32 JoinedSlotNum = 0;
 
 	UPROPERTY()
+	int32 Skill1Level = 1;
+
+	UPROPERTY()
+	int32 Skill2Level = 1;
+
+	UPROPERTY()
+	int32 Skill3Level = 1;
+
+	UPROPERTY()
+	int32 Skill4Level = 1;
+
+	UPROPERTY()
 	bool bIsEnemy = false;
 };
 
