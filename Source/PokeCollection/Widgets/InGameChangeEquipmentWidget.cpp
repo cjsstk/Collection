@@ -81,13 +81,7 @@ void UExcludeEquipmentSlot::OnExcludeButtonClicked()
 		return;
 	}
 
-	APokeCharacter* Character = Player->GetCharacterByID(InfoWidget->GetSelectedCharacterID());
-	if (!ensure(Character))
-	{
-		return;
-	}
-
-	Character->TakeOffEquipment();
+	Player->TakeOffEquipment(InfoWidget->GetSelectedCharacterID());
 
 	PokeHud->OnBackButtonClicked(PokeHud->GetInGameChangeEquipmentWidget());
 }

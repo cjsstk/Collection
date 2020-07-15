@@ -160,11 +160,15 @@ void UCharacterBoxSlot::OnSelectButtonClicked()
 		int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
 		int32 SelectedPartyNum = Player->GetCurrentSelectedPartyNum();
 
+		TArray<int32> UpdatedCharacterIds;
+
 		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(SelectedPartyNum, SelectedSlotNum);
 		if (CurrentCharacter)
 		{
 			CurrentCharacter->SetJoinedSlotNum(0);
 			CurrentCharacter->SetJoinedPartyNum(0);
+
+			UpdatedCharacterIds.Add(CurrentCharacter->GetCharacterID());
 		}
 
 		APokeCharacter* NextCharacter = Player->GetCharacterByID(ContentID);
@@ -172,7 +176,11 @@ void UCharacterBoxSlot::OnSelectButtonClicked()
 		{
 			NextCharacter->SetJoinedSlotNum(SelectedSlotNum);
 			NextCharacter->SetJoinedPartyNum(SelectedPartyNum);
+
+			UpdatedCharacterIds.Add(NextCharacter->GetCharacterID());
 		}
+
+		Player->UpdateCharacters(UpdatedCharacterIds);
 
 		PokeHud->OnBackButtonClicked(CharacterBoxWidget);
 	}
@@ -208,12 +216,18 @@ void UExcludeCharacterSlot::OnExcludeButtonClicked()
 		int32 SelectedSlotNum = CharacterBoxWidget->GetSelectedPartySlotNum();
 		int32 SelectedPartyNum = Player->GetCurrentSelectedPartyNum();
 
+		TArray<int32> UpdatedCharacterIds;
+
 		APokeCharacter* CurrentCharacter = Player->GetCharacterBySlotNum(SelectedPartyNum, SelectedSlotNum);
 		if (CurrentCharacter)
 		{
 			CurrentCharacter->SetJoinedSlotNum(0);
 			CurrentCharacter->SetJoinedPartyNum(0);
+
+			UpdatedCharacterIds.Add(CurrentCharacter->GetCharacterID());
 		}
+
+		Player->UpdateCharacters(UpdatedCharacterIds);
 
 		PokeHud->OnBackButtonClicked(CharacterBoxWidget);
 	}

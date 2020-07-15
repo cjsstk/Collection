@@ -557,8 +557,52 @@ void APokeCollectionCharacter::DeleteItemsByKey(TMap<int32, int32>& InItemKeys)
 	HttpActor->Request(RequestParams);
 }
 
+void APokeCollectionCharacter::UpdateCharacters(TArray<int32>& InCharacterIDs)
+{
+	if (InCharacterIDs.Num() <= 0)
+	{
+		return;
+	}
+
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!HttpActor)
+	{
+		return;
+	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::UpdateCharacters;
+	Params.MemberID = PokeCore::DeviceId;
+	Params.UpdateCharacterIds = InCharacterIDs;
+
+	HttpActor->Request(Params);
+}
+
+void APokeCollectionCharacter::UpdateEquipments(TArray<int32>& InEquipmentIDs)
+{
+	if (InEquipmentIDs.Num() <= 0)
+	{
+		return;
+	}
+
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!HttpActor)
+	{
+		return;
+	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::UpdateEquipments;
+	Params.MemberID = PokeCore::DeviceId;
+	Params.UpdateEquipmentIds = InEquipmentIDs;
+
+	HttpActor->Request(Params);
+}
+
 void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 {
+	TArray<int32> UpdatedCharacterIds;
+
 	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);
 
 	for (auto&& PartyMember : CurrentPartyCharacters)
@@ -570,7 +614,10 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 		}
 
 		PartyCharacter->TakeExperience(InBattleReward.ExperienceAmount);
+		UpdatedCharacterIds.Add(PartyCharacter->GetCharacterID());
 	}
+
+	UpdateCharacters(UpdatedCharacterIds);
 
 	TArray<FInitCharacterParams> NewCharactersParams;
 	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
@@ -634,50 +681,76 @@ void APokeCollectionCharacter::SetMaxHaveEquipmentsNum(int32 NewMaxHaveEquipment
 
 void APokeCollectionCharacter::PutOnEquipment(int32 InCharacterID, int32 InEquipmentID)
 {
-	APokeCharacter* PokeCharacter = GetCharacterByID(InCharacterID);
-	UPokeEquipment* PokeEquipment = GetEquipmentByID(InEquipmentID);
+	TArray<int32> UpdatedEquipIds;
 
-	if (PokeCharacter && !PokeEquipment)
+	APokeCharacter* PokeCharacter = GetCharacterByID(InCharacterID);
+	UPokeEquipment* NextEquipment = GetEquipmentByID(InEquipmentID);
+
+	if (NextEquipment)
+	{
+		UpdatedEquipIds.Add(NextEquipment->GetEquipmentID());
+	}
+
+	if (PokeCharacter)
+	{
+		UPokeEquipment* PrevEquipment = PokeCharacter->GetCurrentEquipment();
+		if (PrevEquipment)
+		{
+			UpdatedEquipIds.Add(PrevEquipment->GetEquipmentID());
+		}
+	}
+
+	if (PokeCharacter && !NextEquipment)
 	{
 		PokeCharacter->TakeOffEquipment();
+		UpdateEquipments(UpdatedEquipIds);
 		return;
 	}
 
 
-	if (PokeEquipment && !PokeCharacter)
+	if (NextEquipment && !PokeCharacter)
 	{
-		PokeEquipment->SetOwnerCharacterID(-1);
+		NextEquipment->SetOwnerCharacterID(-1);
+		UpdateEquipments(UpdatedEquipIds);
 		return;
 	}
 
-	if (!PokeEquipment || !PokeCharacter)
+	if (!NextEquipment || !PokeCharacter)
 	{
 		return;
 	}
 
-	if (PokeEquipment->GetOwnerCharacterID() >= 0)
+	if (NextEquipment->GetOwnerCharacterID() >= 0)
 	{
-		APokeCharacter* PrevCharacter = GetCharacterByID(PokeEquipment->GetOwnerCharacterID());
-		if (!ensure(PrevCharacter))
+		APokeCharacter* PrevCharacter = GetCharacterByID(NextEquipment->GetOwnerCharacterID());
+		if (ensure(PrevCharacter))
 		{
-			return;
+			PrevCharacter->TakeOffEquipment();
 		}
-
-		PrevCharacter->TakeOffEquipment();
 	}
 
-	PokeCharacter->PutOnEquipment(PokeEquipment);
+	PokeCharacter->PutOnEquipment(NextEquipment);
+	
+	UpdateEquipments(UpdatedEquipIds);
 }
 
 void APokeCollectionCharacter::TakeOffEquipment(int32 InCharacterID)
 {
+	TArray<int32> UpdatedEquipIds;
+
 	APokeCharacter* PokeCharacter = GetCharacterByID(InCharacterID);
-	if (!PokeCharacter)
+	if (PokeCharacter)
 	{
-		return;
+		UPokeEquipment* PrevEquipment = PokeCharacter->GetCurrentEquipment();
+		if (PrevEquipment)
+		{
+			UpdatedEquipIds.Add(PrevEquipment->GetEquipmentID());
+
+			PokeCharacter->TakeOffEquipment();
+		}
 	}
 
-	PokeCharacter->TakeOffEquipment();
+	UpdateEquipments(UpdatedEquipIds);
 }
 
 void APokeCollectionCharacter::SetPlayerNickName(FString& InNickname)

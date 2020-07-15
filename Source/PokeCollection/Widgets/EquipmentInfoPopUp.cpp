@@ -118,13 +118,7 @@ void UEquipmentInfoPopUp::OnExcludeButtonClicked()
 		return;
 	}
 
-	APokeCharacter* Character = Player->GetCharacterByID(InfoWidget->GetSelectedCharacterID());
-	if (!ensure(Character))
-	{
-		return;
-	}
-
-	Character->TakeOffEquipment();
+	Player->TakeOffEquipment(InfoWidget->GetSelectedCharacterID());
 
 	InfoWidget->OnOpen();
 

@@ -193,6 +193,11 @@ void USkillUpgradePopUp::OnUpgradeButtonClicked()
 
 	InitInfo(SkillKey, SkillIndex);
 
+	TArray<int32> UpdatedCharacters;
+	UpdatedCharacters.Add(SelectedCharacter->GetCharacterID());
+
+	Player->UpdateCharacters(UpdatedCharacters);
+
 	UInGameCharacterInfoWidget* InfoWidget = PokeHud->GetInGameCharacterInfoWidget();
 	if (InfoWidget && InfoWidget->IsInViewport())
 	{

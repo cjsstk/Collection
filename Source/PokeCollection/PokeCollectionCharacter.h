@@ -41,6 +41,9 @@ public:
 	//void DeleteItemsByID(TMap<int32, int32>& InItemIDs);
 	void DeleteItemsByKey(TMap<int32, int32>& InItemKeys);
 
+	void UpdateCharacters(TArray<int32>& InCharacterIDs);
+	void UpdateEquipments(TArray<int32>& InEquipmentIDs);
+
 	void GetReward(FBattleReward& InBattleReward);
 
 	void PutOnEquipment(int32 InCharacterID, int32 InEquipmentID);
@@ -90,6 +93,7 @@ public:
 	int32 GetBattleSpeedMultiplier() const { return BattleSpeedMultiplier; }
 
 	const TArray<class APokeCharacter*>& GetHaveCharacters() const;
+	/** Key: SlotNum, Value: Character */
 	const TMap<int32, class APokeCharacter*> GetPartyCharacters(int32 InPartyNum) const;
 	class APokeCharacter* GetCharacterByID(int32 InCharacterID) const;
 	class APokeCharacter* GetCharacterBySlotNum(int32 InPartyNum, int32 InSlotNum) const;

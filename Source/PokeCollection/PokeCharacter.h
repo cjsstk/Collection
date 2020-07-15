@@ -64,6 +64,7 @@ public:
 
 	/** Use PutOnEquipment of PokeCollectionPlayer instead of this */
 	void PutOnEquipment(class UPokeEquipment* InEquipment);
+	/** Use TakeOffEquipment of PokeCollectionPlayer instead of this */
 	void TakeOffEquipment();
 	class UPokeEquipment* GetCurrentEquipment() const { return CurrentEquipment; }
 
