@@ -7,11 +7,34 @@
 #include "Image.h"
 #include "TextBlock.h"
 #include "VerticalBox.h"
+#include "Overlay.h"
 
 #include "CMS.h"
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
+
+extern TAutoConsoleVariable<int32> CVarSkill1ActivateLevel
+(
+	TEXT("poke.skill1ActivateLevel"),
+	5,
+	TEXT("Skill1 activated on this level")
+);
+
+extern TAutoConsoleVariable<int32> CVarSkill2ActivateLevel
+(
+	TEXT("poke.skill2ActivateLevel"),
+	20,
+	TEXT("Skill2 activated on this level")
+);
+
+extern TAutoConsoleVariable<int32> CVarSkill3ActivateLevel
+(
+	TEXT("poke.skill3ActivateLevel"),
+	50,
+	TEXT("Skill3 activated on this level")
+);
+
 
 void UCharacterSkillInfoWidget::NativeConstruct()
 {
@@ -40,6 +63,8 @@ void UCharacterSkillInfoWidget::OnOpen()
 	}
 
 	SkillSlotBox->ClearChildren();
+
+	int32 CharacterLevel = SelectedCharacter->GetLevel();
 
 	TArray<int32> SkillLevels;
 	SelectedCharacter->GetSkillLevels(SkillLevels);
@@ -72,6 +97,24 @@ void UCharacterSkillInfoWidget::OnOpen()
 		Params.SkillLevel = SkillLevels[SkillIndex];
 
 		SkillSlot->InitSkillInfo(Params);
+
+		int32 ActivateLevel = 0;
+		switch (SkillIndex)
+		{
+		case 0:
+			ActivateLevel = CVarSkill1ActivateLevel.GetValueOnGameThread();
+			break;
+		case 1:
+			ActivateLevel = CVarSkill2ActivateLevel.GetValueOnGameThread();
+			break;
+		case 2:
+			ActivateLevel = CVarSkill3ActivateLevel.GetValueOnGameThread();
+			break;
+		default:
+			break;
+		}
+
+		SkillSlot->SetActivateSlot(CharacterLevel >= ActivateLevel);
 		SkillSlotBox->AddChildToVerticalBox(SkillSlot);
 	}
 
@@ -122,6 +165,38 @@ void USkillInfoSlot::InitSkillInfo(const InitSkillParams& Params)
 	if (SkillDescText)
 	{
 		SkillDescText->SetText(SkillInfo->SkillDesc);
+	}
+}
+
+void USkillInfoSlot::SetActivateSlot(bool bActivate)
+{
+	if (DeactiveMessage)
+	{
+		DeactiveMessage->SetVisibility(bActivate ? ESlateVisibility::Collapsed : ESlateVisibility::SelfHitTestInvisible);
+	}
+
+	if (ActiveLevelMessage)
+	{
+		int32 ActivateLevel = 0;
+
+		switch (SkillIndex)
+		{
+		case 0:
+			ActivateLevel = CVarSkill1ActivateLevel.GetValueOnGameThread();
+			break;
+		case 1:
+			ActivateLevel = CVarSkill2ActivateLevel.GetValueOnGameThread();
+			break;
+		case 2:
+			ActivateLevel = CVarSkill3ActivateLevel.GetValueOnGameThread();
+			break;
+		default:
+			break;	
+		}
+
+		FString ActiveLevelString = FString::FromInt(ActivateLevel) + TEXT("레벨에 활성화");
+
+		ActiveLevelMessage->SetText(FText::AsCultureInvariant(ActiveLevelString));
 	}
 }
 

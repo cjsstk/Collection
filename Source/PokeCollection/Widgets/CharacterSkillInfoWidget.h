@@ -18,6 +18,8 @@ public:
 	//virtual void OnOpen() override;
 	void InitSkillInfo(const InitSkillParams& Params);
 
+	void SetActivateSlot(bool bActivate);
+
 	UFUNCTION()
 	void OnSkillUpgradeButtonClicked();
 
@@ -36,6 +38,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SkillUpgradeButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* DeactiveMessage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ActiveLevelMessage = nullptr;
 
 	int32 SkillKey = 0;
 	int32 SkillIndex = 0;

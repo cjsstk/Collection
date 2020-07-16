@@ -7,6 +7,7 @@
 #include "PokeCore.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeSkill.h"
+#include "Widgets/CharacterSkillInfoWidget.h"
 
 static TAutoConsoleVariable<int32> CVarCanEnemyAttack
 (
@@ -46,7 +47,7 @@ void UBattleCharacterCombatComponent::AttackTarget()
 		if (Skills.IsValidIndex(Index))
 		{
 			UPokeSkill* Skill = Skills[Index];
-			if (Skill && Skill->CanUseSkill())
+			if (Skill && Skill->CanUseSkill() && IsActivateSkill(Index))
 			{
 				Character->ChangeSprite(ESpriteType::Skill, Index);
 
@@ -205,5 +206,34 @@ void UBattleCharacterCombatComponent::TickAttackTarget(float DeltaTime)
 	AttackTarget();
 	AttackDelayAgeSeconds = 0.0f;
 	
+}
+
+bool UBattleCharacterCombatComponent::IsActivateSkill(int32 InSkillIndex)
+{
+	ABattleCharacterActor* Character = Cast<ABattleCharacterActor>(GetOwner());
+	if (!ensure(Character))
+	{
+		return false;
+	}
+
+	int32 CharacterLevel = Character->GetCharacterLevel();
+	int32 NeedLevel = 0;
+
+	switch (InSkillIndex)
+	{
+	case 0:
+		NeedLevel = CVarSkill1ActivateLevel.GetValueOnGameThread();
+		break;
+	case 1:
+		NeedLevel = CVarSkill2ActivateLevel.GetValueOnGameThread();
+		break;
+	case 2:
+		NeedLevel = CVarSkill3ActivateLevel.GetValueOnGameThread();
+		break;
+	default:
+		break;
+	}
+
+	return CharacterLevel >= NeedLevel;
 }
 

@@ -8,6 +8,10 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterAttack);
 
+extern TAutoConsoleVariable<int32> CVarSkill1ActivateLevel;
+extern TAutoConsoleVariable<int32> CVarSkill2ActivateLevel;
+extern TAutoConsoleVariable<int32> CVarSkill3ActivateLevel;
+
 struct FPokeUseSkillParams;
 
 UCLASS()
@@ -32,6 +36,8 @@ protected:
 private:
 	void TickFindNewTarget();
 	void TickAttackTarget(float DeltaTime);
+
+	bool IsActivateSkill(int32 InSkillIndex);
 
 	UPROPERTY(Transient)
 	class ABattleCharacterActor* TargetCharacter = nullptr;

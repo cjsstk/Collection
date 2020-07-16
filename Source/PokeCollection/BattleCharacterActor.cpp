@@ -70,6 +70,8 @@ void ABattleCharacterActor::InitBattleCharacter(class APokeCharacter& InPokeChar
 
 	JoinedSlotNum = InPokeCharacter.GetJoinedSlotNum();
 
+	CharacterLevel = InPokeCharacter.GetLevel();
+
 	TArray<int32> SkillLevels;
 	InPokeCharacter.GetSkillLevels(SkillLevels);
 
