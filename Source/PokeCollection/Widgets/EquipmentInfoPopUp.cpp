@@ -6,6 +6,7 @@
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
+#include "PokeCore.h"
 #include "PokeEquipment.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
 
@@ -56,7 +57,7 @@ void UEquipmentInfoPopUp::InitInfo(int32 InEquipmentID)
 
 	if (EquipmentImage)
 	{
-		EquipmentImage->SetBrushFromTexture(Equipment->GetEquipmentProfileImage());
+		EquipmentImage->SetBrushFromMaterial(PokeCore::GetItemIcon(Equipment->GetEquipmentIconIndex(), this));
 	}
 
 	if (EquipmentName)

@@ -16,7 +16,6 @@
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
-#include "Materials/MaterialInstanceDynamic.h"
 
 class APokeCollectionCharacter* PokeCore::GetPokePlayer(const UWorld* WorldContext)
 {

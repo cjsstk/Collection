@@ -310,7 +310,8 @@ void UBoxSlot::InitByKey(int32 InContentKey)
 		const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(InContentKey);
 		if (ensure(EquipmentInfo))
 		{
-			SetContentImage(EquipmentInfo->EquipmentProfile.LoadSynchronous());
+			//SetContentImage(EquipmentInfo->EquipmentProfile.LoadSynchronous());
+			SetContentImageByMaterial(PokeCore::GetItemIcon(EquipmentInfo->EquipmentIconIndex, this));
 			SetContentName(FText::FromName(EquipmentInfo->EquipmentName));
 			SetBackgroundColor(EquipmentInfo->EquipmentRank);
 		}

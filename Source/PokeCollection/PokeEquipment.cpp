@@ -15,6 +15,7 @@ void UPokeEquipment::Init(FInitEquipmentParams& InInitEquipmentParams)
 
 	EquipmentID = InInitEquipmentParams.EquipmentID;
 	EquipmentKey = InInitEquipmentParams.EquipmentKey;
+	Level = InInitEquipmentParams.EquipmentLevel;
 
 	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(EquipmentKey);
 	if (!ensure(EquipmentInfo))
@@ -149,6 +150,23 @@ UTexture2D* UPokeEquipment::GetEquipmentProfileImage() const
 	}
 
 	return EquipmentInfo->EquipmentProfile.LoadSynchronous();
+}
+
+int32 UPokeEquipment::GetEquipmentIconIndex() const
+{
+	if (EquipmentKey == INVALID_EQUIPMENTKEY)
+	{
+		ensure(0);
+		return 0;
+	}
+
+	const FEquipmentInfo* EquipmentInfo = CMS::GetEquipmentDataTable(EquipmentKey);
+	if (!ensure(EquipmentInfo))
+	{
+		return 0;
+	}
+
+	return EquipmentInfo->EquipmentIconIndex;
 }
 
 FText UPokeEquipment::GetEquipmentDesc() const

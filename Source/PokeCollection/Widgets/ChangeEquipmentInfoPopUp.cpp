@@ -11,6 +11,7 @@
 #include "PokeCharacter.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCollectionHUD.h"
+#include "PokeCore.h"
 #include "PokeEquipment.h"
 #include "Widgets/InGameChangeEquipmentWidget.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
@@ -117,7 +118,7 @@ void UChangeEquipmentInfoPopUp::InitCurrentEquipmentInfo(class UPokeEquipment* I
 	if (InCurrentEquipment)
 	{
 		CurrentEquipmentImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		CurrentEquipmentImage->SetBrushFromTexture(InCurrentEquipment->GetEquipmentProfileImage());
+		CurrentEquipmentImage->SetBrushFromMaterial(PokeCore::GetItemIcon(InCurrentEquipment->GetEquipmentIconIndex(), this));
 	}
 	else
 	{
@@ -191,7 +192,7 @@ void UChangeEquipmentInfoPopUp::InitNextEquipmentInfo(class UPokeEquipment* InNe
 	if (InNextEquipment)
 	{
 		NextEquipmentImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		NextEquipmentImage->SetBrushFromTexture(InNextEquipment->GetEquipmentProfileImage());
+		NextEquipmentImage->SetBrushFromMaterial(PokeCore::GetItemIcon(InNextEquipment->GetEquipmentIconIndex(), this));
 	}
 	else
 	{

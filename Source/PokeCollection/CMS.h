@@ -139,6 +139,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UTexture2D> EquipmentProfile;
 
+	/** Icon index is 0 ~ */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 EquipmentIconIndex;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText EquipmentDesc;
 

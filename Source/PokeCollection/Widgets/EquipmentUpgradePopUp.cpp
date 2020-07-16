@@ -73,7 +73,7 @@ void UEquipmentUpgradePopUp::InitInfo(int32 InEquipmentID)
 
 	if (EquipmentImage)
 	{
-		EquipmentImage->SetBrushFromTexture(Equipment->GetEquipmentProfileImage());
+		EquipmentImage->SetBrushFromMaterial(PokeCore::GetItemIcon(Equipment->GetEquipmentIconIndex(), this));
 	}
 
 	if (EquipmentName)
@@ -147,6 +147,10 @@ void UEquipmentUpgradePopUp::OnUpgradeButtonClicked()
 
 	int32 NewLevel = Equipment->GetLevel() + 1;
 	Equipment->SetLevel(NewLevel);
+
+	TArray<int32> UpdatedEquipIds;
+	UpdatedEquipIds.Add(EquipmentID);
+	Player->UpdateEquipments(UpdatedEquipIds);
 
 	InitInfo(EquipmentID);
 

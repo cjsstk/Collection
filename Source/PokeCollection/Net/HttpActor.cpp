@@ -382,15 +382,15 @@ void AHttpActor::RequestDestroyItems(const FString& InUserId, const TMap<int32, 
 
 	for (auto&& Item : DestroyItemKeys)
 	{
-		UPokeItem* PokeItem = Player->GetItemByKey(Item.Key);
+		/*UPokeItem* PokeItem = Player->GetItemByKey(Item.Key);
 		if (!PokeItem)
 		{
 			continue;
-		}
+		}*/
 
 		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 
-		JsonObject->SetNumberField(TEXT("itemId"), PokeItem->GetItemID());
+		//JsonObject->SetNumberField(TEXT("itemId"), PokeItem->GetItemID());
 		JsonObject->SetNumberField(TEXT("itemKey"), Item.Key);
 		JsonObject->SetNumberField(TEXT("stackNum"), Item.Value);
 

@@ -71,6 +71,7 @@ public:
 	TArray<int32> GetFinalEquipmentStatus2();
 	FName GetEquipmentName() const;
 	class UTexture2D* GetEquipmentProfileImage() const;
+	int32 GetEquipmentIconIndex() const;
 	FText GetEquipmentDesc() const;
 	ERank GetEquipmentRank() const;
 

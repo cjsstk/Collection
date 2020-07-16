@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "UObject/NoExportTypes.h"
 
 class APokeCollectionCharacter;

@@ -1198,10 +1198,20 @@ void APokeCollectionCharacter::OnHaveEquipmentsResponsed(FHttpRequestPtr Request
 
 			if (InitEquipmentParams.OwnerCharacterID >= 0)
 			{
-				PutOnEquipment(InitEquipmentParams.OwnerCharacterID, InitEquipmentParams.EquipmentID);
+				TArray<int32> UpdatedEquipIds;
+
+				APokeCharacter* PokeCharacter = GetCharacterByID(InitEquipmentParams.OwnerCharacterID);
+
+				if (!PokeCharacter)
+				{
+					PokeEquipment->SetOwnerCharacterID(-1);
+				}
+				else
+				{
+					PokeCharacter->PutOnEquipment(PokeEquipment);
+				}
 			}
 		}
-
 	}
 
 	InitHaveItems();
