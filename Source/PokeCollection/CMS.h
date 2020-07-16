@@ -339,9 +339,6 @@ struct FCharacterExperienceTable : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Level;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 NeedExperienceForNextLevel;
 };
 

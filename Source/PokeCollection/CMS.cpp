@@ -230,34 +230,26 @@ const FTypeInfo* CMS::GetTypeDataTable(EType InType)
 
 const FPlayerExperienceTable* CMS::GetPlayerExperienceTable(int32 InCurrentLevel)
 {
-	TArray<FPlayerExperienceTable*> AllTable;
-	PlayerExperienceDataTable->GetAllRows(FString(""), AllTable);
-
-	for (FPlayerExperienceTable* ET : AllTable)
+	if (InCurrentLevel <= 0)
 	{
-		if (ET && ET->Level == InCurrentLevel)
-		{
-			return ET;
-		}
+		return nullptr;
 	}
 
-	return nullptr;
+	FPlayerExperienceTable* PlayerNeedExp = PlayerExperienceDataTable->FindRow<FPlayerExperienceTable>(FName(*(FString::FormatAsNumber(InCurrentLevel))), FString(""));
+
+	return PlayerNeedExp;
 }
 
 const FCharacterExperienceTable* CMS::GetCharacterExperienceTable(int32 InCurrentLevel)
 {
-	TArray<FCharacterExperienceTable*> AllTable;
-	CharacterExperienceDataTable->GetAllRows(FString(""), AllTable);
-
-	for (FCharacterExperienceTable* ET : AllTable)
+	if (InCurrentLevel <= 0)
 	{
-		if (ET && ET->Level == InCurrentLevel)
-		{
-			return ET;
-		}
+		return nullptr;
 	}
 
-	return nullptr;
+	FCharacterExperienceTable* CharacterNeedExp = CharacterExperienceDataTable->FindRow<FCharacterExperienceTable>(FName(*(FString::FormatAsNumber(InCurrentLevel))), FString(""));
+
+	return CharacterNeedExp;
 }
 
 const FDialogInfoTable* CMS::GetDialogDataTable(int32 InDialogKey)
