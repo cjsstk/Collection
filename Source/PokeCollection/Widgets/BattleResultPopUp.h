@@ -7,6 +7,22 @@
 #include "CMSType.h"
 #include "BattleResultPopUp.generated.h"
 
+UCLASS()
+class POKECOLLECTION_API UBattleRewardSlot : public UUserWidget
+{
+	GENERATED_BODY()
+
+public:
+	void InitSlot(const ERewardSlotType& InRewardType, int32 InRewardKey, int32 InRewardNum);
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UImage* RewardImage = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* RewardNumText = nullptr;
+};
+
 /**
  * 전투 끝나고 결과가 나타나는 팝업 위젯
  */
@@ -26,6 +42,14 @@ public:
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BackgroundButton = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	class UScrollBox* RewardBox = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UBattleRewardSlot> RewardSlotClass = nullptr;
+
+	FBattleReward BattleReward;
 
 };
 

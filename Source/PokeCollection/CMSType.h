@@ -69,6 +69,13 @@ enum class ECategoryWidgetType
 	Quest,
 };
 
+enum class ERewardSlotType
+{
+	Character,
+	Item,
+	Money,
+};
+
 struct FBattleReward
 {
 public:
