@@ -619,6 +619,7 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 
 	UpdateCharacters(UpdatedCharacterIds);
 
+	// NewCharacters
 	TArray<FInitCharacterParams> NewCharactersParams;
 	for (int32 NewCharacterKey : InBattleReward.GetCharacters)
 	{
@@ -629,6 +630,18 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 	}
 	AddNewCharacters(NewCharactersParams);
 
+	int32 NewCharacterNum = NewCharactersParams.Num();
+	UPlayerQuestComponent* QuestComp = GetQuestComponent();
+	if (QuestComp)
+	{
+		FUpdateQuestParams Params;
+		Params.ObjectionType = EQuestObjectionType::GetCharacterCount;
+		Params.InCount = NewCharacterNum;
+
+		QuestComp->UpdateQuest(Params);
+	}
+
+	// NewItems
 	TArray<FInitItemParams> AddItems;
 	for (auto&& NewItemInfo : InBattleReward.GetItems)
 	{
@@ -655,7 +668,21 @@ void APokeCollectionCharacter::SetMaxClearBattleStage(battleStageKey InBattleSta
 {
 	MaxClearBattleStageNum = FMath::Max(MaxClearBattleStageNum, InBattleStageKey);
 
-	SavePlayerInfo(ESavePlayerInfo::MaxClearBattleStage);
+	if (MaxClearBattleStageNum != InBattleStageKey)
+	{
+		SavePlayerInfo(ESavePlayerInfo::MaxClearBattleStage);
+
+		UPlayerQuestComponent* QuestComp = GetQuestComponent();
+		if (QuestComp)
+		{
+			FUpdateQuestParams Params;
+			Params.ObjectionType = EQuestObjectionType::ClearBattleStageNum;
+			Params.bIsAdd = false;
+			Params.InCount = MaxClearBattleStageNum;
+
+			QuestComp->UpdateQuest(Params);
+		}
+	}
 }
 
 void APokeCollectionCharacter::SetCurrentSelectedPartyNum(int32 NewSelectedPartyNum)
@@ -929,6 +956,16 @@ void APokeCollectionCharacter::ConsumeBerry(int32 InConsumeBerryAmount)
 	}
 
 	SetBerryAmount(BerryAmount - InConsumeBerryAmount);
+
+	UPlayerQuestComponent* QuestComp = GetQuestComponent();
+	if (QuestComp)
+	{
+		FUpdateQuestParams Params;
+		Params.ObjectionType = EQuestObjectionType::SpendBerryAmount;
+		Params.InCount = InConsumeBerryAmount;
+
+		QuestComp->UpdateQuest(Params);
+	}
 }
 
 void APokeCollectionCharacter::SetMoneyAmount(int32 NewMoneyAmount)
@@ -936,6 +973,21 @@ void APokeCollectionCharacter::SetMoneyAmount(int32 NewMoneyAmount)
 	MoneyAmount = FMath::Clamp(NewMoneyAmount, 0, INT32_MAX);
 
 	SavePlayerInfo(ESavePlayerInfo::Money);
+}
+
+void APokeCollectionCharacter::SpendMoney(int32 InSpendAmout)
+{
+	SetMoneyAmount(GetMoneyAmount() - InSpendAmout);
+
+	UPlayerQuestComponent* QuestComp = GetQuestComponent();
+	if (QuestComp)
+	{
+		FUpdateQuestParams Params;
+		Params.ObjectionType = EQuestObjectionType::SpendMoneyAmount;
+		Params.InCount = InSpendAmout;
+
+		QuestComp->UpdateQuest(Params);
+	}
 }
 
 void APokeCollectionCharacter::BeginPlay()

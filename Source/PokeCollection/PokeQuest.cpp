@@ -12,7 +12,14 @@ void UPokeQuest::InitQuest(FInitQuestParams& InitParams)
 	QuestDesc = InitParams.QuestDesc;
 }
 
-void UPokeQuest::Update(int32 InCount)
+void UPokeQuest::Update(bool bIsAdd, int32 InCount)
 {
-	CurrNum = FMath::Min(DestNum, CurrNum + InCount);
+	if (bIsAdd)
+	{
+		CurrNum = FMath::Min(DestNum, CurrNum + InCount);
+	}
+	else
+	{
+		CurrNum = InCount;
+	}
 }

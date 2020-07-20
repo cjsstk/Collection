@@ -142,7 +142,7 @@ void UEquipmentUpgradePopUp::OnUpgradeButtonClicked()
 	CMS::GetEquipmentUpgradeInfo(Equipment->GetLevel(), Equipment->GetEquipmentRank(), NeedItems);
 
 	Player->DeleteItemsByKey(NeedItems);
-	Player->SetMoneyAmount(Player->GetMoneyAmount() - NeedMoney);
+	Player->SpendMoney(NeedMoney);
 	//
 
 	int32 NewLevel = Equipment->GetLevel() + 1;

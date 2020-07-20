@@ -352,7 +352,7 @@ bool UShopSlot::PaySlotPrice(int32 InEggMoney)
 		return false;
 	}
 
-	Player->SetMoneyAmount(Player->GetMoneyAmount() - InEggMoney);
+	Player->SpendMoney(InEggMoney);
 
 	return true;
 }

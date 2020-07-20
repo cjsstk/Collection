@@ -32,7 +32,8 @@ class POKECOLLECTION_API UPokeQuest : public UObject
 public:
 	void InitQuest(FInitQuestParams& InitParams);
 
-	void Update(int32 InCount);
+	/** If bIsAdd is true, InCount Added to CurrNum else InCount override CurrNum */
+	void Update(bool bIsAdd, int32 InCount);
 
 	bool CanComplete() const { return CurrNum >= DestNum; }
 	int32 GetQuestKey() const { return QuestKey; }

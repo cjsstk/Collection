@@ -250,6 +250,16 @@ public:
 
 };
 
+struct FUpdateQuestParams
+{
+	EQuestObjectionType ObjectionType = EQuestObjectionType::ClearBattleCount;
+
+	/** If bIsAdd is true, InCount Added to CurrNum else InCount override CurrNum */
+	bool bIsAdd = true;
+
+	int32 InCount = 1;
+};
+
 USTRUCT()
 struct FUpgradeEquipmentInfo
 {

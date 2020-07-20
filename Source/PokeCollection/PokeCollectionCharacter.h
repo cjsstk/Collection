@@ -115,6 +115,7 @@ public:
 
 	void ConsumeBerry(int32 InConsumeBerryAmount);
 	void SetMoneyAmount(int32 NewMoneyAmount);
+	void SpendMoney(int32 InSpendAmout);
 
 	class UPlayerQuestComponent* GetQuestComponent() const { return QuestComponent; }
 

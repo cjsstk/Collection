@@ -185,7 +185,7 @@ void USkillUpgradePopUp::OnUpgradeButtonClicked()
 	CMS::GetSkillUpgradeInfo(SkillLevel, NeedItems);
 
 	Player->DeleteItemsByKey(NeedItems);
-	Player->SetMoneyAmount(Player->GetMoneyAmount() - NeedMoney);
+	Player->SpendMoney(NeedMoney);
 	//
 
 	int32 NewLevel = SkillLevel + 1;

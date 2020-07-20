@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CMSType.h"
 #include "PlayerQuestComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestUpdate, EQuestObjectionType, ObjectionType, int32, Count);
@@ -17,7 +18,7 @@ class POKECOLLECTION_API UPlayerQuestComponent : public UActorComponent
 public:	
 	UPlayerQuestComponent();
 
-	void UpdateQuest(EQuestObjectionType InObjectionType, int32 InCount);
+	void UpdateQuest(const FUpdateQuestParams& InUpdateParams);
 
 	const TMap<int32, class UPokeQuest*>& GetHaveQuests() const { return Quests; }
 	const TMap<int32, class UPokeQuest*>& GetHaveDailyMissions() const { return DailyMissions; }

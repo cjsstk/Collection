@@ -10,6 +10,7 @@
 #include "PokeCollectionHUD.h"
 #include "PokeCharacter.h"
 #include "PokeCore.h"
+#include "PlayerQuestComponent.h"
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -289,6 +290,15 @@ void ABattleManager::OpenResult(bool bIsWin)
 			{
 				PlayerCharacter->GetReward(Reward);
 				PlayerCharacter->SetMaxClearBattleStage(CurrentBattleStageKey);
+
+				UPlayerQuestComponent* QuestComp = PlayerCharacter->GetQuestComponent();
+				if (QuestComp)
+				{
+					FUpdateQuestParams Params;
+					Params.ObjectionType = EQuestObjectionType::ClearBattleCount;
+
+					QuestComp->UpdateQuest(Params);
+				}
 			}
 		}
 

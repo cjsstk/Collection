@@ -10,7 +10,7 @@ UPlayerQuestComponent::UPlayerQuestComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UPlayerQuestComponent::UpdateQuest(EQuestObjectionType InObjectionType, int32 InCount)
+void UPlayerQuestComponent::UpdateQuest(const FUpdateQuestParams& InUpdateParams)
 {
 	for (auto&& Quest : Quests)
 	{
@@ -20,12 +20,12 @@ void UPlayerQuestComponent::UpdateQuest(EQuestObjectionType InObjectionType, int
 			continue;
 		}
 
-		if (PokeQuest->CanComplete() || PokeQuest->GetObjectionType() != InObjectionType)
+		if (PokeQuest->CanComplete() || PokeQuest->GetObjectionType() != InUpdateParams.ObjectionType)
 		{
 			continue;
 		}
 
-		PokeQuest->Update(InCount);
+		PokeQuest->Update(InUpdateParams.bIsAdd, InUpdateParams.InCount);
 	}
 
 	for (auto&& DailyMission : DailyMissions)
@@ -36,12 +36,12 @@ void UPlayerQuestComponent::UpdateQuest(EQuestObjectionType InObjectionType, int
 			continue;
 		}
 
-		if (PokeMission->CanComplete() || PokeMission->GetObjectionType() != InObjectionType)
+		if (PokeMission->CanComplete() || PokeMission->GetObjectionType() != InUpdateParams.ObjectionType)
 		{
 			continue;
 		}
 
-		PokeMission->Update(InCount);
+		PokeMission->Update(InUpdateParams.bIsAdd, InUpdateParams.InCount);
 	}
 }
 
