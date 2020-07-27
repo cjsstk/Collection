@@ -247,7 +247,22 @@ public:
 
 	UPROPERTY()
 	int32 ItemStackNum = 1;
+};
 
+USTRUCT()
+struct FSaveQuestParams
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	int32 QuestKey = -1;
+
+	UPROPERTY()
+	int32 CurrentNum = 0;
+	
+	UPROPERTY()
+	bool bIsCompleted = false;
 };
 
 struct FUpdateQuestParams

@@ -29,6 +29,12 @@ void ABattleManager::BattleStart()
 		return;
 	}
 
+	UPlayerQuestComponent* QuestComp = PlayerCharacter->GetQuestComponent();
+	if (!QuestComp)
+	{
+		return;
+	}
+
 	UWorld* World = GetWorld();
 	if (!ensure(World))
 	{
@@ -122,6 +128,8 @@ void ABattleManager::BattleStart()
 			PokeHud->OpenInGameBattleWidget(GetBattleCharacters(false));
 		}
 	}
+
+	QuestComp->SaveQuests();
 
 	bIsBattlePlaying = true;
 	OnBattleStart.Broadcast();
@@ -298,6 +306,7 @@ void ABattleManager::OpenResult(bool bIsWin)
 					Params.ObjectionType = EQuestObjectionType::ClearBattleCount;
 
 					QuestComp->UpdateQuest(Params);
+					QuestComp->SaveQuests();
 				}
 			}
 		}

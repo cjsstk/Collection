@@ -17,6 +17,7 @@ enum class EHttpRequestType
 	Invalid,
 	Login,
 	Regist,
+	RegistQuests,
 	HaveCharacters,
 	HaveEquipments,
 	HaveItems,
@@ -29,6 +30,7 @@ enum class EHttpRequestType
 	DestroyItems,
 	UpdateCharacters,
 	UpdateEquipments,
+	SaveQuests,
 };
 
 enum class ESavePlayerInfo
@@ -77,6 +79,8 @@ public:
 	TArray<int32> UpdateCharacterIds;
 
 	TArray<int32> UpdateEquipmentIds;
+
+	TArray<FSaveQuestParams> SaveQuestInfos;
 };
 
 UCLASS()
@@ -94,6 +98,7 @@ public:
 
 	FOnHttpResponseReceived OnHttpLoginResponseReceived;
 	FOnHttpResponseReceived OnHttpRegistResponseReceived;
+	FOnHttpResponseReceived OnHttpRegistQuestsResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveCharactersResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveEquipmentsResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveItemsResponseReceived;
@@ -108,6 +113,7 @@ private:
 
 	void RequestLogin(const FString& InLoginId);
 	void RequestRegist(const FString& InRegistId);
+	void RequestRegistQuests(const FString& InRegistId);
 	void RequestHaveCharacters(const FString& InUserId);
 	void RequestHaveEquipments(const FString& InUserId);
 	void RequestHaveItems(const FString& InUserId);
@@ -120,9 +126,11 @@ private:
 	void RequestDestroyItems(const FString& InUserId, const TMap<int32, int32>& DestroyItemKeys);
 	void RequestUpdateCharacters(const FString& InUserId, const TArray<int32>& UpdateCharacterIds);
 	void RequestUpdateEquipments(const FString& InUserId, const TArray<int32>& UpdateEquipmentIds);
+	void RequestSaveQuests(const FString& InUserId, const TArray<FSaveQuestParams>& SaveQuestInfos);
 
 	void OnLoginResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnRegistQuestsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
@@ -135,6 +143,7 @@ private:
 	void OnDestroyItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnUpdateCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnUpdateEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnSaveQuestsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	FHttpModule* Http;
 

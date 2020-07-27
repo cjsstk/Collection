@@ -3,7 +3,9 @@
 #include "PlayerQuestComponent.h"
 
 #include "CMS.h"
+#include "PokeCore.h"
 #include "PokeQuest.h"
+#include "Net/HttpActor.h"
 
 UPlayerQuestComponent::UPlayerQuestComponent()
 {
@@ -43,6 +45,41 @@ void UPlayerQuestComponent::UpdateQuest(const FUpdateQuestParams& InUpdateParams
 
 		PokeMission->Update(InUpdateParams.bIsAdd, InUpdateParams.InCount);
 	}
+}
+
+void UPlayerQuestComponent::SaveQuests()
+{
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!HttpActor)
+	{
+		return;
+	}
+
+	TArray<FSaveQuestParams> SaveQuests;
+
+	for (auto&& Quest : Quests)
+	{
+		UPokeQuest* PokeQuest = Quest.Value;
+		if (!PokeQuest)
+		{
+			continue;
+		}
+
+		FSaveQuestParams Params;
+		Params.QuestKey = Quest.Key;
+		Params.CurrentNum = PokeQuest->GetCurrentCount();
+		Params.bIsCompleted = PokeQuest->IsCompleted();
+
+		SaveQuests.Add(Params);
+	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::SaveQuests;
+	Params.MemberID = PokeCore::DeviceId;
+	Params.SaveQuestInfos = SaveQuests;
+
+	HttpActor->Request(Params);
+
 }
 
 void UPlayerQuestComponent::BeginPlay()

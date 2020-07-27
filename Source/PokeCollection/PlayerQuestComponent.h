@@ -19,6 +19,7 @@ public:
 	UPlayerQuestComponent();
 
 	void UpdateQuest(const FUpdateQuestParams& InUpdateParams);
+	void SaveQuests();
 
 	const TMap<int32, class UPokeQuest*>& GetHaveQuests() const { return Quests; }
 	const TMap<int32, class UPokeQuest*>& GetHaveDailyMissions() const { return DailyMissions; }

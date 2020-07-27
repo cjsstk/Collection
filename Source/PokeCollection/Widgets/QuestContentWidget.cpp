@@ -154,6 +154,12 @@ void UQuestSlot::SetQuestCount(int32 InCurrCount, int32 InDestCount)
 
 void UQuestSlot::OnCompleteButtonClicked()
 {
+	APokeCollectionCharacter* Player = Cast<APokeCollectionCharacter>(GetOwningPlayerPawn());
+	if (!Player)
+	{
+		return;
+	}
+
 	UPokeQuest* Quest = WeakQuest.Get();
 	if (!ensure(Quest))
 	{
@@ -171,5 +177,14 @@ void UQuestSlot::OnCompleteButtonClicked()
 		return;
 	}
 
+	int32 RewardMoney = QuestInfo->RewardMoney;
+	TMap<int32, int32> RewardItemKeys = QuestInfo->RewardItemKeys;
 
+	FBattleReward Reward;
+	Reward.GetItems = RewardItemKeys;
+	Reward.MoneyAmount = RewardMoney;
+
+	Player->GetReward(Reward);
+
+	Player->SaveQuests();
 }

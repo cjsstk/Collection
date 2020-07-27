@@ -203,6 +203,8 @@ void USkillUpgradePopUp::OnUpgradeButtonClicked()
 	{
 		InfoWidget->OnOpen();
 	}
+
+	Player->SaveQuests();
 }
 
 void USkillUpgradePopUp::SetNeedMoneyText(int32 InNeedMoney)

@@ -9,6 +9,7 @@
 #include "PokeCollectionHUD.h"
 #include "PokeEquipment.h"
 #include "PokeItem.h"
+#include "PlayerQuestComponent.h"
 #include "Widgets/InGameCharacterInfoWidget.h"
 
 #include "Image.h"
@@ -125,6 +126,12 @@ void UEquipmentUpgradePopUp::OnUpgradeButtonClicked()
 		return;
 	}
 
+	UPlayerQuestComponent* QuestComp = Player->GetQuestComponent();
+	if (!QuestComp)
+	{
+		return;
+	}
+
 	APokeCollectionHUD* PokeHud = Cast<APokeCollectionHUD>(GetOwningPlayer()->GetHUD());
 	if (!PokeHud)
 	{
@@ -165,6 +172,8 @@ void UEquipmentUpgradePopUp::OnUpgradeButtonClicked()
 	{
 		InfoWidget->OnOpen();
 	}
+
+	QuestComp->SaveQuests();
 }
 
 void UEquipmentUpgradePopUp::SetNeedMoneyText(int32 InNeedMoney)

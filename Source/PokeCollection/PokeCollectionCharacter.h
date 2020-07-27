@@ -49,6 +49,8 @@ public:
 	void PutOnEquipment(int32 InCharacterID, int32 InEquipmentID);
 	void TakeOffEquipment(int32 InCharacterID);
 
+	bool SaveQuests();
+
 	/** 
 	 * Player Info
 	 */
@@ -114,7 +116,7 @@ public:
 	int32 GetMoneyChargingIntervalMinutes() const { return MoneyChargingIntervalSeconds / 60; }
 
 	void ConsumeBerry(int32 InConsumeBerryAmount);
-	void SetMoneyAmount(int32 NewMoneyAmount);
+	void AddMoney(int32 InAddAmout);
 	void SpendMoney(int32 InSpendAmout);
 
 	class UPlayerQuestComponent* GetQuestComponent() const { return QuestComponent; }
@@ -148,6 +150,7 @@ private:
 	void SetBattleClearCount(int32 NewBattleClearCount);
 	void SetGetCharacterCount(int32 NewGetCharacterCount);
 	void SetIndex(FString& NewIndex);
+	void SetMoneyAmount(int32 NewMoneyAmount);
 
 	FString GetIndex();
 

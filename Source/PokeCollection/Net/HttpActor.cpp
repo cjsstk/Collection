@@ -7,6 +7,7 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
+#include "CMS.h"
 #include "PokeCore.h"
 #include "PokeCollectionCharacter.h"
 #include "PokeCharacter.h"
@@ -105,6 +106,51 @@ void AHttpActor::RequestRegist(const FString& InRegistId)
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetHeader("Authorization", AuthToken);
 	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::Regist));
+
+	Request->ProcessRequest();
+}
+
+void AHttpActor::RequestRegistQuests(const FString& InRegistId)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	TArray<FQuestInfo*> QuestInfos;
+	CMS::GetAllQuestDataTable(QuestInfos);
+
+	for (int32 QuestKey = 1; QuestKey <= QuestInfos.Num(); ++QuestKey)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InRegistId));
+		JsonObject->SetNumberField(TEXT("questKey"), QuestKey);
+		JsonObject->SetNumberField(TEXT("currentNum"), 0);
+		JsonObject->SetNumberField(TEXT("completed"), 0);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("quests", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InRegistId + FString("/quests");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::POST);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::RegistQuests));
 
 	Request->ProcessRequest();
 }
@@ -550,6 +596,48 @@ void AHttpActor::RequestUpdateEquipments(const FString& InUserId, const TArray<i
 	Request->ProcessRequest();
 }
 
+void AHttpActor::RequestSaveQuests(const FString& InUserId, const TArray<FSaveQuestParams>& SaveQuestInfos)
+{
+	TArray<TSharedPtr<FJsonValue>> ObjArray;
+
+	for (auto&& SaveQuest : SaveQuestInfos)
+	{
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		JsonObject->SetStringField(TEXT("memberId"), *FString::Printf(TEXT("%s"), *InUserId));
+		JsonObject->SetNumberField(TEXT("questKey"), SaveQuest.QuestKey);
+		JsonObject->SetNumberField(TEXT("currentNum"), SaveQuest.CurrentNum);
+		JsonObject->SetNumberField(TEXT("completed"), SaveQuest.bIsCompleted ? 1 : 0);
+
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonObject));
+		ObjArray.Add(JsonValue);
+	}
+
+	TSharedPtr<FJsonObject> SendJsonObject = MakeShareable(new FJsonObject());
+	SendJsonObject->SetArrayField("quests", ObjArray);
+
+	FString OutputString;
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&OutputString);
+
+	FJsonSerializer::Serialize(SendJsonObject.ToSharedRef(), JsonWriter);
+
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/quests");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::PUT);
+	Request->SetContentAsString(OutputString);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::SaveQuests));
+
+	Request->ProcessRequest();
+}
+
 void AHttpActor::RequestSavePlayerInfo(const FString& InUserId, const ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params)
 {
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
@@ -665,7 +753,7 @@ void AHttpActor::OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponse
 
 	if (FJsonSerializer::Deserialize(Reader, JsonObject))
 	{
-		OnHttpRegistResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
+
 	}
 	else
 	{
@@ -673,6 +761,20 @@ void AHttpActor::OnRegistResponseReceived(FHttpRequestPtr Request, FHttpResponse
 	}
 
 	OnHttpRegistResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
+}
+
+void AHttpActor::OnRegistQuestsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (!FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+
+	OnHttpRegistQuestsResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
 }
 
 void AHttpActor::OnHaveCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
@@ -867,6 +969,22 @@ void AHttpActor::OnUpdateEquipmentsResponseReceived(FHttpRequestPtr Request, FHt
 	}
 }
 
+void AHttpActor::OnSaveQuestsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 1.0f, FColor::Red, FString(TEXT("퀘스트 저장")));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
 void AHttpActor::BeginPlay()
 {
 	Super::BeginPlay();
@@ -906,6 +1024,9 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 	case EHttpRequestType::Regist:
 		RequestRegist(InRequestParams.MemberID);
 		break;
+	case EHttpRequestType::RegistQuests:
+		RequestRegistQuests(InRequestParams.MemberID);
+		break;
 	case EHttpRequestType::HaveCharacters:
 		RequestHaveCharacters(InRequestParams.MemberID);
 		break;
@@ -942,6 +1063,9 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 	case EHttpRequestType::UpdateEquipments:
 		RequestUpdateEquipments(InRequestParams.MemberID, InRequestParams.UpdateEquipmentIds);
 		break;
+	case EHttpRequestType::SaveQuests:
+		RequestSaveQuests(InRequestParams.MemberID, InRequestParams.SaveQuestInfos);
+		break;
 	case EHttpRequestType::Invalid:
 	default:
 		bRequesting = false;
@@ -971,6 +1095,9 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 		break;
 	case EHttpRequestType::Regist:
 		OnRegistResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::RegistQuests:
+		OnRegistQuestsResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::HaveCharacters:
 		OnHaveCharactersResponseReceived(Request, Response, bWasSuccessful);
@@ -1007,6 +1134,9 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 		break;
 	case EHttpRequestType::UpdateEquipments:
 		OnUpdateEquipmentsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::SaveQuests:
+		OnSaveQuestsResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::Invalid:
 	default:

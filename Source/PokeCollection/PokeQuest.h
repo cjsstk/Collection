@@ -41,6 +41,7 @@ public:
 	const FText& GetQuestDesc() const { return QuestDesc; }
 	int32 GetCurrentCount() const { return CurrNum; }
 	int32 GetDestCount() const { return DestNum; }
+	bool IsCompleted() const { return bIsCompleted; }
 
 private:
 	int32 QuestKey = -1;
@@ -53,4 +54,6 @@ private:
 	int32 ParentQuestKey = -1;
 
 	FText QuestDesc;
+
+	bool bIsCompleted = false;
 };

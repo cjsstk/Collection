@@ -22,6 +22,7 @@ void ULoginWidget::NativeConstruct()
 
 	HttpActor->OnHttpLoginResponseReceived.BindUObject(this, &ULoginWidget::OnLoginResponsed);
 	HttpActor->OnHttpRegistResponseReceived.BindUObject(this, &ULoginWidget::OnRegistResponsed);
+	HttpActor->OnHttpRegistQuestsResponseReceived.BindUObject(this, &ULoginWidget::OnRegistQuestsResponsed);
 
 	FHttpRequestParams Params;
 	Params.RequestType = EHttpRequestType::Login;
@@ -79,6 +80,38 @@ void ULoginWidget::OnRegistResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonOb
 {
 	if (!ResponceJson)
 	{
+		return;
+	}
+
+	int32 recievedCode = ResponceJson->GetIntegerField("code");
+	if (recievedCode == 200)
+	{
+		AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+		if (!ensure(HttpActor))
+		{
+			return;
+		}
+
+		FHttpRequestParams Params;
+		Params.RequestType = EHttpRequestType::RegistQuests;
+		Params.MemberID = PokeCore::DeviceId;
+
+		HttpActor->Request(Params);
+		//bCanStartGame = true;
+	}
+	else
+	{
+		// 생성 실패
+		// DB error
+		ensure(0);
+	}
+}
+
+void ULoginWidget::OnRegistQuestsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+	if (!ResponceJson)
+	{
+		ensure(0);
 		return;
 	}
 

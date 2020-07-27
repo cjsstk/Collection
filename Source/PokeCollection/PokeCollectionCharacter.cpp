@@ -240,6 +240,11 @@ bool APokeCollectionCharacter::AddNewCharacter(FInitCharacterParams& InInitChara
 
 void APokeCollectionCharacter::AddNewCharacters(TArray<FInitCharacterParams>& InInitCharacterParams)
 {
+	if (InInitCharacterParams.Num() <= 0)
+	{
+		return;
+	}
+
 	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
 	if (!ensure(HttpActor))
 	{
@@ -262,6 +267,17 @@ void APokeCollectionCharacter::AddNewCharacters(TArray<FInitCharacterParams>& In
 		}
 	}
 
+	int32 NewCharacterNum = AddedCharacters.Num();
+	UPlayerQuestComponent* QuestComp = GetQuestComponent();
+	if (QuestComp)
+	{
+		FUpdateQuestParams Params;
+		Params.ObjectionType = EQuestObjectionType::GetCharacterCount;
+		Params.InCount = NewCharacterNum;
+
+		QuestComp->UpdateQuest(Params);
+	}
+
 	if (AddedCharacters.Num() > 0)
 	{
 		FHttpRequestParams RequestParams;
@@ -277,6 +293,11 @@ void APokeCollectionCharacter::AddNewCharacters(TArray<FInitCharacterParams>& In
 
 void APokeCollectionCharacter::AddNewEquipments(TArray<FInitEquipmentParams>& InInitEquipmentParams)
 {
+	if (InInitEquipmentParams.Num() <= 0)
+	{
+		return;
+	}
+
 	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
 	if (!ensure(HttpActor))
 	{
@@ -312,6 +333,11 @@ void APokeCollectionCharacter::AddNewEquipments(TArray<FInitEquipmentParams>& In
 
 void APokeCollectionCharacter::AddNewItems(TArray<FInitItemParams>& InInitItemParams)
 {
+	if (InInitItemParams.Num() <= 0)
+	{
+		return;
+	}
+
 	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
 	if (!ensure(HttpActor))
 	{
@@ -601,23 +627,26 @@ void APokeCollectionCharacter::UpdateEquipments(TArray<int32>& InEquipmentIDs)
 
 void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 {
-	TArray<int32> UpdatedCharacterIds;
-
-	const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);
-
-	for (auto&& PartyMember : CurrentPartyCharacters)
+	if (InBattleReward.ExperienceAmount > 0)
 	{
-		APokeCharacter* PartyCharacter = PartyMember.Value;
-		if (!PartyCharacter)
+		TArray<int32> UpdatedCharacterIds;
+
+		const TMap<int32, APokeCharacter*>& CurrentPartyCharacters = GetPartyCharacters(CurrentSelectedParty);
+
+		for (auto&& PartyMember : CurrentPartyCharacters)
 		{
-			continue;
+			APokeCharacter* PartyCharacter = PartyMember.Value;
+			if (!PartyCharacter)
+			{
+				continue;
+			}
+
+			PartyCharacter->TakeExperience(InBattleReward.ExperienceAmount);
+			UpdatedCharacterIds.Add(PartyCharacter->GetCharacterID());
 		}
 
-		PartyCharacter->TakeExperience(InBattleReward.ExperienceAmount);
-		UpdatedCharacterIds.Add(PartyCharacter->GetCharacterID());
+		UpdateCharacters(UpdatedCharacterIds);
 	}
-
-	UpdateCharacters(UpdatedCharacterIds);
 
 	// NewCharacters
 	TArray<FInitCharacterParams> NewCharactersParams;
@@ -629,17 +658,6 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 		NewCharactersParams.Add(Params);
 	}
 	AddNewCharacters(NewCharactersParams);
-
-	int32 NewCharacterNum = NewCharactersParams.Num();
-	UPlayerQuestComponent* QuestComp = GetQuestComponent();
-	if (QuestComp)
-	{
-		FUpdateQuestParams Params;
-		Params.ObjectionType = EQuestObjectionType::GetCharacterCount;
-		Params.InCount = NewCharacterNum;
-
-		QuestComp->UpdateQuest(Params);
-	}
 
 	// NewItems
 	TArray<FInitItemParams> AddItems;
@@ -653,7 +671,7 @@ void APokeCollectionCharacter::GetReward(FBattleReward& InBattleReward)
 	}
 	AddNewItems(AddItems);
 
-	SetMoneyAmount(GetMoneyAmount() + InBattleReward.MoneyAmount);
+	AddMoney(InBattleReward.MoneyAmount);
 	SetPlayerExp(GetPlayerCurrentExp() + InBattleReward.ExperienceAmount);
 }
 
@@ -778,6 +796,18 @@ void APokeCollectionCharacter::TakeOffEquipment(int32 InCharacterID)
 	}
 
 	UpdateEquipments(UpdatedEquipIds);
+}
+
+bool APokeCollectionCharacter::SaveQuests()
+{
+	if (!QuestComponent)
+	{
+		return false;
+	}
+
+	QuestComponent->SaveQuests();
+
+	return true;
 }
 
 void APokeCollectionCharacter::SetPlayerNickName(FString& InNickname)
@@ -965,6 +995,14 @@ void APokeCollectionCharacter::ConsumeBerry(int32 InConsumeBerryAmount)
 		Params.InCount = InConsumeBerryAmount;
 
 		QuestComp->UpdateQuest(Params);
+	}
+}
+
+void APokeCollectionCharacter::AddMoney(int32 InAddAmout)
+{
+	if (InAddAmout > 0)
+	{
+		SetMoneyAmount(GetMoneyAmount() + InAddAmout);
 	}
 }
 

@@ -433,8 +433,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	int32 RewardMoney = 0;
 
+	/** Key: ItemKey, Value: Num */
 	UPROPERTY(EditDefaultsOnly)
-	TArray<int32> RewardItemKeys;
+	TMap<int32, int32> RewardItemKeys;
 };
 
 namespace CMS

@@ -354,6 +354,8 @@ bool UShopSlot::PaySlotPrice(int32 InEggMoney)
 
 	Player->SpendMoney(InEggMoney);
 
+	Player->SaveQuests();
+
 	return true;
 }
 
