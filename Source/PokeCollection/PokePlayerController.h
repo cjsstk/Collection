@@ -17,14 +17,20 @@ class POKECOLLECTION_API APokePlayerController : public APlayerController
 public:
 	void AddBattleLogString(const FString& InBattleLogString);
 
+	void OnScreenTouched(const FPointerEvent& MouseEvent);
+
 private:
 	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	void OnInputTouch(ETouchIndex::Type FingerIndex, AActor* TouchedActor);
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
 private:
 	FString BattleLogString;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UTouchEffectWidget> TouchEffectWidgetClass;
 
+	UPROPERTY(Transient)
+	class UTouchEffectWidget* TouchEffectWidget = nullptr;
+
+	TSharedPtr<class FTouchEffectInputProcessor> InputProcessor;
 };

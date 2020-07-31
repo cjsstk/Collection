@@ -143,7 +143,7 @@ void AHttpActor::RequestRegistQuests(const FString& InRegistId)
 
 	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
-	FString RequestURL = CollectionURL + FString("members/") + InRegistId + FString("/quests");
+	FString RequestURL = CollectionURL + FString("v2/members/") + InRegistId + FString("/quests");
 	Request->SetURL(RequestURL);
 	Request->SetVerb(HTTPVerb::POST);
 	Request->SetContentAsString(OutputString);
@@ -626,7 +626,7 @@ void AHttpActor::RequestSaveQuests(const FString& InUserId, const TArray<FSaveQu
 
 	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
 
-	FString RequestURL = CollectionURL + FString("members/") + InUserId + FString("/quests");
+	FString RequestURL = CollectionURL + FString("v2/members/") + InUserId + FString("/quests");
 	Request->SetURL(RequestURL);
 	Request->SetVerb(HTTPVerb::PUT);
 	Request->SetContentAsString(OutputString);

@@ -1072,6 +1072,10 @@ void APokeCollectionCharacter::BeginPlay()
 	//InitHaveItems();
 
 	//PutOnEquipment(1, 1);
+
+	/*Params.RequestType = EHttpRequestType::RegistQuests;
+
+	HttpActor->Request(Params);*/
 }
 
 void APokeCollectionCharacter::Tick(float DeltaSeconds)
