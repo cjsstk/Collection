@@ -23,3 +23,8 @@ void UPokeQuest::Update(bool bIsAdd, int32 InCount)
 		CurrNum = InCount;
 	}
 }
+
+void UPokeQuest::Complete()
+{
+	bIsCompleted = true;
+}

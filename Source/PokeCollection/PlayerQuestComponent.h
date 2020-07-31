@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "CMSType.h"
+#include "Net/HttpActor.h"
 #include "PlayerQuestComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestUpdate, EQuestObjectionType, ObjectionType, int32, Count);
@@ -20,6 +21,8 @@ public:
 
 	void UpdateQuest(const FUpdateQuestParams& InUpdateParams);
 	void SaveQuests();
+
+	void OnHaveQuestsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful);
 
 	const TMap<int32, class UPokeQuest*>& GetHaveQuests() const { return Quests; }
 	const TMap<int32, class UPokeQuest*>& GetHaveDailyMissions() const { return DailyMissions; }

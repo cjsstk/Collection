@@ -206,6 +206,23 @@ void AHttpActor::RequestHaveItems(const FString& InUserId)
 	Request->ProcessRequest();
 }
 
+void AHttpActor::RequestHaveQuests(const FString& InUserId)
+{
+	TSharedRef<IHttpRequest> Request = Http->CreateRequest();
+
+	Request->OnProcessRequestComplete().BindUObject(this, &AHttpActor::HttpResponseReceived);
+
+	FString RequestURL = CollectionURL + FString("v2/members/") + InUserId + FString("/quests");
+	Request->SetURL(RequestURL);
+	Request->SetVerb(HTTPVerb::GET);
+	Request->SetHeader(TEXT("User-Agent"), "X-UnrealEngine-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader("Authorization", AuthToken);
+	Request->SetHeader("X-Request-ID", FString::FromInt((int32)EHttpRequestType::HaveQuests));
+
+	Request->ProcessRequest();
+}
+
 void AHttpActor::RequestAddNewCharacters(const FString& InUserId, const TArray<FInitCharacterParams>& NewCharactersInfos)
 {
 	TArray<TSharedPtr<FJsonValue>> ObjArray;
@@ -825,6 +842,22 @@ void AHttpActor::OnHaveItemsResponseReceived(FHttpRequestPtr Request, FHttpRespo
 	}
 }
 
+void AHttpActor::OnHaveQuestsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	TSharedPtr<FJsonObject> JsonObject;
+
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		OnHttpHaveQuestsResponseReceived.ExecuteIfBound(Request, JsonObject, bWasSuccessful);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Red, Reader.Get().GetErrorMessage());
+	}
+}
+
 void AHttpActor::OnSavePlayerInfoResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	TSharedPtr<FJsonObject> JsonObject;
@@ -1036,6 +1069,9 @@ void AHttpActor::HttpRequest(const FHttpRequestParams& InRequestParams)
 	case EHttpRequestType::HaveItems:
 		RequestHaveItems(InRequestParams.MemberID);
 		break;
+	case EHttpRequestType::HaveQuests:
+		RequestHaveQuests(InRequestParams.MemberID);
+		break;
 	case EHttpRequestType::SavePlayerInfo:
 		RequestSavePlayerInfo(InRequestParams.MemberID, InRequestParams.SaveColumn, InRequestParams.SavePlayerInfos);
 		break;
@@ -1107,6 +1143,9 @@ void AHttpActor::HttpResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr 
 		break;
 	case EHttpRequestType::HaveItems:
 		OnHaveItemsResponseReceived(Request, Response, bWasSuccessful);
+		break;
+	case EHttpRequestType::HaveQuests:
+		OnHaveQuestsResponseReceived(Request, Response, bWasSuccessful);
 		break;
 	case EHttpRequestType::SavePlayerInfo:
 		OnSavePlayerInfoResponseReceived(Request, Response, bWasSuccessful);

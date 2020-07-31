@@ -307,6 +307,8 @@ void UShopSlot::OnBuyCharacterSlot(int32 InSlotKey)
 	}
 
 	Player->AddNewCharacters(NewCharactersParams);
+
+	Player->SaveQuests();
 }
 
 void UShopSlot::OnBuyItemSlot(int32 InSlotKey)
@@ -353,8 +355,6 @@ bool UShopSlot::PaySlotPrice(int32 InEggMoney)
 	}
 
 	Player->SpendMoney(InEggMoney);
-
-	Player->SaveQuests();
 
 	return true;
 }

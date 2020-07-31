@@ -35,6 +35,8 @@ public:
 	/** If bIsAdd is true, InCount Added to CurrNum else InCount override CurrNum */
 	void Update(bool bIsAdd, int32 InCount);
 
+	void Complete();
+
 	bool CanComplete() const { return CurrNum >= DestNum; }
 	int32 GetQuestKey() const { return QuestKey; }
 	EQuestObjectionType GetObjectionType() const { return ObjectionType; }

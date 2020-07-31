@@ -139,6 +139,7 @@ private:
 	void InitHaveCharacters();
 	void InitHaveEquipments();
 	void InitHaveItems();
+	void InitHaveQuests();
 
 	void InitPlayerInfo(FInitPlayerParams& Params);
 	void InitMainCharacter();

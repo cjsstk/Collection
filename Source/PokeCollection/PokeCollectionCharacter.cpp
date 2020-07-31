@@ -90,6 +90,21 @@ void APokeCollectionCharacter::InitHaveItems()
 	}*/
 }
 
+void APokeCollectionCharacter::InitHaveQuests()
+{
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	FHttpRequestParams Params;
+	Params.RequestType = EHttpRequestType::HaveQuests;
+	Params.MemberID = PokeCore::DeviceId;
+
+	HttpActor->Request(Params);
+}
+
 void APokeCollectionCharacter::InitPlayerInfo(FInitPlayerParams& Params)
 {
 	PlayerNickName = FName(*Params.PlayerNickname);
@@ -1335,6 +1350,8 @@ void APokeCollectionCharacter::OnHaveItemsResponsed(FHttpRequestPtr Request, TSh
 		}
 
 	}
+
+	InitHaveQuests();
 }
 
 void APokeCollectionCharacter::SavePlayerInfo(ESavePlayerInfo InSaveInfo)

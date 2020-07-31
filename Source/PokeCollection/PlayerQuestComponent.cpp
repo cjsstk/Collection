@@ -82,9 +82,45 @@ void UPlayerQuestComponent::SaveQuests()
 
 }
 
+void UPlayerQuestComponent::OnHaveQuestsResponsed(FHttpRequestPtr Request, TSharedPtr<FJsonObject> ResponceJson, bool bWasSuccessful)
+{
+	TArray<TSharedPtr<FJsonValue>> DBQuests = ResponceJson->GetArrayField("data");
+
+	for (int32 Index = 0; Index < DBQuests.Num(); ++Index)
+	{
+		TSharedPtr<FJsonObject> QuestJs = DBQuests[Index]->AsObject();
+
+		FString MemberId = QuestJs->GetStringField("memberId");
+		int32 QuestKey = QuestJs->GetIntegerField("questKey");
+		int32 CurrentNum = QuestJs->GetIntegerField("currentNum");
+		int32 Completed = QuestJs->GetIntegerField("completed");
+
+		UPokeQuest* Quest = *Quests.Find(QuestKey);
+		if (!Quest)
+		{
+			continue;
+		}
+
+		Quest->Update(false, CurrentNum);
+		
+		if (Completed > 0)
+		{
+			Quest->Complete();
+		}
+	}
+}
+
 void UPlayerQuestComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AHttpActor* HttpActor = PokeCore::GetHttpActor(GetWorld());
+	if (!ensure(HttpActor))
+	{
+		return;
+	}
+
+	HttpActor->OnHttpHaveQuestsResponseReceived.BindUObject(this, &UPlayerQuestComponent::OnHaveQuestsResponsed);
 
 	// Init Quests
 	TArray<FQuestInfo*> QuestInfos;

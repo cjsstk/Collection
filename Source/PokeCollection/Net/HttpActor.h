@@ -21,6 +21,7 @@ enum class EHttpRequestType
 	HaveCharacters,
 	HaveEquipments,
 	HaveItems,
+	HaveQuests,
 	SavePlayerInfo,
 	AddNewCharacters,
 	AddNewEquipments,
@@ -102,6 +103,7 @@ public:
 	FOnHttpResponseReceived OnHttpHaveCharactersResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveEquipmentsResponseReceived;
 	FOnHttpResponseReceived OnHttpHaveItemsResponseReceived;
+	FOnHttpResponseReceived OnHttpHaveQuestsResponseReceived;
 
 protected:
 	virtual void BeginPlay() override;
@@ -117,6 +119,7 @@ private:
 	void RequestHaveCharacters(const FString& InUserId);
 	void RequestHaveEquipments(const FString& InUserId);
 	void RequestHaveItems(const FString& InUserId);
+	void RequestHaveQuests(const FString& InUserId);
 	void RequestSavePlayerInfo(const FString& InUserId, const ESavePlayerInfo& InColumnName, const FInitPlayerParams& Params);
 	void RequestAddNewCharacters(const FString& InUserId, const TArray<FInitCharacterParams>& NewCharactersInfos);
 	void RequestAddNewEquipments(const FString& InUserId, const TArray<FInitEquipmentParams>& NewEquipmentsInfos);
@@ -134,6 +137,7 @@ private:
 	void OnHaveCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnHaveItemsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHaveQuestsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnSavePlayerInfoResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnAddNewCharactersResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void OnAddNewEquipmentsResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
